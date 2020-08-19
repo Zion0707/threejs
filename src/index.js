@@ -1,14 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
+import Index from './pages/index';
+import Threejs from './pages/threejs';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <>
+        <Router>
+            <Route exact path="/" component={Index} />
+            <Route exact path="/threejs" component={Threejs} />
+        </Router>
+    </>,
+    document.getElementById('root')
 );
 
 // If you want your app to work offline and load faster, you can change

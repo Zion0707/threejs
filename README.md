@@ -1,2 +1,7 @@
 # threejs
-3D框架
+
+3D 框架
+
+### yarn start
+
+### yarn build
