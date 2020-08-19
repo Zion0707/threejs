@@ -20,6 +20,7 @@ module.exports = {
         'space-before-function-paren': 0,
         'react/react-in-jsx-scope': 0,
         'react/prop-types': 0,
+        'no-new': 0,
         semi: 0,
         indent: 0,
     },
