@@ -12,7 +12,7 @@ function Threejs() {
         const camera = new THREE.PerspectiveCamera(75, winWidth / winHeight, 0.1, 1000);
 
         const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(winWidth, winHeight);
         content.appendChild(renderer.domElement);
         camera.position.set(2, 2, 0);
 
@@ -32,6 +32,7 @@ function Threejs() {
 
         new OrbitControls(camera, renderer.domElement);
 
+        // 坐标系
         scene.add(new THREE.AxesHelper(1));
         // 网格 20x20
         // scene.add(new THREE.GridHelper(20, 20));
