@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-function Line() {
+function Basis() {
     const init = () => {
         const content = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -48,4 +48,4 @@ function Line() {
     return <div id="content"></div>;
 }
 
-export default Line;
+export default Basis;
