@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 
-import model from 'static/media/pikaqiu/file.obj';
-import skin from 'static/media/pikaqiu/file.jpg';
+import model from 'static/media/logo/file.obj';
+import skin from 'static/media/logo/file.png';
 
 function Line() {
     const wrapMsg = () => {
@@ -49,14 +49,15 @@ function Line() {
 
         // 添加灰色网格线
         scene.add(new THREE.GridHelper(20, 20));
+        scene.add(new THREE.AxesHelper(2));
 
         // 导入obj模型
         const objLoader = new OBJLoader();
         objLoader.load(model, function (object) {
             // 设置模型缩放比例
-            object.scale.set(1, 1, 1);
+            object.scale.set(0.1, 0.1, 0.1);
             // 设置模型的坐标
-            object.position.set(0, 0, 0);
+            object.position.set(-15, 0, 0);
 
             object.traverse(function (child) {
                 if (child instanceof THREE.Mesh) {
