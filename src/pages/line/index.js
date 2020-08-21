@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
-
-import model from 'static/media/logo/file.obj';
-import skin from 'static/media/logo/file.png';
 
 function Line() {
     const wrapMsg = () => {
@@ -24,18 +20,18 @@ function Line() {
         const { winWidth, winHeight, el } = domMsg;
         // 场景
         const scene = new THREE.Scene();
+
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
         camera.position.set(50, 30, 100);
         // 渲染器
-        const renderer = new THREE.WebGLRenderer();
-
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true,
+        });
         // 设置渲染器的颜色和大小
         renderer.setClearColor(0x404040);
         renderer.setSize(winWidth, winHeight);
-        // 将renderer（渲染器）的dom元素（renderer.domElement）添加到我们的HTML文档中。
-        // 这就是渲染器用来显示场景给我们看的<canvas>元素
         document.body.appendChild(renderer.domElement);
 
         // 鼠标控制旋转
@@ -47,27 +43,14 @@ function Line() {
         scene.add(light);
         scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
+        const box = new THREE.BoxGeometry(2, 2, 2);
+        const mbm = new THREE.MeshBasicMaterial({ color: '#f00' });
+        const mesh = new THREE.Mesh(box, mbm);
+        scene.add(mesh);
+
         // 添加灰色网格线
         scene.add(new THREE.GridHelper(20, 20));
         scene.add(new THREE.AxesHelper(2));
-
-        // 导入obj模型
-        const objLoader = new OBJLoader();
-        objLoader.load(model, function (object) {
-            // 设置模型缩放比例
-            object.scale.set(0.1, 0.1, 0.1);
-            // 设置模型的坐标
-            object.position.set(-15, 0, 0);
-
-            object.traverse(function (child) {
-                if (child instanceof THREE.Mesh) {
-                    // 设置模型皮肤
-                    child.material.map = THREE.ImageUtils.loadTexture(skin);
-                }
-            });
-            // 将模型添加到场景中
-            scene.add(object);
-        });
 
         el.append(renderer.domElement);
 
