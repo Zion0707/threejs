@@ -2,10 +2,6 @@ import React, { useEffect } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import img400x400 from 'static/images/400x400.png';
-import img200x100 from 'static/images/200x100.png';
-const imgsArr = [img400x400, img200x100];
-
 function Line() {
     const wrapMsg = () => {
         const el = document.getElementById('content');
@@ -20,23 +16,7 @@ function Line() {
         };
     };
 
-    // 图片加载情况
-    const imgLoad = async () => {
-        const loader = new THREE.ImageLoader();
-        const imgs = [];
-        imgsArr.forEach((item) => {
-            const p = new Promise((reslove) => {
-                loader.load(item, (img) => {
-                    reslove(img);
-                });
-            });
-            imgs.push(p);
-        });
-        const res = await Promise.all(imgs);
-        return res;
-    };
-
-    const init = (domMsg, imgLoadRes) => {
+    const init = (domMsg) => {
         const { winWidth, winHeight, el } = domMsg;
         // 场景
         const scene = new THREE.Scene();
@@ -102,13 +82,8 @@ function Line() {
         render();
     };
     useEffect(() => {
-        const loadPost = async () => {
-            const imgLoadRes = await imgLoad();
-            const domMsg = wrapMsg();
-            init(domMsg, imgLoadRes);
-        };
-
-        loadPost();
+        const domMsg = wrapMsg();
+        init(domMsg);
     }, []);
 
     return <div id="content"></div>;

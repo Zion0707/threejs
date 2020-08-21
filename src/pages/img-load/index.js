@@ -21,7 +21,6 @@ function ImgLoad() {
             });
             pArr.push(p);
         });
-
         const res = await Promise.all(pArr);
         return res;
     };
@@ -29,6 +28,8 @@ function ImgLoad() {
     useEffect(() => {
         const init = async () => {
             const res = await imgLoad();
+            console.log(res);
+            console.log('加载完成...');
             setImgList(res);
             setMsg('加载完成...');
         };
