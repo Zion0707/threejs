@@ -2,6 +2,10 @@ import React, { useEffect } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
+import img400x400 from 'static/images/400x400.png';
+import img200x100 from 'static/images/200x100.png';
+const imgsArr = [img400x400, img200x100];
+
 function Line() {
     const wrapMsg = () => {
         const el = document.getElementById('content');
@@ -16,7 +20,23 @@ function Line() {
         };
     };
 
-    const init = (domMsg) => {
+    // 图片加载情况
+    const imgLoad = async () => {
+        const loader = new THREE.ImageLoader();
+        const imgs = [];
+        imgsArr.forEach((item) => {
+            const p = new Promise((reslove) => {
+                loader.load(item, (img) => {
+                    reslove(img);
+                });
+            });
+            imgs.push(p);
+        });
+        const res = await Promise.all(imgs);
+        return res;
+    };
+
+    const init = (domMsg, imgLoadRes) => {
         const { winWidth, winHeight, el } = domMsg;
         // 场景
         const scene = new THREE.Scene();
@@ -32,10 +52,11 @@ function Line() {
         // 设置渲染器的颜色和大小
         renderer.setClearColor(0x404040);
         renderer.setSize(winWidth, winHeight);
-        document.body.appendChild(renderer.domElement);
+        const canvas = renderer.domElement;
+        document.body.appendChild(canvas);
 
         // 鼠标控制旋转
-        new OrbitControls(camera, renderer.domElement);
+        new OrbitControls(camera, canvas);
 
         // 设置光源
         const light = new THREE.DirectionalLight(0xffffff, 0.5);
@@ -43,16 +64,34 @@ function Line() {
         scene.add(light);
         scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
-        const box = new THREE.BoxGeometry(2, 2, 2);
-        const mbm = new THREE.MeshBasicMaterial({ color: '#f00' });
+        const box = new THREE.BoxGeometry(5, 5, 5);
+        const mbm = new THREE.MeshBasicMaterial({ color: '#ddd' });
         const mesh = new THREE.Mesh(box, mbm);
+        mesh.name = 'zhangsan';
+
+        const boxChild = new THREE.BoxGeometry(3, 3, 3);
+        const mbmChild = new THREE.MeshBasicMaterial({ color: '#f00' });
+        const meshChild = new THREE.Mesh(boxChild, mbmChild);
+        meshChild.position.set(-10, 0, 0);
+
+        mesh.add(meshChild);
         scene.add(mesh);
 
-        // 添加灰色网格线
-        scene.add(new THREE.GridHelper(20, 20));
-        scene.add(new THREE.AxesHelper(2));
+        el.append(canvas);
 
-        el.append(renderer.domElement);
+        // 事件触发
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        canvas.addEventListener('click', (event) => {
+            mouse.x = (event.clientX / winWidth) * 2 - 1;
+            mouse.y = -(event.clientY / winHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(scene.children);
+            intersects.forEach((item) => {
+                item.object.material.color.set('#ff0');
+                console.log(item);
+            });
+        });
 
         function render() {
             // 动画循环渲染
@@ -63,8 +102,13 @@ function Line() {
         render();
     };
     useEffect(() => {
-        const domMsg = wrapMsg();
-        init(domMsg);
+        const loadPost = async () => {
+            const imgLoadRes = await imgLoad();
+            const domMsg = wrapMsg();
+            init(domMsg, imgLoadRes);
+        };
+
+        loadPost();
     }, []);
 
     return <div id="content"></div>;

@@ -2,21 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 import Index from './pages/index';
 import Basis from './pages/basis';
 import Pikaqiu from './pages/pikaqiu';
 import Line from './pages/line';
+import ImgLoad from './pages/img-load';
 
 ReactDOM.render(
     <>
         <Router>
-            <Switch>
-                <Route exact path="/" component={Index} />
-                <Route exact path="/line" component={Line} />
-                <Route exact path="/basis" component={Basis} />
-                <Route exact path="/pikaqiu" component={Pikaqiu} />
-            </Switch>
+            <Route exact path="/" component={Index} />
+            <Route exact path="/line" component={Line} />
+            <Route exact path="/basis" component={Basis} />
+            <Route exact path="/pikaqiu" component={Pikaqiu} />
+            <Route exact path="/img-load" component={ImgLoad} />
         </Router>
     </>,
     document.getElementById('root')

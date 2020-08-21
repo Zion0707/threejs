@@ -21,6 +21,7 @@ module.exports = {
         'react/react-in-jsx-scope': 0,
         'react/prop-types': 0,
         'no-new': 0,
+        'promise/param-names': 0,
         semi: 0,
         indent: 0,
     },
