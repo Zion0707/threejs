@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import cocaSlider from 'static/media/coca/coca_slider.jpg';
+import cocaTop from 'static/media/coca/coca_top.png';
+import cocaObj from 'static/media/coca/file.obj';
 
-import model from 'static/media/pikaqiu/file.obj';
-import skin from 'static/media/pikaqiu/file.jpg';
-
-function Line() {
+function PsCoca() {
     const wrapMsg = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -24,22 +24,23 @@ function Line() {
         const { winWidth, winHeight, el } = domMsg;
         // 场景
         const scene = new THREE.Scene();
+
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
         camera.position.set(50, 30, 100);
         // 渲染器
-        const renderer = new THREE.WebGLRenderer();
-
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true,
+        });
         // 设置渲染器的颜色和大小
-        renderer.setClearColor(0x404040);
+        renderer.setClearColor('#000');
         renderer.setSize(winWidth, winHeight);
-        // 将renderer（渲染器）的dom元素（renderer.domElement）添加到我们的HTML文档中。
-        // 这就是渲染器用来显示场景给我们看的<canvas>元素
-        document.body.appendChild(renderer.domElement);
+        const canvas = renderer.domElement;
+        document.body.appendChild(canvas);
 
         // 鼠标控制旋转
-        new OrbitControls(camera, renderer.domElement);
+        new OrbitControls(camera, canvas);
 
         // 设置光源
         const light = new THREE.DirectionalLight(0xffffff, 0.5);
@@ -47,29 +48,25 @@ function Line() {
         scene.add(light);
         scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
-        // 添加灰色网格线
-        scene.add(new THREE.GridHelper(20, 20));
-
-        // 导入obj模型
         const objLoader = new OBJLoader();
-        objLoader.load(model, (object) => {
-            // 设置模型缩放比例
-            object.scale.set(1, 1, 1);
-            // 设置模型的坐标
-            object.position.set(0, 0, 0);
-
-            object.traverse((child) => {
+        objLoader.load(cocaObj, (obj) => {
+            obj.position.set(0, -10, 0);
+            obj.scale.set(0.1, 0.1, 0.1);
+            obj.traverse((child) => {
                 if (child instanceof THREE.Mesh) {
-                    console.log(child.material);
+                    console.log(child.material[0]);
+                    console.log(child.material[1]);
                     // 设置模型皮肤
-                    child.material.map = THREE.ImageUtils.loadTexture(skin);
+                    child.material[0].map = THREE.ImageUtils.loadTexture(cocaSlider);
+                    child.material[1].map = THREE.ImageUtils.loadTexture(cocaTop);
                 }
             });
-            // 将模型添加到场景中
-            scene.add(object);
+
+            scene.add(obj);
         });
 
-        el.append(renderer.domElement);
+        // 把canvas元素添加到指定元素中
+        el.append(canvas);
 
         function render() {
             // 动画循环渲染
@@ -87,4 +84,4 @@ function Line() {
     return <div id="content"></div>;
 }
 
-export default Line;
+export default PsCoca;

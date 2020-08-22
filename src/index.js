@@ -8,6 +8,7 @@ import Basis from './pages/basis';
 import Pikaqiu from './pages/pikaqiu';
 import Line from './pages/line';
 import ImgLoad from './pages/img-load';
+import PsCoca from './pages/ps-coca';
 
 ReactDOM.render(
     <>
@@ -17,6 +18,7 @@ ReactDOM.render(
             <Route exact path="/basis" component={Basis} />
             <Route exact path="/pikaqiu" component={Pikaqiu} />
             <Route exact path="/img-load" component={ImgLoad} />
+            <Route exact path="/ps-coca" component={PsCoca} />
         </Router>
     </>,
     document.getElementById('root')
