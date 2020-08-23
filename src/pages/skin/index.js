@@ -10,11 +10,11 @@ import cocaBlue from 'static/media/coca/coca_blue.jpg';
 import './index.css';
 function Skin() {
     // obj对象需贴图的面，为数据对象
-    let objLoaderMaterial = [];
+    let objLoaderMaterialArr = [];
 
     // 更换皮肤
     const changeSkin = (color) => {
-        // 纹理
+        // 纹理设置
         let TextureLoader = null;
         switch (color) {
             case 'red':
@@ -28,7 +28,8 @@ function Skin() {
                 break;
             default:
         }
-        objLoaderMaterial[0] = new THREE.MeshBasicMaterial({
+        // 给第一个纹理面设置相关图片
+        objLoaderMaterialArr[0] = new THREE.MeshLambertMaterial({
             map: TextureLoader,
         });
     };
@@ -49,9 +50,10 @@ function Skin() {
             obj.scale.set(0.1, 0.1, 0.1);
             obj.traverse((child) => {
                 if (child instanceof THREE.Mesh) {
-                    objLoaderMaterial = child.material;
-                    // objLoaderMaterial.map = THREE.ImageUtils.loadTexture(cocaRed);
-                    objLoaderMaterial[0] = new THREE.MeshBasicMaterial({
+                    // 获取需贴纸的材质列表
+                    objLoaderMaterialArr = child.material;
+                    // 给第一个纹理面设置相关图片
+                    objLoaderMaterialArr[0] = new THREE.MeshLambertMaterial({
                         map: new THREE.TextureLoader().load(cocaRed),
                     });
                 }
