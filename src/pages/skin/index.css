@@ -1,0 +1,18 @@
+.skin-list {
+    position: absolute;
+    display: flex;
+}
+.skin-list li {
+    width: 40px;
+    height: 40px;
+    margin: 10px;
+}
+.skin-list li:nth-child(1) {
+    background-color: #c11d24;
+}
+.skin-list li:nth-child(2) {
+    background-color: #ff7800;
+}
+.skin-list li:nth-child(3) {
+    background-color: #00d2ff;
+}

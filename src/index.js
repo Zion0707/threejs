@@ -6,7 +6,7 @@ import { Route, BrowserRouter as Router } from 'react-router-dom';
 import Index from './pages/index';
 import Basis from './pages/basis';
 import Pikaqiu from './pages/pikaqiu';
-import Line from './pages/line';
+import Skin from './pages/skin';
 import ImgLoad from './pages/img-load';
 import PsCoca from './pages/ps-coca';
 
@@ -14,7 +14,7 @@ ReactDOM.render(
     <>
         <Router>
             <Route exact path="/" component={Index} />
-            <Route exact path="/line" component={Line} />
+            <Route exact path="/skin" component={Skin} />
             <Route exact path="/basis" component={Basis} />
             <Route exact path="/pikaqiu" component={Pikaqiu} />
             <Route exact path="/img-load" component={ImgLoad} />

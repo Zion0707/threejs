@@ -28,8 +28,6 @@ function ImgLoad() {
     useEffect(() => {
         const init = async () => {
             const res = await imgLoad();
-            console.log(res);
-            console.log('加载完成...');
             setImgList(res);
             setMsg('加载完成...');
         };
@@ -40,7 +38,7 @@ function ImgLoad() {
         <>
             {msg}
             {imgList.map((item) => {
-                return <img key={item.src} src={item.src} />;
+                return <img key={item.src} src={item.src} alt="图片" />;
             })}
         </>
     );
