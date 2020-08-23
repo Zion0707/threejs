@@ -1,18 +1,18 @@
-.skin-list {
+.skin-btn {
     position: absolute;
     display: flex;
 }
-.skin-list li {
+.skin-btn li {
     width: 40px;
     height: 40px;
-    margin: 10px;
+    margin: 15px 10px;
 }
-.skin-list li:nth-child(1) {
+.skin-btn--red {
     background-color: #c11d24;
 }
-.skin-list li:nth-child(2) {
+.skin-btn--orange {
     background-color: #ff7800;
 }
-.skin-list li:nth-child(3) {
+.skin-btn--blue {
     background-color: #00d2ff;
 }

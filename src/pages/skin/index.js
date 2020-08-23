@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
@@ -11,36 +11,34 @@ import './index.css';
 function Line() {
     let selectedObjects = null;
 
-    const wrapMsg = () => {
+    // 更换皮肤
+    const changeSkin = (color) => {
+        // 纹理
+        let TextureLoader = null;
+        switch (color) {
+            case 'red':
+                TextureLoader = new THREE.TextureLoader().load(cocaRed);
+                break;
+            case 'orange':
+                TextureLoader = new THREE.TextureLoader().load(cocaOrange);
+                break;
+            case 'blue':
+                TextureLoader = new THREE.TextureLoader().load(cocaBlue);
+                break;
+            default:
+        }
+
+        selectedObjects[0] = new THREE.MeshBasicMaterial({
+            map: TextureLoader,
+        });
+    };
+
+    const init = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
         const winHeight = window.innerHeight;
         el.style.cssText = `width:${winWidth}px;height:${winHeight}px`;
 
-        return {
-            winWidth,
-            winHeight,
-            el,
-        };
-    };
-
-    // 更换皮肤
-    const changeSkin = (color) => {
-        switch (color) {
-            case 'red':
-                selectedObjects.map = THREE.ImageUtils.loadTexture(cocaRed);
-                break;
-            case 'orange':
-                selectedObjects.map = THREE.ImageUtils.loadTexture(cocaOrange);
-                break;
-            case 'blue':
-                selectedObjects.map = THREE.ImageUtils.loadTexture(cocaBlue);
-                break;
-        }
-    };
-
-    const init = (domMsg) => {
-        const { winWidth, winHeight, el } = domMsg;
         // 场景
         const scene = new THREE.Scene();
 
@@ -49,8 +47,11 @@ function Line() {
             obj.scale.set(0.1, 0.1, 0.1);
             obj.traverse((child) => {
                 if (child instanceof THREE.Mesh) {
-                    selectedObjects = child.material[0];
-                    selectedObjects.map = THREE.ImageUtils.loadTexture(cocaRed);
+                    selectedObjects = child.material;
+                    // selectedObjects.map = THREE.ImageUtils.loadTexture(cocaRed);
+                    selectedObjects[0] = new THREE.MeshBasicMaterial({
+                        map: new THREE.TextureLoader().load(cocaRed),
+                    });
                 }
             });
             scene.add(obj);
@@ -92,27 +93,26 @@ function Line() {
         render();
     };
     useEffect(() => {
-        const domMsg = wrapMsg();
-        init(domMsg);
-    }, []);
+        init();
+    });
 
     return (
         <div id="content">
-            <ul className="skin-list" id="skin_list">
-                {/* <li data-color="red"></li>
-                <li data-color="orange"></li>
-                <li data-color="blue"></li> */}
+            <ul className="skin-btn">
                 <li
+                    className="skin-btn--red"
                     onClick={() => {
                         changeSkin('red');
                     }}
                 ></li>
                 <li
+                    className="skin-btn--orange"
                     onClick={() => {
                         changeSkin('orange');
                     }}
                 ></li>
                 <li
+                    className="skin-btn--blue"
                     onClick={() => {
                         changeSkin('blue');
                     }}
