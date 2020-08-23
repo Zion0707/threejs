@@ -28,9 +28,7 @@ function Test() {
 
         const planeGeometry = new THREE.PlaneGeometry(20, 20, 1, 1);
         const planeMaterial = new THREE.MeshBasicMaterial({
-            color: '#fff',
-            side: THREE.DoubleSide,
-            wireframe: true,
+            color: 0xffffff,
         });
         const plane = new THREE.Mesh(planeGeometry, planeMaterial);
         plane.position.set(0, 0, 1);
@@ -42,6 +40,7 @@ function Test() {
         const camera = new THREE.PerspectiveCamera(75, winWidth / winHeight, 0.1, 200);
         camera.position.set(10, 30, 10);
         camera.lookAt(scene.position); // 设置相机方向(指向的场景对象)
+
         const renderer = new THREE.WebGLRenderer({ antialias: true });
 
         new OrbitControls(camera, renderer.domElement);
@@ -57,6 +56,12 @@ function Test() {
             requestAnimationFrame(render);
             // 渲染到页面上
             renderer.render(scene, camera);
+
+            if (plane.position.z >= 5) {
+                plane.position.z -= 0.1;
+            } else {
+                plane.position.z += 0.1;
+            }
         }
         render();
     };
