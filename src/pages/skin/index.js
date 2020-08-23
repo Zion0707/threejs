@@ -9,7 +9,8 @@ import cocaBlue from 'static/media/coca/coca_blue.jpg';
 
 import './index.css';
 function Line() {
-    let selectedObjects = null;
+    // obj对象需贴图的面，为数据对象
+    let objLoaderMaterial = [];
 
     // 更换皮肤
     const changeSkin = (color) => {
@@ -27,8 +28,7 @@ function Line() {
                 break;
             default:
         }
-
-        selectedObjects[0] = new THREE.MeshBasicMaterial({
+        objLoaderMaterial[0] = new THREE.MeshBasicMaterial({
             map: TextureLoader,
         });
     };
@@ -49,9 +49,9 @@ function Line() {
             obj.scale.set(0.1, 0.1, 0.1);
             obj.traverse((child) => {
                 if (child instanceof THREE.Mesh) {
-                    selectedObjects = child.material;
-                    // selectedObjects.map = THREE.ImageUtils.loadTexture(cocaRed);
-                    selectedObjects[0] = new THREE.MeshBasicMaterial({
+                    objLoaderMaterial = child.material;
+                    // objLoaderMaterial.map = THREE.ImageUtils.loadTexture(cocaRed);
+                    objLoaderMaterial[0] = new THREE.MeshBasicMaterial({
                         map: new THREE.TextureLoader().load(cocaRed),
                     });
                 }
