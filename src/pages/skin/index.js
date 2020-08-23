@@ -8,7 +8,7 @@ import cocaOrange from 'static/media/coca/coca_orange.jpg';
 import cocaBlue from 'static/media/coca/coca_blue.jpg';
 
 import './index.css';
-function Line() {
+function Skin() {
     // obj对象需贴图的面，为数据对象
     let objLoaderMaterial = [];
 
@@ -128,4 +128,4 @@ function Line() {
     );
 }
 
-export default Line;
+export default Skin;
