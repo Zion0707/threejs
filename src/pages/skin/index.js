@@ -34,14 +34,16 @@ function Line() {
     };
 
     const init = () => {
-        const el = document.getElementById('content');
+        // dom元素生成
+        const contentEl = document.getElementById('content');
         const winWidth = window.innerWidth;
         const winHeight = window.innerHeight;
-        el.style.cssText = `width:${winWidth}px;height:${winHeight}px`;
+        contentEl.style.cssText = `width:${winWidth}px;height:${winHeight}px`;
 
         // 场景
         const scene = new THREE.Scene();
 
+        // obj 元素加载器
         const objLoader = new OBJLoader();
         objLoader.load(fileObj, (obj) => {
             obj.scale.set(0.1, 0.1, 0.1);
@@ -71,9 +73,13 @@ function Line() {
         renderer.setSize(winWidth, winHeight);
         const canvas = renderer.domElement;
         document.body.appendChild(canvas);
+        contentEl.append(canvas);
 
         // 鼠标控制旋转
-        new OrbitControls(camera, canvas);
+        const orbitControls = new OrbitControls(camera, canvas);
+        // 设置自动旋转及旋转速度
+        orbitControls.autoRotate = true;
+        orbitControls.autoRotateSpeed = 10;
 
         // 设置光源
         const light = new THREE.DirectionalLight(0xffffff, 0.5);
@@ -81,14 +87,14 @@ function Line() {
         scene.add(light);
         scene.add(new THREE.AmbientLight(0xffffff, 0.5));
 
-        // 把canvas元素添加到指定元素中
-        el.append(canvas);
-
+        // 执行实时刷新
         function render() {
             // 动画循环渲染
             requestAnimationFrame(render);
             // 渲染到页面上
             renderer.render(scene, camera);
+
+            orbitControls.update();
         }
         render();
     };
