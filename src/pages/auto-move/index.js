@@ -3,7 +3,13 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 import './index.css';
 
-function Test() {
+function AutoMove() {
+    let boxMaterial = null;
+    const setOpacity = () => {
+        boxMaterial.opacity = 0.5;
+        boxMaterial.transparent = true;
+    };
+
     const init = () => {
         // dom元素生成
         const contentEl = document.getElementById('content');
@@ -13,19 +19,18 @@ function Test() {
 
         const scene = new THREE.Scene();
 
-        const geometry = new THREE.BoxGeometry(10, 10, 10);
-        const material = new THREE.MeshLambertMaterial({
-            color: '#0000ff',
-        });
-        const mesh = new THREE.Mesh(geometry, material);
+        const boxGeometry = new THREE.BoxGeometry(10, 10, 10);
+        const mlm = new THREE.MeshLambertMaterial({ color: '#ffffff' });
+        const mesh = new THREE.Mesh(boxGeometry, mlm);
+        boxMaterial = mlm;
         scene.add(mesh);
 
-        setTimeout(() => {
-            scene.remove(mesh);
-        }, 1000);
+        const point = new THREE.PointLight('#fff');
+        point.position.set(20, 30, 10);
+        scene.add(point);
 
-        const light = new THREE.DirectionalLight('#fff', 1);
-        scene.add(light);
+        // const light = new THREE.DirectionalLight('#fff', 1);
+        // scene.add(light);
 
         // --------------------------------------------------------------------------------
 
@@ -38,25 +43,24 @@ function Test() {
         new OrbitControls(camera, renderer.domElement);
 
         // 设置渲染器的颜色和大小
-        renderer.setClearColor('#f1f1f1');
+        renderer.setClearColor('#000');
         renderer.setSize(winWidth, winHeight);
-        renderer.shadowMapEnabled = true;
         contentEl.append(renderer.domElement);
 
-        // let options = true;
+        let meshs = true;
         // 执行实时刷新
         function render() {
-            // if (options) {
-            //     mlm.opacity += 0.01;
-            //     if (mlm.opacity >= 1) {
-            //         options = false;
-            //     }
-            // } else {
-            //     mlm.opacity -= 0.01;
-            //     if (mlm.opacity <= 0) {
-            //         options = true;
-            //     }
-            // }
+            if (meshs) {
+                mesh.position.x += 0.05;
+                if (mesh.position.x >= 5) {
+                    meshs = false;
+                }
+            } else {
+                mesh.position.x -= 0.05;
+                if (mesh.position.x <= -5) {
+                    meshs = true;
+                }
+            }
 
             // 动画循环渲染
             requestAnimationFrame(render);
@@ -71,9 +75,17 @@ function Test() {
     return (
         <div id="content">
             <ul>
-                <li></li>
+                <li>
+                    <button
+                        onClick={() => {
+                            setOpacity();
+                        }}
+                    >
+                        变半透明
+                    </button>
+                </li>
             </ul>
         </div>
     );
 }
-export default Test;
+export default AutoMove;
