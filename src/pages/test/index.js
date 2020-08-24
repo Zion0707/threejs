@@ -15,12 +15,15 @@ function Test() {
 
         const carGroup = new THREE.Group();
         carGroup.name = '汽车组';
+
+        // 车身
         const carBodyGeometry = new THREE.BoxGeometry(20, 4, 30);
         carBodyGeometry.name = '车身';
         const carBodyMaterial = new THREE.MeshLambertMaterial({ color: '#fff', transparent: true });
         carBodyMaterial.opacity = 0.5;
         const carBodyMesh = new THREE.Mesh(carBodyGeometry, carBodyMaterial);
 
+        // 车轮
         const carWheels = new THREE.CylinderGeometry(5, 5, 4, 32);
         const carWheelsMaterial = new THREE.MeshLambertMaterial({
             color: '#000',
@@ -49,13 +52,22 @@ function Test() {
         carWheelsRightAfter.position.x = -10;
         carWheelsRightAfter.position.z = -8;
 
+        // 车轴
+        const carShaft = new THREE.CylinderGeometry(1, 1, 10, 32);
+        const carShaftMaterial = new THREE.MeshLambertMaterial({
+            color: '#fff',
+            transparent: true,
+        });
+        const carShaftMesh = new THREE.Mesh(carShaft, carShaftMaterial);
+
         // 添加到组里面
         carGroup.add(
             carBodyMesh,
             carWheelsLeftBefore,
             carWheelsRightBefore,
             carWheelsLeftAfter,
-            carWheelsRightAfter
+            carWheelsRightAfter,
+            carShaftMesh
         );
         scene.add(carGroup);
 
