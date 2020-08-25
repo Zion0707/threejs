@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 import './index.css';
 
-function Test() {
+function Tadiao() {
     const init = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -62,4 +62,4 @@ function Test() {
         </div>
     );
 }
-export default Test;
+export default Tadiao;
