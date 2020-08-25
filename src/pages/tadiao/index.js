@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
+import img01 from 'static/images/tadiao/01.png';
 import './index.css';
 
 function Tadiao() {
@@ -13,10 +14,105 @@ function Tadiao() {
         // 场景
         const scene = new THREE.Scene();
 
+        const tdGroup = new THREE.Group();
+        tdGroup.name = '塔吊组';
+        tdGroup.position.y = -20;
+
+        const tdBaseGeometry = new THREE.BoxGeometry(35, 5, 35);
+        const tdBaseMaterial = new THREE.MeshLambertMaterial({ color: '#FFF' });
+        const tdBaseMesh = new THREE.Mesh(tdBaseGeometry, tdBaseMaterial);
+        tdBaseMesh.name = '塔吊底座';
+        tdBaseMesh.position.y = -90;
+
+        const tdCenterGroup = new THREE.Group();
+        tdCenterGroup.name = '塔吊中心柱组';
+        // 中心柱皮肤
+        const tdCenterGeometry = new THREE.BoxGeometry(8, 160, 8);
+        const img01Texture = new THREE.TextureLoader().load(img01);
+        // 纹理y轴重复
+        img01Texture.repeat.set(1, 20);
+        img01Texture.wrapS = THREE.RepeatWrapping;
+        img01Texture.wrapT = THREE.RepeatWrapping;
+        const tdCenterMaterial = new THREE.MeshLambertMaterial({
+            map: img01Texture,
+            transparent: true,
+        });
+        tdCenterMaterial.opacity = 0.7;
+        const tdCenterMesh = new THREE.Mesh(tdCenterGeometry, tdCenterMaterial);
+        tdCenterMesh.name = '塔吊中心柱';
+
+        const tdPillarsGeometry = new THREE.BoxGeometry(2, 160, 2);
+        const tdPillarsMaterial = new THREE.MeshLambertMaterial({ color: '#ddbe07' });
+        const tdPillarsMesh1 = new THREE.Mesh(tdPillarsGeometry, tdPillarsMaterial);
+        tdPillarsMesh1.name = '顶梁柱左后方';
+        tdPillarsMesh1.position.x = -4;
+        tdPillarsMesh1.position.z = -4;
+
+        const tdPillarsMesh2 = tdPillarsMesh1.clone();
+        tdPillarsMesh2.name = '顶梁柱右后方';
+        tdPillarsMesh2.position.x = 4;
+        tdPillarsMesh2.position.z = -4;
+
+        const tdPillarsMesh3 = tdPillarsMesh1.clone();
+        tdPillarsMesh3.name = '顶梁柱左前方';
+        tdPillarsMesh3.position.x = -4;
+        tdPillarsMesh3.position.z = 4;
+
+        const tdPillarsMesh4 = tdPillarsMesh1.clone();
+        tdPillarsMesh4.name = '顶梁柱右前方';
+        tdPillarsMesh4.position.x = 4;
+        tdPillarsMesh4.position.z = 4;
+
+        // 塔吊分层
+        const tdLayerGeometry = new THREE.BoxGeometry(10, 4, 10);
+        const tdLayerMaterial = new THREE.MeshLambertMaterial({ color: '#ddbe07' });
+        const tdLayerMesh = new THREE.Mesh(tdLayerGeometry, tdLayerMaterial);
+        tdLayerMesh.name = '塔吊分层';
+        tdLayerMesh.position.y = 10;
+        tdCenterGroup.add(
+            tdCenterMesh,
+            tdPillarsMesh1,
+            tdPillarsMesh2,
+            tdPillarsMesh3,
+            tdPillarsMesh4,
+            tdLayerMesh
+        );
+        tdCenterGroup.position.y = -8;
+
+        // 塔吊手臂
+        const tdTopGroup = new THREE.Group();
+        tdTopGroup.name = '塔吊顶部手臂';
+        const tdArmGeometry = new THREE.CylinderGeometry(4, 2, 260, 4);
+        const tdArmMaterial = new THREE.MeshLambertMaterial({
+            color: '#ddbe07',
+            transparent: true,
+            wireframe: true,
+        });
+        const tdArmMesh = new THREE.Mesh(tdArmGeometry, tdArmMaterial);
+        tdArmMesh.position.y = 75;
+        tdArmMesh.position.z = 40;
+        tdArmMesh.rotation.x = -1.6;
+        tdArmMesh.rotation.y = -0.8;
+
+        // 塔吊机窗
+        const tdAircraftWindowGeometry = new THREE.BoxGeometry(15, 20, 15);
+        const tdAircraftWindowMaterial = new THREE.MeshLambertMaterial({ color: '#bfc9c6' });
+        const tdAircraftWindowMesh = new THREE.Mesh(
+            tdAircraftWindowGeometry,
+            tdAircraftWindowMaterial
+        );
+        tdAircraftWindowMesh.name = '塔吊机窗';
+        tdAircraftWindowMesh.position.y = 80;
+
+        tdTopGroup.add(tdArmMesh, tdAircraftWindowMesh);
+        tdGroup.add(tdBaseMesh, tdCenterGroup, tdTopGroup);
+        scene.add(tdGroup);
+
+        // ---------------------------------------------------------------------------------------------
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(0, 0, 200);
+        camera.position.set(400, 0, 500);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true });
