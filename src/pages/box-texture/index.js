@@ -5,7 +5,7 @@ import TWEEN from '@tweenjs/tween.js';
 import './index.css';
 import img400x400 from 'static/images/400x400.png';
 
-function Test() {
+function BoxTexture() {
     const init = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -80,4 +80,4 @@ function Test() {
         </div>
     );
 }
-export default Test;
+export default BoxTexture;

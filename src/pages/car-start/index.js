@@ -4,13 +4,13 @@ import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import './index.css';
 
-function Test() {
+function CarStart() {
     let carGroupGlobal = null;
     let carStartSwitch = false;
     const carStart = () => {
         if (carGroupGlobal) {
             // 使用tween进行补间
-            const zNum = 100; // 汽车要行驶的距离
+            const zNum = 10; // 汽车要行驶的距离
             const tween = new TWEEN.Tween(carGroupGlobal.position)
                 .to({ z: zNum })
                 .easing(TWEEN.Easing.Quadratic.Out)
@@ -39,7 +39,7 @@ function Test() {
         const scene = new THREE.Scene();
 
         const carGroup = new THREE.Group();
-        carGroup.position.z = -100;
+        carGroup.position.z = -50;
         carGroup.name = '汽车组';
         carGroupGlobal = carGroup;
 
@@ -165,4 +165,4 @@ function Test() {
         </div>
     );
 }
-export default Test;
+export default CarStart;

@@ -10,6 +10,8 @@ import Skin from './pages/skin';
 import ImgLoad from './pages/img-load';
 import PsCoca from './pages/ps-coca';
 import AutoMove from './pages/auto-move';
+import CarStart from './pages/car-start';
+import BoxTexture from './pages/box-texture';
 import Test from './pages/test';
 import Note404 from './pages/note404';
 
@@ -25,6 +27,8 @@ ReactDOM.render(
                 <Route path="/img-load" component={ImgLoad} />
                 <Route path="/ps-coca" component={PsCoca} />
                 <Route path="/auto-move" component={AutoMove} />
+                <Route path="/car-start" component={CarStart} />
+                <Route path="/box-texture" component={BoxTexture} />
                 <Route path="/note404" component={Note404} />
                 <Redirect to="/note404" />
             </Switch>
