@@ -1,6 +1,6 @@
 # threejs
 
-3D 框架
+3D 模型案例
 
 ### yarn start
 
