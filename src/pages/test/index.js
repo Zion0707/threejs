@@ -1,9 +1,21 @@
 import React, { useEffect } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
+import TWEEN from '@tweenjs/tween.js';
 import './index.css';
 
 function Test() {
+    let carGroupGlobal = null;
+    const carStart = () => {
+        if (carGroupGlobal) {
+            // 使用tween进行补间
+            const tween = new TWEEN.Tween(carGroupGlobal.position)
+                .to({ z: 20, time: 1000 })
+                .easing(TWEEN.Easing.Quadratic.Out);
+            tween.start();
+        }
+    };
+
     const init = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -15,6 +27,7 @@ function Test() {
 
         const carGroup = new THREE.Group();
         carGroup.name = '汽车组';
+        carGroupGlobal = carGroup;
 
         // 车身
         const carBodyGeometry = new THREE.BoxGeometry(20, 4, 30);
@@ -53,12 +66,19 @@ function Test() {
         carWheelsRightAfter.position.z = -8;
 
         // 车轴
-        const carShaft = new THREE.CylinderGeometry(1, 1, 10, 32);
+        const carShaft = new THREE.CylinderGeometry(1, 1, 26, 32);
         const carShaftMaterial = new THREE.MeshLambertMaterial({
             color: '#fff',
             transparent: true,
         });
-        const carShaftMesh = new THREE.Mesh(carShaft, carShaftMaterial);
+        const carShaftBefore = new THREE.Mesh(carShaft, carShaftMaterial);
+        carShaftBefore.name = '前轴';
+        carShaftBefore.rotation.set(33, 0, 33);
+        carShaftBefore.position.z = -8;
+
+        const carShaftAfter = carShaftBefore.clone();
+        carShaftAfter.name = '后轴';
+        carShaftAfter.position.z = 8;
 
         // 添加到组里面
         carGroup.add(
@@ -67,16 +87,17 @@ function Test() {
             carWheelsRightBefore,
             carWheelsLeftAfter,
             carWheelsRightAfter,
-            carShaftMesh
+            carShaftBefore,
+            carShaftAfter
         );
         scene.add(carGroup);
 
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(150, 50, 50);
+        camera.position.set(100, 0, 150);
         // 渲染器
-        const renderer = new THREE.WebGLRenderer();
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
 
         // 设置渲染器的颜色和大小
         renderer.setClearColor(0x404040);
@@ -94,21 +115,24 @@ function Test() {
         scene.add(light);
         scene.add(new THREE.AmbientLight('#fff', 0.5));
 
-        // 添加灰色网格线
+        // 红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
         scene.add(new THREE.AxesHelper(5));
 
         el.append(renderer.domElement);
 
         function render() {
-            carWheelsLeftBefore.rotation.x += 2;
-            carWheelsLeftAfter.rotation.x += 2;
-            carWheelsRightBefore.rotation.x += 2;
-            carWheelsRightAfter.rotation.x += 2;
+            // 汽车运动
+            carWheelsLeftBefore.rotation.x += 0.05;
+            carWheelsLeftAfter.rotation.x += 0.05;
+            carWheelsRightBefore.rotation.x += 0.05;
+            carWheelsRightAfter.rotation.x += 0.05;
 
             // 动画循环渲染
             requestAnimationFrame(render);
             // 渲染到页面上
             renderer.render(scene, camera);
+
+            TWEEN.update();
         }
         render();
     };
@@ -118,7 +142,9 @@ function Test() {
     return (
         <div id="content">
             <ul>
-                <li></li>
+                <li>
+                    <button onClick={carStart}>启动汽车</button>
+                </li>
             </ul>
         </div>
     );
