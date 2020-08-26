@@ -10,6 +10,21 @@ import img03 from 'static/images/tadiao/03.png';
 import './index.css';
 
 function Tadiao() {
+    // 所有动画开启开关
+    let animateSwitch = true;
+
+    // 指定动画开启开关
+    let tdTopGroupAnimateSwitch = true;
+    let tdHookLineAnimateSwitch = true;
+
+    // 物体默认运动值
+    const tdTopGroupAnimateDefaultNum = 0; // 手臂旋转值
+    const tdSliderAnimateDefaultNum = -110; // 滑块来回值
+    const tdHookLineAnimateDefaultNum = -20; // 鱼钩上下值
+
+    // 相关动画停顿时间
+    let tdTopGroupAnimateDelay = 3;
+
     const init = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -27,23 +42,18 @@ function Tadiao() {
         });
         const grayMeshMaterial = new THREE.MeshLambertMaterial({ color: '#DDD' });
 
-        // 物体运动值
-        const tdSliderAnimateNum = -100;
-        const tdTopGroupAnimateNum = 0;
-        const tdHookLineAnimateNum = -30;
-
         // 运动物体
         //  *** 塔吊顶部组，需要动画的（y轴运动，手臂旋转）
         const tdTopGroup = new THREE.Group();
         tdTopGroup.name = '塔吊顶部组';
-        tdTopGroup.rotation.y = tdTopGroupAnimateNum;
+        tdTopGroup.rotation.y = tdTopGroupAnimateDefaultNum;
 
         //  *** 塔吊滑块，需要动画的（y轴运动）
         const tdTopSliderGeometry = new THREE.BoxGeometry(8, 8, 4);
         const tdTopSliderMesh = new THREE.Mesh(tdTopSliderGeometry, blackMeshMaterial);
         tdTopSliderMesh.name = '塔吊滑块';
         tdTopSliderMesh.position.z = -4.6;
-        tdTopSliderMesh.position.y = tdSliderAnimateNum; //  0 ~ -120 运动范围值
+        tdTopSliderMesh.position.y = tdSliderAnimateDefaultNum; //  0 ~ -120 运动范围值
         //  *** 塔吊滑块动态牵引线，需要动画的（y轴运动）
         const tdTopSliderLineGeometry = new THREE.Geometry();
         tdTopSliderLineGeometry.vertices = [
@@ -53,7 +63,7 @@ function Tadiao() {
         const tdTopSliderLine1 = new THREE.Line(tdTopSliderLineGeometry, grayLineMaterial);
         const tdTopSliderLine2 = tdTopSliderLine1.clone();
         tdTopSliderLine2.position.x = 2.2;
-        tdTopSliderLineGeometry.vertices[0].y = tdSliderAnimateNum; //  0 ~ -120 运动范围值
+        tdTopSliderLineGeometry.vertices[0].y = tdSliderAnimateDefaultNum; //  0 ~ -120 运动范围值
         //  *** 塔吊钩子线，需要动画的（z轴运动）
         const tdHookLineGeometry = new THREE.Geometry();
         tdHookLineGeometry.vertices = [new THREE.Vector3(0, 0, -10), new THREE.Vector3(0, 0, 0)];
@@ -61,10 +71,10 @@ function Tadiao() {
         tdHookLineMesh.position.x = 0.2;
         const tdHookLineMesh2 = tdHookLineMesh.clone();
         tdHookLineMesh2.position.x = -0.2;
-        tdHookLineGeometry.vertices[0].z = tdHookLineAnimateNum; //  0 ~ -80 运动范围值
+        tdHookLineGeometry.vertices[0].z = tdHookLineAnimateDefaultNum; //  0 ~ -80 运动范围值
         // *** 塔吊钩子组，需要动画的（z轴运动）
         const tdHookGroup = new THREE.Group();
-        tdHookGroup.position.z = tdHookLineAnimateNum;
+        tdHookGroup.position.z = tdHookLineAnimateDefaultNum; //  0 ~ -80 运动范围值
 
         const tdHookHeadGeometry = new THREE.BoxGeometry(2, 2, 1);
         const img02Texture1 = new THREE.TextureLoader().load(img02);
@@ -97,7 +107,7 @@ function Tadiao() {
         tdHookIronGeometry.setPositions(pointArr);
         const tdHookIronMaterial = new LineMaterial({
             color: '#000',
-            linewidth: 4,
+            linewidth: 3,
         });
         tdHookIronMaterial.resolution.set(window.innerWidth, window.innerHeight);
         const tdHookIronLine = new Line2(tdHookIronGeometry, tdHookIronMaterial);
@@ -368,11 +378,65 @@ function Tadiao() {
 
         el.append(renderer.domElement);
 
+        // 手臂来回摆动动画
+        const tdTopGroupAnimateFun = () => {
+            // 手臂来回摆动动画执行
+            if (tdTopGroupAnimateSwitch) {
+                tdTopGroup.rotation.y += 0.003;
+                if (tdTopGroup.rotation.y >= 1.5) {
+                    tdTopGroup.rotation.y = 1.5;
+                    tdTopGroupAnimateDelay -= 0.01;
+                    if (tdTopGroupAnimateDelay <= 0) {
+                        tdTopGroupAnimateSwitch = false;
+                        tdHookLineAnimateSwitch = true;
+                    }
+
+                    tdHookLineAnimateFun();
+                }
+            } else {
+                tdTopGroup.rotation.y -= 0.003;
+                if (tdTopGroup.rotation.y <= 0) {
+                    tdTopGroup.rotation.y = 0;
+                    tdTopGroupAnimateDelay += 0.01;
+                    if (tdTopGroupAnimateDelay >= 3) {
+                        tdTopGroupAnimateSwitch = true;
+                        tdHookLineAnimateSwitch = false;
+                    }
+
+                    tdHookLineAnimateFun();
+                }
+            }
+        };
+
+        // 钩子上下动画
+        const tdHookLineAnimateFun = () => {
+            if (tdHookLineAnimateSwitch) {
+                tdHookLineMesh.scale.z += 0.01;
+                tdHookLineMesh2.scale.z += 0.01;
+                tdHookGroup.position.z -= 0.2;
+                if (tdHookGroup.position.z <= -50) {
+                    tdHookLineAnimateSwitch = false;
+                }
+            } else {
+                tdHookLineMesh.scale.z -= 0.01;
+                tdHookLineMesh2.scale.z -= 0.01;
+                tdHookGroup.position.z += 0.2;
+                if (tdHookGroup.position.z >= -20) {
+                    tdHookLineAnimateSwitch = true;
+                }
+            }
+        };
+
         function render() {
             // 动画循环渲染
             requestAnimationFrame(render);
             // 渲染到页面上
             renderer.render(scene, camera);
+
+            // 所有动画执行条件
+            if (animateSwitch) {
+                tdTopGroupAnimateFun();
+            }
         }
         render();
     };
@@ -382,7 +446,15 @@ function Tadiao() {
     return (
         <div id="content">
             <ul>
-                <li></li>
+                <li>
+                    <button
+                        onClick={() => {
+                            animateSwitch = false;
+                        }}
+                    >
+                        关闭所有动画
+                    </button>
+                </li>
             </ul>
         </div>
     );
