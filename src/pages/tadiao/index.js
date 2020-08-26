@@ -5,6 +5,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // import { Line2 } from 'three/examples/jsm/lines/Line2';
 import * as THREE from 'three';
 import img01 from 'static/images/tadiao/01.png';
+import img02 from 'static/images/tadiao/02.png';
+import img03 from 'static/images/tadiao/03.png';
 import './index.css';
 
 function Tadiao() {
@@ -28,6 +30,7 @@ function Tadiao() {
         // 物体运动值
         const tdSliderAnimateNum = -120;
         const tdTopGroupAnimateNum = 0;
+        const tdHookLineAnimateNum = -50;
 
         // 运动物体
         //  *** 塔吊顶部组，需要动画的（y轴运动，手臂旋转）
@@ -40,7 +43,7 @@ function Tadiao() {
         const tdTopSliderMesh = new THREE.Mesh(tdTopSliderGeometry, blackMeshMaterial);
         tdTopSliderMesh.name = '塔吊滑块';
         tdTopSliderMesh.position.z = -4.6;
-        tdTopSliderMesh.position.y = tdSliderAnimateNum; // -120 ~ 0 运动范围值
+        tdTopSliderMesh.position.y = tdSliderAnimateNum; //  0 ~ -120 运动范围值
         //  *** 塔吊滑块动态牵引线，需要动画的（y轴运动）
         const tdTopSliderLineGeometry = new THREE.Geometry();
         tdTopSliderLineGeometry.vertices = [
@@ -50,14 +53,49 @@ function Tadiao() {
         const tdTopSliderLine1 = new THREE.Line(tdTopSliderLineGeometry, grayLineMaterial);
         const tdTopSliderLine2 = tdTopSliderLine1.clone();
         tdTopSliderLine2.position.x = 2.2;
-        tdTopSliderLineGeometry.vertices[0].y = tdSliderAnimateNum; // -120 ~ 0 运动范围值
-        //  *** 塔吊鱼钩线，需要动画的（y轴运动）
+        tdTopSliderLineGeometry.vertices[0].y = tdSliderAnimateNum; //  0 ~ -120 运动范围值
+        //  *** 塔吊钩子线，需要动画的（z轴运动）
         const tdHookLineGeometry = new THREE.Geometry();
-        const tdHookLineMaterial = new THREE.LineBasicMaterial({ color: 'red' });
         tdHookLineGeometry.vertices = [new THREE.Vector3(0, 0, -10), new THREE.Vector3(0, 0, 0)];
+        const tdHookLineMesh = new THREE.Line(tdHookLineGeometry, grayLineMaterial);
+        tdHookLineMesh.position.x = 0.2;
+        const tdHookLineMesh2 = tdHookLineMesh.clone();
+        tdHookLineMesh2.position.x = -0.2;
+        tdHookLineGeometry.vertices[0].z = tdHookLineAnimateNum; //  0 ~ -80 运动范围值
+        // *** 塔吊钩子组，需要动画的（z轴运动）
+        const tdHookGroup = new THREE.Group();
+        const tdHookHeadGeometry = new THREE.BoxGeometry(2, 2, 1);
 
-        const tdHookLineMesh = new THREE.Line(tdHookLineGeometry, tdHookLineMaterial);
-        tdTopSliderMesh.add(tdHookLineMesh);
+        const img02Texture1 = new THREE.TextureLoader().load(img02);
+        // 纹理重复
+        img02Texture1.repeat.set(3, 1);
+        img02Texture1.wrapS = THREE.RepeatWrapping;
+        img02Texture1.wrapT = THREE.RepeatWrapping;
+        const tdHookHeadMaterial1 = new THREE.MeshLambertMaterial({
+            map: img02Texture1,
+        });
+        const img03Texture1 = new THREE.TextureLoader().load(img03);
+        // 纹理重复
+        img03Texture1.repeat.set(1, 3);
+        img03Texture1.wrapS = THREE.RepeatWrapping;
+        img03Texture1.wrapT = THREE.RepeatWrapping;
+        const tdHookHeadMaterial2 = new THREE.MeshLambertMaterial({
+            map: img03Texture1,
+        });
+
+        const tdHookMesh = new THREE.Mesh(tdHookHeadGeometry, [
+            tdHookHeadMaterial2,
+            tdHookHeadMaterial2,
+            tdHookHeadMaterial1,
+            tdHookHeadMaterial1,
+            orangeMeshMaterial,
+            orangeMeshMaterial,
+        ]);
+        tdHookGroup.position.z = tdHookLineAnimateNum;
+
+        tdHookGroup.add(tdHookMesh);
+
+        tdTopSliderMesh.add(tdHookLineMesh, tdHookLineMesh2, tdHookGroup);
 
         // 红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
         scene.add(new THREE.AxesHelper(5));
