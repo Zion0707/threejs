@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+// import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
+// import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
+// import { Line2 } from 'three/examples/jsm/lines/Line2';
 import * as THREE from 'three';
 import img01 from 'static/images/tadiao/01.png';
 import './index.css';
@@ -14,9 +17,16 @@ function Tadiao() {
         // 场景
         const scene = new THREE.Scene();
 
+        // 纹理列表
+        const lineGrayMaterial = new THREE.LineBasicMaterial({ color: '#555' });
+
+        // 红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
+        scene.add(new THREE.AxesHelper(5));
+
         const tdGroup = new THREE.Group();
         tdGroup.name = '塔吊组';
-        tdGroup.position.y = -100;
+        tdGroup.position.y = -20;
+        tdGroup.position.z = -100;
 
         const tdBaseGeometry = new THREE.BoxGeometry(35, 5, 35);
         const tdBaseMaterial = new THREE.MeshLambertMaterial({ color: '#FFF' });
@@ -94,16 +104,30 @@ function Tadiao() {
         );
         tdCenterGroup.position.y = -8;
 
+        //  *** 塔吊顶部组，需要动画的（y轴运动）
         const tdTopGroup = new THREE.Group();
         tdTopGroup.name = '塔吊顶部组';
+        // tdTopGroup.rotation.y = -100;
 
-        //  *** 塔吊滑块，需要动画的
+        const tdSliderAnimateNum = -100;
+
+        //  *** 塔吊滑块，需要动画的（y轴运动）
         const tdTopSliderGeometry = new THREE.BoxGeometry(8, 8, 4);
         const tdTopSliderMaterial = new THREE.MeshLambertMaterial({ color: '#000' });
         const tdTopSliderMesh = new THREE.Mesh(tdTopSliderGeometry, tdTopSliderMaterial);
         tdTopSliderMesh.name = '塔吊滑块';
         tdTopSliderMesh.position.z = -4.6;
-        tdTopSliderMesh.position.y = -122; // -122 ~ 20 运动范围值
+        tdTopSliderMesh.position.y = tdSliderAnimateNum; // -120 ~ 0 运动范围值
+        //  *** 塔吊滑块动态牵引线，需要动画
+        const tdTopSliderLineGeometry = new THREE.Geometry();
+        tdTopSliderLineGeometry.vertices = [
+            new THREE.Vector3(-1.2, 0, -4),
+            new THREE.Vector3(-1.2, -128, -4),
+        ];
+        const tdTopSliderLine1 = new THREE.Line(tdTopSliderLineGeometry, lineGrayMaterial);
+        const tdTopSliderLine2 = tdTopSliderLine1.clone();
+        tdTopSliderLine2.position.x = 2.2;
+        tdTopSliderLineGeometry.vertices[0].y = tdSliderAnimateNum; // -120 ~ 0 运动范围值
 
         // 塔吊手臂
         const tdArmGeometry = new THREE.BoxGeometry(6, 260, 6);
@@ -142,7 +166,9 @@ function Tadiao() {
             tdArmChildMesh2,
             tdArmChildMesh3,
             tdArmChildMesh4,
-            tdTopSliderMesh
+            tdTopSliderMesh,
+            tdTopSliderLine1,
+            tdTopSliderLine2
         );
 
         // 塔吊手臂前方,中间和后方封顶
@@ -150,13 +176,34 @@ function Tadiao() {
         const tdArmTopMaterial = new THREE.MeshLambertMaterial({ color: '#ddbe07' });
         const tdArmTopMesh = new THREE.Mesh(tdArmTopGeometry, tdArmTopMaterial);
         tdArmTopMesh.position.y = -128;
+
+        const tdArmTopRollerGeometry = new THREE.CylinderGeometry(1, 1, 4, 32);
+        const tdArmTopRoller = new THREE.MeshPhongMaterial({ color: '#000' });
+        const tdArmTopRollerMesh = new THREE.Mesh(tdArmTopRollerGeometry, tdArmTopRoller);
+        tdArmTopRollerMesh.name = '手臂前端滚轮';
+        tdArmTopRollerMesh.position.y = -128;
+        tdArmTopRollerMesh.position.z = 3.5;
+        tdArmTopRollerMesh.rotation.z = 1.55;
+        const tdArmTopRollerMesh2 = tdArmTopRollerMesh.clone();
+        tdArmTopRollerMesh2.position.z = -3.5;
+
         const tdArmTopMesh2 = tdArmTopMesh.clone();
         tdArmTopMesh2.position.y = 105;
         const tdArmTopMesh3 = tdArmTopMesh.clone();
         tdArmTopMesh3.position.y = 32;
         const tdArmTopMesh4 = tdArmTopMesh.clone();
         tdArmTopMesh4.position.y = 48;
-        tdArmMesh.add(tdArmTopMesh, tdArmTopMesh2, tdArmTopMesh3, tdArmTopMesh4);
+        const tdArmTopMesh5 = tdArmTopMesh.clone();
+        tdArmTopMesh5.position.y = 7;
+        tdArmMesh.add(
+            tdArmTopMesh,
+            tdArmTopMesh2,
+            tdArmTopMesh3,
+            tdArmTopMesh4,
+            tdArmTopMesh5,
+            tdArmTopRollerMesh,
+            tdArmTopRollerMesh2
+        );
 
         // 塔吊机窗顶部三角支架
         const tdTipGeometry = new THREE.CylinderGeometry(1, 4, 20, 4);
@@ -169,7 +216,7 @@ function Tadiao() {
         tdTipMesh.position.y = 113;
         tdTipMesh.rotation.y = -0.8;
 
-        // 塔吊最顶部圆圈
+        // 塔吊最顶部圆圈滚轮
         const tdTipBoxGeometry = new THREE.CylinderGeometry(1.5, 1.5, 1, 32);
         const tdTipBoxMaterial = new THREE.MeshLambertMaterial({
             color: '#000',
@@ -177,6 +224,24 @@ function Tadiao() {
         const tdTipBoxMesh = new THREE.Mesh(tdTipBoxGeometry, tdTipBoxMaterial);
         tdTipBoxMesh.position.y = 123;
         tdTipBoxMesh.rotation.z = 1.55;
+
+        // 塔吊静态线条
+        const tdStaticLineGeometry1 = new THREE.Geometry();
+        tdStaticLineGeometry1.vertices = [
+            new THREE.Vector3(-40, -2, 168),
+            new THREE.Vector3(1.2, 0, 0),
+            new THREE.Vector3(-38, -2, -80),
+        ];
+        const tdStaticLine1 = new THREE.Line(tdStaticLineGeometry1, lineGrayMaterial);
+
+        const tdStaticLineGeometry2 = new THREE.Geometry();
+        tdStaticLineGeometry2.vertices = [
+            new THREE.Vector3(-40, 0.5, 168),
+            new THREE.Vector3(1.2, 0, 0),
+            new THREE.Vector3(-38, 0.5, -80),
+        ];
+        const tdStaticLine2 = new THREE.Line(tdStaticLineGeometry2, lineGrayMaterial);
+        tdTipBoxMesh.add(tdStaticLine1, tdStaticLine2);
 
         const tdTipBoxChildGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1.5, 32);
         const tdTipBoxChildMaterial = new THREE.MeshLambertMaterial({ color: '#DDD' });
@@ -196,8 +261,12 @@ function Tadiao() {
         tdAircraftWindowMesh.position.y = 87;
 
         // 塔吊平衡机
-        const tdBalancingMachineGeometry = new THREE.BoxGeometry(20, 12, 30);
-        const tdBalancingMachineMaterial = new THREE.MeshLambertMaterial({ color: '#44c1ef' });
+        const tdBalancingMachineGeometry = new THREE.BoxGeometry(25, 15, 30);
+        const tdBalancingMachineMaterial = new THREE.MeshLambertMaterial({
+            color: '#44c1ef',
+            transparent: true,
+            // opacity: 0.5,
+        });
         const tdBalancingMachineMesh = new THREE.Mesh(
             tdBalancingMachineGeometry,
             tdBalancingMachineMaterial
@@ -206,6 +275,17 @@ function Tadiao() {
         tdBalancingMachineMesh.position.y = 73.8;
         tdBalancingMachineMesh.position.z = -80;
         tdBalancingMachineMesh.rotation.x = -0.03;
+
+        const tdBalancingMachineRollerGeometry = new THREE.CylinderGeometry(4, 4, 4, 32);
+        const tdBalancingMachineRollerMaterial = new THREE.MeshLambertMaterial({ color: '#000' });
+        const tdBalancingMachineRollerMesh = new THREE.Mesh(
+            tdBalancingMachineRollerGeometry,
+            tdBalancingMachineRollerMaterial
+        );
+        tdBalancingMachineRollerMesh.name = '塔吊平衡机滚轮';
+        tdBalancingMachineRollerMesh.position.y = 8;
+        tdBalancingMachineRollerMesh.rotation.z = -1.55;
+        tdBalancingMachineMesh.add(tdBalancingMachineRollerMesh);
 
         tdTopGroup.add(
             tdArmMesh,
@@ -242,9 +322,6 @@ function Tadiao() {
         light.position.setScalar(100);
         scene.add(light);
         scene.add(new THREE.AmbientLight('#fff', 0.5));
-
-        // 红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
-        scene.add(new THREE.AxesHelper(5));
 
         el.append(renderer.domElement);
 
