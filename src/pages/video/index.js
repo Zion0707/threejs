@@ -1,10 +1,15 @@
 import React, { useEffect } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
-import img200x100 from 'static/images/200x100.png';
+import movieMp4 from 'static/mp4/movie.mp4';
 import './index.css';
 
 function Test() {
+    let videoElglobal = null;
+    // 视频播放
+    const videoPlay = () => {
+        videoElglobal.play();
+    };
     const init = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -14,16 +19,22 @@ function Test() {
         // 场景
         const scene = new THREE.Scene();
 
-        const spriteMaterial = new THREE.SpriteMaterial({
-            map: new THREE.TextureLoader().load(img200x100),
+        const videoEl = document.createElement('video');
+        videoEl.src = movieMp4;
+        videoEl.autoplay = 'autoplay';
+        videoElglobal = videoEl;
+
+        const videoBoxGeometry = new THREE.BoxGeometry(40, 40, 40);
+        const videoMaterial = new THREE.MeshLambertMaterial({
+            map: new THREE.VideoTexture(videoEl),
         });
-        const sprite = new THREE.Sprite(spriteMaterial);
-        scene.add(sprite);
+        const videoMesh = new THREE.Mesh(videoBoxGeometry, videoMaterial);
+        scene.add(videoMesh);
 
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(0, 0, 10);
+        camera.position.set(0, 0, 200);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -46,7 +57,7 @@ function Test() {
         scene.add(new THREE.AmbientLight('#fff', 0.5));
 
         // 红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
-        scene.add(new THREE.AxesHelper(5));
+        scene.add(new THREE.AxesHelper(10));
 
         el.append(renderer.domElement);
 
@@ -71,7 +82,15 @@ function Test() {
     return (
         <div id="content">
             <ul>
-                <li></li>
+                <li>
+                    <button
+                        onClick={() => {
+                            videoPlay();
+                        }}
+                    >
+                        播放视频
+                    </button>
+                </li>
             </ul>
         </div>
     );
