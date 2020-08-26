@@ -18,7 +18,7 @@ function Test() {
 
         const geometry = new LineGeometry();
         // 顶点坐标构成的数组pointArr
-        const pointArr = [0, 0, 0, 0, 10, 0];
+        const pointArr = [0, 0, 0, 0, 10, 0, 20, 0, 0];
         // 几何体传入顶点坐标
         geometry.setPositions(pointArr);
         // 自定义的材质

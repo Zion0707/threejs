@@ -13,6 +13,7 @@ import AutoMove from './pages/auto-move';
 import CarStart from './pages/car-start';
 import BoxTexture from './pages/box-texture';
 import Tadiao from './pages/tadiao';
+import Line2 from './pages/line2';
 import Test from './pages/test';
 import Note404 from './pages/note404';
 
@@ -31,6 +32,7 @@ ReactDOM.render(
                 <Route path="/car-start" component={CarStart} />
                 <Route path="/box-texture" component={BoxTexture} />
                 <Route path="/tadiao" component={Tadiao} />
+                <Route path="/line2" component={Line2} />
                 <Route path="/note404" component={Note404} />
                 <Redirect to="/note404" />
             </Switch>
