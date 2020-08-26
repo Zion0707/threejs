@@ -37,6 +37,7 @@ function Tadiao() {
         // 纹理列表
         const grayLineMaterial = new THREE.LineBasicMaterial({ color: '#999' });
         const orangeMeshMaterial = new THREE.MeshLambertMaterial({ color: '#ddbe07' });
+        const whiteMeshMaterial = new THREE.MeshLambertMaterial({ color: '#fff' });
         const blackMeshMaterial = new THREE.MeshLambertMaterial({
             color: '#000',
         });
@@ -126,8 +127,7 @@ function Tadiao() {
         // tdGroup.position.z = -100;
 
         const tdBaseGeometry = new THREE.BoxGeometry(50, 10, 50);
-        const tdBaseMaterial = new THREE.MeshLambertMaterial({ color: '#FFF' });
-        const tdBaseMesh = new THREE.Mesh(tdBaseGeometry, tdBaseMaterial);
+        const tdBaseMesh = new THREE.Mesh(tdBaseGeometry, whiteMeshMaterial);
         tdBaseMesh.name = '塔吊底座';
         tdBaseMesh.position.y = -90;
 
@@ -449,10 +449,10 @@ function Tadiao() {
                 <li>
                     <button
                         onClick={() => {
-                            animateSwitch = false;
+                            animateSwitch = !animateSwitch;
                         }}
                     >
-                        关闭所有动画
+                        动画开启/暂停
                     </button>
                 </li>
             </ul>
