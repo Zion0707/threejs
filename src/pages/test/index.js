@@ -16,6 +16,7 @@ function Test() {
 
         const spriteMaterial = new THREE.SpriteMaterial({
             map: new THREE.TextureLoader().load(img200x100),
+            lights: true,
         });
         const sprite = new THREE.Sprite(spriteMaterial);
         scene.add(sprite);
@@ -59,9 +60,11 @@ function Test() {
         render();
 
         // onresize 事件会在窗口被调整大小时发生
-        window.onresize = function () {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            camera.aspect = window.innerWidth / window.innerHeight;
+        window.onresize = () => {
+            const newWindowWidth = window.innerWidth;
+            const newWindowHeight = window.innerHeight;
+            renderer.setSize(newWindowWidth, newWindowHeight);
+            camera.aspect = newWindowWidth / newWindowHeight;
             camera.updateProjectionMatrix();
         };
     };
