@@ -17,29 +17,20 @@ function Test() {
         const scene = new THREE.Scene();
 
         const geometry = new LineGeometry();
-        // 顶点坐标构成的数组pointArr
-        const pointArr = [0, 0, 0, 0, 10, 0, 20, 0, 0];
-        // 几何体传入顶点坐标
+        const pointArr = [0, 0, 0, 0, -6, 0, 0, -6, 4, 0, -3, 4];
         geometry.setPositions(pointArr);
-        // 自定义的材质
         const material = new LineMaterial({
             color: '#000',
-            // 线宽度
-            linewidth: 5,
+            linewidth: 8,
         });
-        // 把渲染窗口尺寸分辨率传值给材质LineMaterial的resolution属性
-        // resolution属性值会在着色器代码中参与计算
         material.resolution.set(window.innerWidth, window.innerHeight);
         const line = new Line2(geometry, material);
         scene.add(line);
-        console.log(line);
-
-        console.log(material);
 
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(0, 0, 200);
+        camera.position.set(200, 0, 200);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true });

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-// import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
-// import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
-// import { Line2 } from 'three/examples/jsm/lines/Line2';
+import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
+import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
+import { Line2 } from 'three/examples/jsm/lines/Line2';
 import * as THREE from 'three';
 import img01 from 'static/images/tadiao/01.png';
 import img02 from 'static/images/tadiao/02.png';
@@ -28,9 +28,9 @@ function Tadiao() {
         const grayMeshMaterial = new THREE.MeshLambertMaterial({ color: '#DDD' });
 
         // 物体运动值
-        const tdSliderAnimateNum = -120;
+        const tdSliderAnimateNum = -100;
         const tdTopGroupAnimateNum = 0;
-        const tdHookLineAnimateNum = -50;
+        const tdHookLineAnimateNum = -30;
 
         // 运动物体
         //  *** 塔吊顶部组，需要动画的（y轴运动，手臂旋转）
@@ -64,8 +64,9 @@ function Tadiao() {
         tdHookLineGeometry.vertices[0].z = tdHookLineAnimateNum; //  0 ~ -80 运动范围值
         // *** 塔吊钩子组，需要动画的（z轴运动）
         const tdHookGroup = new THREE.Group();
-        const tdHookHeadGeometry = new THREE.BoxGeometry(2, 2, 1);
+        tdHookGroup.position.z = tdHookLineAnimateNum;
 
+        const tdHookHeadGeometry = new THREE.BoxGeometry(2, 2, 1);
         const img02Texture1 = new THREE.TextureLoader().load(img02);
         // 纹理重复
         img02Texture1.repeat.set(3, 1);
@@ -82,7 +83,6 @@ function Tadiao() {
         const tdHookHeadMaterial2 = new THREE.MeshLambertMaterial({
             map: img03Texture1,
         });
-
         const tdHookMesh = new THREE.Mesh(tdHookHeadGeometry, [
             tdHookHeadMaterial2,
             tdHookHeadMaterial2,
@@ -91,9 +91,17 @@ function Tadiao() {
             orangeMeshMaterial,
             orangeMeshMaterial,
         ]);
-        tdHookGroup.position.z = tdHookLineAnimateNum;
 
-        tdHookGroup.add(tdHookMesh);
+        const tdHookIronGeometry = new LineGeometry();
+        const pointArr = [0, 0, 0, 0, 0, -3, 0, -2, -3, 0, -2, -1.5];
+        tdHookIronGeometry.setPositions(pointArr);
+        const tdHookIronMaterial = new LineMaterial({
+            color: '#000',
+            linewidth: 4,
+        });
+        tdHookIronMaterial.resolution.set(window.innerWidth, window.innerHeight);
+        const tdHookIronLine = new Line2(tdHookIronGeometry, tdHookIronMaterial);
+        tdHookGroup.add(tdHookMesh, tdHookIronLine);
 
         tdTopSliderMesh.add(tdHookLineMesh, tdHookLineMesh2, tdHookGroup);
 
@@ -104,8 +112,8 @@ function Tadiao() {
 
         const tdGroup = new THREE.Group();
         tdGroup.name = '塔吊组';
-        tdGroup.position.y = -20;
-        tdGroup.position.z = -100;
+        // tdGroup.position.y = -20;
+        // tdGroup.position.z = -100;
 
         const tdBaseGeometry = new THREE.BoxGeometry(50, 10, 50);
         const tdBaseMaterial = new THREE.MeshLambertMaterial({ color: '#FFF' });
@@ -292,13 +300,7 @@ function Tadiao() {
 
         // 塔吊机窗
         const tdAircraftWindowGeometry = new THREE.BoxGeometry(18, 32, 18);
-        const tdAircraftWindowMaterial = new THREE.MeshLambertMaterial({
-            color: '#ddd',
-        });
-        const tdAircraftWindowMesh = new THREE.Mesh(
-            tdAircraftWindowGeometry,
-            tdAircraftWindowMaterial
-        );
+        const tdAircraftWindowMesh = new THREE.Mesh(tdAircraftWindowGeometry, orangeMeshMaterial);
         tdAircraftWindowMesh.name = '塔吊机窗';
         tdAircraftWindowMesh.position.y = 87;
 
@@ -342,7 +344,7 @@ function Tadiao() {
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(200, 0, 100);
+        camera.position.set(400, 80, 400);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true });

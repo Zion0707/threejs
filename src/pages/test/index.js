@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
-import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
-import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
-import { Line2 } from 'three/examples/jsm/lines/Line2';
+// import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
+// import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
+// import { Line2 } from 'three/examples/jsm/lines/Line2';
 import './index.css';
 
 function Test() {
@@ -16,25 +16,26 @@ function Test() {
         // 场景
         const scene = new THREE.Scene();
 
-        const geometry = new LineGeometry();
-        // 顶点坐标构成的数组pointArr
-        const pointArr = [0, 0, 0, 0, 10, 0];
-        // 几何体传入顶点坐标
-        geometry.setPositions(pointArr);
-        // 自定义的材质
-        const material = new LineMaterial({
-            color: '#000',
-            // 线宽度
-            linewidth: 5,
-        });
-        // 把渲染窗口尺寸分辨率传值给材质LineMaterial的resolution属性
-        // resolution属性值会在着色器代码中参与计算
-        material.resolution.set(window.innerWidth, window.innerHeight);
-        const line = new Line2(geometry, material);
-        scene.add(line);
-        console.log(line);
+        function CustomSinCurve(scale) {
+            THREE.Curve.call(this);
+            this.scale = scale === undefined ? 1 : scale;
+        }
 
-        console.log(material);
+        CustomSinCurve.prototype = Object.create(THREE.Curve.prototype);
+        CustomSinCurve.prototype.constructor = CustomSinCurve;
+
+        CustomSinCurve.prototype.getPoint = function (t) {
+            const tx = t * 3 - 1.5;
+            const ty = Math.sin(2 * Math.PI * t);
+            const tz = 0;
+            return new THREE.Vector3(tx, ty, tz).multiplyScalar(this.scale);
+        };
+
+        const path = new CustomSinCurve(10);
+        const geometry = new THREE.TubeGeometry(path, 20, 2, 8, false);
+        const material = new THREE.MeshBasicMaterial({ color: '#000' });
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
 
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
