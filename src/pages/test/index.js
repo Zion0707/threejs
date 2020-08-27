@@ -13,16 +13,21 @@ function Test() {
         // 场景
         const scene = new THREE.Scene();
 
+        const boxGeometry = new THREE.BoxGeometry(4, 4, 4);
+        const boxMeshMaterial = new THREE.MeshLambertMaterial({ color: '#fff' });
+        const boxMesh = new THREE.Mesh(boxGeometry, boxMeshMaterial);
+        scene.add(boxMesh);
+
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(0, 0, 100);
+        camera.position.set(50, 0, 50);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true });
 
         // 设置渲染器的颜色和大小
-        renderer.setClearColor('#fff');
+        renderer.setClearColor('#040b1a');
         renderer.setSize(winWidth, winHeight);
         // 将renderer（渲染器）的dom元素（renderer.domElement）添加到我们的HTML文档中。
         // 这就是渲染器用来显示场景给我们看的<canvas>元素

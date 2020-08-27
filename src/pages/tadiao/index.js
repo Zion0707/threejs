@@ -526,7 +526,7 @@ function Tadiao() {
                             animateSwitch = !animateSwitch;
                         }}
                     >
-                        动画开启/暂停
+                        机器启动/暂停
                     </button>
                 </li>
             </ul>
