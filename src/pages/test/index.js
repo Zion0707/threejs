@@ -14,17 +14,35 @@ function Test() {
         // 场景
         const scene = new THREE.Scene();
 
-        const spriteMaterial = new THREE.SpriteMaterial({
-            map: new THREE.TextureLoader().load(img200x100),
-            lights: true,
+        const grayMeshMaterial = new THREE.MeshLambertMaterial({
+            color: '#ddd',
         });
-        const sprite = new THREE.Sprite(spriteMaterial);
-        scene.add(sprite);
+        const orangeMeshMaterial = new THREE.MeshLambertMaterial({ color: 'orange' });
+        const controllerWindowGroup = new THREE.Group();
+        controllerWindowGroup.name = '控制室';
+        const controllerWindowGeometry1 = new THREE.BoxGeometry(6, 12, 6);
+        const controllerWindowMesh1 = new THREE.Mesh(controllerWindowGeometry1, grayMeshMaterial);
+        controllerWindowMesh1.position.z = -3;
+        const controllerWindowGeometry2 = new THREE.BoxGeometry(6, 6.2, 6);
+        const controllerWindowMesh2 = new THREE.Mesh(controllerWindowGeometry2, grayMeshMaterial);
+        controllerWindowMesh2.position.z = 0.72;
+        controllerWindowMesh2.position.y = -2.9;
+        const controllerWindowGeometry3 = new THREE.BoxGeometry(5.9, 6, 7);
+        const controllerWindowMesh3 = new THREE.Mesh(controllerWindowGeometry3, orangeMeshMaterial);
+        controllerWindowMesh3.position.z = -0.68;
+        controllerWindowMesh3.position.y = 1.45;
+        controllerWindowMesh3.rotation.x = 1.005;
+        controllerWindowGroup.add(
+            controllerWindowMesh1,
+            controllerWindowMesh2,
+            controllerWindowMesh3
+        );
+        scene.add(controllerWindowGroup);
 
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(0, 0, 10);
+        camera.position.set(100, -40, 100);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true });

@@ -11,7 +11,7 @@ import './index.css';
 
 function Tadiao() {
     // 所有动画开启开关
-    let animateSwitch = true;
+    let animateSwitch = false;
 
     // 指定动画开启开关
     let tdTopGroupAnimateSwitch = true;
@@ -36,12 +36,12 @@ function Tadiao() {
 
         // 纹理列表
         const grayLineMaterial = new THREE.LineBasicMaterial({ color: '#999' });
-        const orangeMeshMaterial = new THREE.MeshLambertMaterial({ color: '#ddbe07' });
+        const taupeMeshMaterial = new THREE.MeshLambertMaterial({ color: '#ddbe07' });
         const whiteMeshMaterial = new THREE.MeshLambertMaterial({ color: '#fff' });
         const blackMeshMaterial = new THREE.MeshLambertMaterial({
             color: '#000',
         });
-        const grayMeshMaterial = new THREE.MeshLambertMaterial({ color: '#DDD' });
+        const grayMeshMaterial = new THREE.MeshLambertMaterial({ color: '#ddd' });
 
         // 运动物体
         //  *** 塔吊顶部组，需要动画的（y轴运动，手臂旋转）
@@ -99,8 +99,8 @@ function Tadiao() {
             tdHookHeadMaterial2,
             tdHookHeadMaterial1,
             tdHookHeadMaterial1,
-            orangeMeshMaterial,
-            orangeMeshMaterial,
+            taupeMeshMaterial,
+            taupeMeshMaterial,
         ]);
 
         const tdHookIronGeometry = new LineGeometry();
@@ -149,7 +149,7 @@ function Tadiao() {
         tdCenterMesh.name = '塔吊中心柱';
 
         const tdPillarsGeometry = new THREE.BoxGeometry(2, 160, 2);
-        const tdPillarsMesh1 = new THREE.Mesh(tdPillarsGeometry, orangeMeshMaterial);
+        const tdPillarsMesh1 = new THREE.Mesh(tdPillarsGeometry, taupeMeshMaterial);
         tdPillarsMesh1.name = '顶梁柱左后方';
         tdPillarsMesh1.position.x = -4;
         tdPillarsMesh1.position.z = -4;
@@ -171,7 +171,7 @@ function Tadiao() {
 
         // 塔吊分层
         const tdLayerGeometry = new THREE.BoxGeometry(10, 4, 10);
-        const tdLayerMesh = new THREE.Mesh(tdLayerGeometry, orangeMeshMaterial);
+        const tdLayerMesh = new THREE.Mesh(tdLayerGeometry, taupeMeshMaterial);
         tdLayerMesh.name = '塔吊分层';
         tdLayerMesh.position.y = 10;
         const tdLayerMesh2 = tdLayerMesh.clone();
@@ -215,7 +215,7 @@ function Tadiao() {
         tdArmMesh.rotation.x = -1.6;
         // 塔吊手臂顶梁柱
         const tdArmChildGeometry = new THREE.BoxGeometry(1, 260, 1);
-        const tdArmChildMesh1 = new THREE.Mesh(tdArmChildGeometry, orangeMeshMaterial);
+        const tdArmChildMesh1 = new THREE.Mesh(tdArmChildGeometry, taupeMeshMaterial);
         tdArmChildMesh1.position.x = -3;
         tdArmChildMesh1.position.z = -3;
         const tdArmChildMesh2 = tdArmChildMesh1.clone();
@@ -239,7 +239,7 @@ function Tadiao() {
 
         // 塔吊手臂前方,中间和后方封顶
         const tdArmTopGeometry = new THREE.BoxGeometry(7.2, 6, 7.2);
-        const tdArmTopMesh = new THREE.Mesh(tdArmTopGeometry, orangeMeshMaterial);
+        const tdArmTopMesh = new THREE.Mesh(tdArmTopGeometry, taupeMeshMaterial);
         tdArmTopMesh.position.y = -128;
 
         const tdArmTopRollerGeometry = new THREE.CylinderGeometry(1, 1, 4, 32);
@@ -310,9 +310,41 @@ function Tadiao() {
 
         // 塔吊机窗
         const tdAircraftWindowGeometry = new THREE.BoxGeometry(18, 32, 18);
-        const tdAircraftWindowMesh = new THREE.Mesh(tdAircraftWindowGeometry, orangeMeshMaterial);
+        const tdAircraftWindowMesh = new THREE.Mesh(tdAircraftWindowGeometry, taupeMeshMaterial);
         tdAircraftWindowMesh.name = '塔吊机窗';
         tdAircraftWindowMesh.position.y = 87;
+
+        const tdControllerWindowGroup = new THREE.Group();
+        tdControllerWindowGroup.name = '控制室';
+        tdControllerWindowGroup.position.y = 85;
+        tdControllerWindowGroup.position.z = 2;
+        tdControllerWindowGroup.position.x = 13.5;
+        tdControllerWindowGroup.scale.set(1.5, 1.5, 1.5);
+        const controllerWindowGeometry1 = new THREE.BoxGeometry(6, 12, 6);
+        const controllerWindowMesh1 = new THREE.Mesh(controllerWindowGeometry1, whiteMeshMaterial);
+        controllerWindowMesh1.position.z = -3;
+        const controllerWindowGeometry2 = new THREE.BoxGeometry(6, 6.2, 4);
+        const controllerWindowMesh2 = new THREE.Mesh(controllerWindowGeometry2, whiteMeshMaterial);
+        controllerWindowMesh2.position.z = 1.72;
+        controllerWindowMesh2.position.y = -2.9;
+        const controllerWindowGeometry3 = new THREE.BoxGeometry(5, 6, 7);
+        const controllerWindowMaterila3 = new THREE.MeshLambertMaterial({
+            color: '#000',
+            transparent: true,
+            opacity: 0.7,
+        });
+        const controllerWindowMesh3 = new THREE.Mesh(
+            controllerWindowGeometry3,
+            controllerWindowMaterila3
+        );
+        controllerWindowMesh3.position.z = -0.68;
+        controllerWindowMesh3.position.y = 1.45;
+        controllerWindowMesh3.rotation.x = 1.005;
+        tdControllerWindowGroup.add(
+            controllerWindowMesh1,
+            controllerWindowMesh2,
+            controllerWindowMesh3
+        );
 
         // 塔吊平衡机
         const tdBalancingMachineGeometry = new THREE.BoxGeometry(25, 15, 30);
@@ -343,6 +375,7 @@ function Tadiao() {
         tdTopGroup.add(
             tdArmMesh,
             tdAircraftWindowMesh,
+            tdControllerWindowGroup,
             tdTipMesh,
             tdTipBoxMesh,
             tdBalancingMachineMesh
