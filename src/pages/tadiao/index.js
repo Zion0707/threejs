@@ -119,7 +119,7 @@ function Tadiao() {
         tdTopSliderMesh.add(tdHookLineMesh1, tdHookLineMesh2, tdHookGroup);
 
         // 红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
-        scene.add(new THREE.AxesHelper(5));
+        // scene.add(new THREE.AxesHelper(5));
 
         // --------------------------------------------------------------------------------------------------------
 
@@ -333,7 +333,7 @@ function Tadiao() {
         const controllerWindowMesh2 = new THREE.Mesh(controllerWindowGeometry2, whiteMeshMaterial);
         controllerWindowMesh2.position.z = 1.72;
         controllerWindowMesh2.position.y = -2.9;
-        const controllerWindowGeometry3 = new THREE.BoxGeometry(5, 6, 7);
+        const controllerWindowGeometry3 = new THREE.BoxGeometry(5.5, 6, 7);
         const controllerWindowMaterila3 = new THREE.MeshLambertMaterial({
             color: '#000',
             transparent: true,
