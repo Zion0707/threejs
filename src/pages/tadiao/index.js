@@ -13,17 +13,10 @@ function Tadiao() {
     // 所有动画开启开关
     let animateSwitch = false;
 
-    // 指定动画开启开关
-    let tdTopGroupAnimateSwitch = true;
-    let tdHookLineAnimateSwitch = true;
-
     // 物体默认运动值
     const tdTopGroupAnimateDefaultNum = 0; // 手臂旋转值
     const tdSliderAnimateDefaultNum = -110; // 滑块来回值
     const tdHookLineAnimateDefaultNum = -20; // 鱼钩上下值
-
-    // 相关动画停顿时间
-    let tdTopGroupAnimateDelay = 3;
 
     const init = () => {
         const el = document.getElementById('content');
@@ -35,13 +28,23 @@ function Tadiao() {
         const scene = new THREE.Scene();
 
         // 纹理列表
-        const grayLineMaterial = new THREE.LineBasicMaterial({ color: '#999' });
-        const taupeMeshMaterial = new THREE.MeshLambertMaterial({ color: '#ddbe07' });
-        const whiteMeshMaterial = new THREE.MeshLambertMaterial({ color: '#fff' });
+        const grayLineMaterial = new THREE.LineBasicMaterial({ color: '#999', transparent: true });
+        const taupeMeshMaterial = new THREE.MeshLambertMaterial({
+            color: '#ddbe07',
+            transparent: true,
+        });
+        const whiteMeshMaterial = new THREE.MeshLambertMaterial({
+            color: '#fff',
+            transparent: true,
+        });
         const blackMeshMaterial = new THREE.MeshLambertMaterial({
             color: '#000',
+            transparent: true,
         });
-        const grayMeshMaterial = new THREE.MeshLambertMaterial({ color: '#ddd' });
+        const grayMeshMaterial = new THREE.MeshLambertMaterial({
+            color: '#ddd',
+            transparent: true,
+        });
 
         // 运动物体
         //  *** 塔吊顶部组，需要动画的（y轴运动，手臂旋转）
@@ -54,28 +57,29 @@ function Tadiao() {
         const tdTopSliderMesh = new THREE.Mesh(tdTopSliderGeometry, blackMeshMaterial);
         tdTopSliderMesh.name = '塔吊滑块';
         tdTopSliderMesh.position.z = -4.6;
-        tdTopSliderMesh.position.y = tdSliderAnimateDefaultNum; //  0 ~ -120 运动范围值
+        tdTopSliderMesh.position.y = tdSliderAnimateDefaultNum;
         //  *** 塔吊滑块动态牵引线，需要动画的（y轴运动）
         const tdTopSliderLineGeometry = new THREE.Geometry();
         tdTopSliderLineGeometry.vertices = [
             new THREE.Vector3(-1.2, 0, -4),
             new THREE.Vector3(-1.2, -128, -4),
         ];
-        const tdTopSliderLine1 = new THREE.Line(tdTopSliderLineGeometry, grayLineMaterial);
-        const tdTopSliderLine2 = tdTopSliderLine1.clone();
-        tdTopSliderLine2.position.x = 2.2;
-        tdTopSliderLineGeometry.vertices[0].y = tdSliderAnimateDefaultNum; //  0 ~ -120 运动范围值
+        const tdTopSliderLineMesh1 = new THREE.Line(tdTopSliderLineGeometry, grayLineMaterial);
+        const tdTopSliderLineMesh2 = tdTopSliderLineMesh1.clone();
+        tdTopSliderLineMesh2.position.x = 2.2;
+        tdTopSliderLineGeometry.vertices[0].y = 110;
+
         //  *** 塔吊钩子线，需要动画的（z轴运动）
         const tdHookLineGeometry = new THREE.Geometry();
         tdHookLineGeometry.vertices = [new THREE.Vector3(0, 0, -10), new THREE.Vector3(0, 0, 0)];
-        const tdHookLineMesh = new THREE.Line(tdHookLineGeometry, grayLineMaterial);
-        tdHookLineMesh.position.x = 0.2;
-        const tdHookLineMesh2 = tdHookLineMesh.clone();
+        const tdHookLineMesh1 = new THREE.Line(tdHookLineGeometry, grayLineMaterial);
+        tdHookLineMesh1.position.x = 0.2;
+        const tdHookLineMesh2 = tdHookLineMesh1.clone();
         tdHookLineMesh2.position.x = -0.2;
-        tdHookLineGeometry.vertices[0].z = tdHookLineAnimateDefaultNum; //  0 ~ -80 运动范围值
+        tdHookLineGeometry.vertices[0].z = tdHookLineAnimateDefaultNum;
         // *** 塔吊钩子组，需要动画的（z轴运动）
         const tdHookGroup = new THREE.Group();
-        tdHookGroup.position.z = tdHookLineAnimateDefaultNum; //  0 ~ -80 运动范围值
+        tdHookGroup.position.z = tdHookLineAnimateDefaultNum;
 
         const tdHookHeadGeometry = new THREE.BoxGeometry(2, 2, 1);
         const img02Texture1 = new THREE.TextureLoader().load(img02);
@@ -103,8 +107,9 @@ function Tadiao() {
             taupeMeshMaterial,
         ]);
 
+        // 塔吊钩子线条绘制
         const tdHookIronGeometry = new LineGeometry();
-        const pointArr = [0, 0, 0, 0, 0, -3, 0, -2, -3, 0, -2, -1.5];
+        const pointArr = [0, 0, 0, 0, 0, -3, 0, 0, -4, 0, -2, -3, 0, -2, -1.5];
         tdHookIronGeometry.setPositions(pointArr);
         const tdHookIronMaterial = new LineMaterial({
             color: '#000',
@@ -114,7 +119,7 @@ function Tadiao() {
         const tdHookIronLine = new Line2(tdHookIronGeometry, tdHookIronMaterial);
         tdHookGroup.add(tdHookMesh, tdHookIronLine);
 
-        tdTopSliderMesh.add(tdHookLineMesh, tdHookLineMesh2, tdHookGroup);
+        tdTopSliderMesh.add(tdHookLineMesh1, tdHookLineMesh2, tdHookGroup);
 
         // 红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
         scene.add(new THREE.AxesHelper(5));
@@ -233,8 +238,8 @@ function Tadiao() {
             tdArmChildMesh3,
             tdArmChildMesh4,
             tdTopSliderMesh,
-            tdTopSliderLine1,
-            tdTopSliderLine2
+            tdTopSliderLineMesh1,
+            tdTopSliderLineMesh2
         );
 
         // 塔吊手臂前方,中间和后方封顶
@@ -269,7 +274,7 @@ function Tadiao() {
             tdArmTopRollerMesh2
         );
 
-        // 塔吊机窗顶部三角支架
+        // 塔吊手臂盒子顶部三角支架
         const tdTipGeometry = new THREE.CylinderGeometry(1, 4, 20, 4);
         const tdTipMaterial = new THREE.MeshLambertMaterial({
             color: '#ddbe07',
@@ -308,14 +313,15 @@ function Tadiao() {
         const tdTipBoxChildMesh = new THREE.Mesh(tdTipBoxChildGeometry, grayMeshMaterial);
         tdTipBoxMesh.add(tdTipBoxChildMesh);
 
-        // 塔吊机窗
+        // 塔吊手臂盒子
         const tdAircraftWindowGeometry = new THREE.BoxGeometry(18, 32, 18);
         const tdAircraftWindowMesh = new THREE.Mesh(tdAircraftWindowGeometry, taupeMeshMaterial);
-        tdAircraftWindowMesh.name = '塔吊机窗';
+        tdAircraftWindowMesh.name = '塔吊手臂盒子';
         tdAircraftWindowMesh.position.y = 87;
 
+        // 塔吊手臂控制室
         const tdControllerWindowGroup = new THREE.Group();
-        tdControllerWindowGroup.name = '控制室';
+        tdControllerWindowGroup.name = '塔吊手臂控制室';
         tdControllerWindowGroup.position.y = 85;
         tdControllerWindowGroup.position.z = 2;
         tdControllerWindowGroup.position.x = 13.5;
@@ -411,31 +417,44 @@ function Tadiao() {
 
         el.append(renderer.domElement);
 
+        // ---------------------------------------------------------------------------------------------------------------
+        // 指定动画开启开关
+        let tdTopGroupAnimateSwitch = true;
+        let tdHookLineAnimateSwitch = true;
+        // eslint-disable-next-line no-unused-vars
+        let tdSliderAnimateSwitch = true;
+
+        // 相关动画停顿时间
+        let tdTopGroupAnimateDelay1 = 3;
+        const tdTopGroupAnimateDelay2 = 3;
+
+        // 摆动范围值
+        const tdTopGroupAnimateRange = 2; // 手臂摆动范围值
+        const tdTopGroupAnimateRangeSpeed = 0.005; // 手臂摆动速度
+
         // 手臂来回摆动动画
         const tdTopGroupAnimateFun = () => {
             // 手臂来回摆动动画执行
             if (tdTopGroupAnimateSwitch) {
-                tdTopGroup.rotation.y += 0.003;
-                if (tdTopGroup.rotation.y >= 1.5) {
-                    tdTopGroup.rotation.y = 1.5;
-                    tdTopGroupAnimateDelay -= 0.01;
-                    if (tdTopGroupAnimateDelay <= 0) {
+                tdTopGroup.rotation.y += tdTopGroupAnimateRangeSpeed;
+                if (tdTopGroup.rotation.y >= tdTopGroupAnimateRange) {
+                    tdTopGroup.rotation.y = tdTopGroupAnimateRange;
+                    tdTopGroupAnimateDelay1 -= 0.01;
+                    if (tdTopGroupAnimateDelay1 <= 0) {
                         tdTopGroupAnimateSwitch = false;
                         tdHookLineAnimateSwitch = true;
                     }
-
                     tdHookLineAnimateFun();
                 }
             } else {
-                tdTopGroup.rotation.y -= 0.003;
+                tdTopGroup.rotation.y -= tdTopGroupAnimateRangeSpeed;
                 if (tdTopGroup.rotation.y <= 0) {
                     tdTopGroup.rotation.y = 0;
-                    tdTopGroupAnimateDelay += 0.01;
-                    if (tdTopGroupAnimateDelay >= 3) {
+                    tdTopGroupAnimateDelay1 += 0.01;
+                    if (tdTopGroupAnimateDelay1 >= tdTopGroupAnimateDelay2) {
                         tdTopGroupAnimateSwitch = true;
                         tdHookLineAnimateSwitch = false;
                     }
-
                     tdHookLineAnimateFun();
                 }
             }
@@ -444,18 +463,37 @@ function Tadiao() {
         // 钩子上下动画
         const tdHookLineAnimateFun = () => {
             if (tdHookLineAnimateSwitch) {
-                tdHookLineMesh.scale.z += 0.01;
+                tdHookLineMesh1.scale.z += 0.01;
                 tdHookLineMesh2.scale.z += 0.01;
                 tdHookGroup.position.z -= 0.2;
                 if (tdHookGroup.position.z <= -50) {
                     tdHookLineAnimateSwitch = false;
+                    tdSliderAnimateSwitch = true;
                 }
+                tdSliderAnimateFun();
             } else {
-                tdHookLineMesh.scale.z -= 0.01;
+                tdHookLineMesh1.scale.z -= 0.01;
                 tdHookLineMesh2.scale.z -= 0.01;
                 tdHookGroup.position.z += 0.2;
                 if (tdHookGroup.position.z >= -20) {
                     tdHookLineAnimateSwitch = true;
+                    tdSliderAnimateSwitch = false;
+                }
+                tdSliderAnimateFun();
+            }
+        };
+
+        // 滑块来回动画
+        const tdSliderAnimateFun = () => {
+            if (tdTopGroupAnimateSwitch) {
+                tdTopSliderMesh.position.y += 0.1;
+                if (tdTopSliderMesh.position.y >= -100) {
+                    tdTopSliderMesh.position.y = -100;
+                }
+            } else {
+                tdTopSliderMesh.position.y -= 0.1;
+                if (tdTopSliderMesh.position.y <= -110) {
+                    tdTopSliderMesh.position.y = -110;
                 }
             }
         };

@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry';
+import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial';
+import { Line2 } from 'three/examples/jsm/lines/Line2';
 import * as THREE from 'three';
-import img200x100 from 'static/images/200x100.png';
 import './index.css';
 
 function Test() {
@@ -14,30 +16,17 @@ function Test() {
         // 场景
         const scene = new THREE.Scene();
 
-        const grayMeshMaterial = new THREE.MeshLambertMaterial({
-            color: '#ddd',
+        // 塔吊钩子线条绘制
+        const tdHookIronGeometry = new LineGeometry();
+        const pointArr = [0, 0, 0, 0, 0, -3, 0, 0, -4, 0, -2, -3, 0, -2, -1.5];
+        tdHookIronGeometry.setPositions(pointArr);
+        const tdHookIronMaterial = new LineMaterial({
+            color: '#000',
+            linewidth: 3,
         });
-        const orangeMeshMaterial = new THREE.MeshLambertMaterial({ color: 'orange' });
-        const controllerWindowGroup = new THREE.Group();
-        controllerWindowGroup.name = '控制室';
-        const controllerWindowGeometry1 = new THREE.BoxGeometry(6, 12, 6);
-        const controllerWindowMesh1 = new THREE.Mesh(controllerWindowGeometry1, grayMeshMaterial);
-        controllerWindowMesh1.position.z = -3;
-        const controllerWindowGeometry2 = new THREE.BoxGeometry(6, 6.2, 6);
-        const controllerWindowMesh2 = new THREE.Mesh(controllerWindowGeometry2, grayMeshMaterial);
-        controllerWindowMesh2.position.z = 0.72;
-        controllerWindowMesh2.position.y = -2.9;
-        const controllerWindowGeometry3 = new THREE.BoxGeometry(5.9, 6, 7);
-        const controllerWindowMesh3 = new THREE.Mesh(controllerWindowGeometry3, orangeMeshMaterial);
-        controllerWindowMesh3.position.z = -0.68;
-        controllerWindowMesh3.position.y = 1.45;
-        controllerWindowMesh3.rotation.x = 1.005;
-        controllerWindowGroup.add(
-            controllerWindowMesh1,
-            controllerWindowMesh2,
-            controllerWindowMesh3
-        );
-        scene.add(controllerWindowGroup);
+        tdHookIronMaterial.resolution.set(window.innerWidth, window.innerHeight);
+        const tdHookIronLine = new Line2(tdHookIronGeometry, tdHookIronMaterial);
+        scene.add(tdHookIronLine);
 
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
