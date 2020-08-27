@@ -421,15 +421,13 @@ function Tadiao() {
         // 指定动画开启开关
         let tdTopGroupAnimateSwitch = true;
         let tdHookLineAnimateSwitch = true;
-        // eslint-disable-next-line no-unused-vars
-        let tdSliderAnimateSwitch = true;
 
         // 相关动画停顿时间
         let tdTopGroupAnimateDelay1 = 3;
         const tdTopGroupAnimateDelay2 = 3;
 
         // 摆动范围值
-        const tdTopGroupAnimateRange = 2; // 手臂摆动范围值
+        const tdTopGroupAnimateRange = 2; // 手臂摆动范围值 0.1 ~ 4
         const tdTopGroupAnimateRangeSpeed = 0.005; // 手臂摆动速度
 
         // 手臂来回摆动动画
@@ -444,7 +442,7 @@ function Tadiao() {
                         tdTopGroupAnimateSwitch = false;
                         tdHookLineAnimateSwitch = true;
                     }
-                    tdHookLineAnimateFun();
+                    tdSliderAnimateFun();
                 }
             } else {
                 tdTopGroup.rotation.y -= tdTopGroupAnimateRangeSpeed;
@@ -455,7 +453,7 @@ function Tadiao() {
                         tdTopGroupAnimateSwitch = true;
                         tdHookLineAnimateSwitch = false;
                     }
-                    tdHookLineAnimateFun();
+                    tdSliderAnimateFun();
                 }
             }
         };
@@ -466,34 +464,32 @@ function Tadiao() {
                 tdHookLineMesh1.scale.z += 0.01;
                 tdHookLineMesh2.scale.z += 0.01;
                 tdHookGroup.position.z -= 0.2;
-                if (tdHookGroup.position.z <= -50) {
+                if (tdHookGroup.position.z <= -40) {
                     tdHookLineAnimateSwitch = false;
-                    tdSliderAnimateSwitch = true;
                 }
-                tdSliderAnimateFun();
             } else {
                 tdHookLineMesh1.scale.z -= 0.01;
                 tdHookLineMesh2.scale.z -= 0.01;
                 tdHookGroup.position.z += 0.2;
                 if (tdHookGroup.position.z >= -20) {
                     tdHookLineAnimateSwitch = true;
-                    tdSliderAnimateSwitch = false;
                 }
-                tdSliderAnimateFun();
             }
         };
 
         // 滑块来回动画
         const tdSliderAnimateFun = () => {
             if (tdTopGroupAnimateSwitch) {
-                tdTopSliderMesh.position.y += 0.1;
-                if (tdTopSliderMesh.position.y >= -100) {
-                    tdTopSliderMesh.position.y = -100;
+                tdTopSliderMesh.position.y += 0.2;
+                if (tdTopSliderMesh.position.y >= -90) {
+                    tdTopSliderMesh.position.y = -90;
+                    tdHookLineAnimateFun();
                 }
             } else {
-                tdTopSliderMesh.position.y -= 0.1;
+                tdTopSliderMesh.position.y -= 0.2;
                 if (tdTopSliderMesh.position.y <= -110) {
                     tdTopSliderMesh.position.y = -110;
+                    tdHookLineAnimateFun();
                 }
             }
         };
