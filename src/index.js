@@ -13,6 +13,7 @@ import AutoMove from './pages/auto-move';
 import CarStart from './pages/car-start';
 import BoxTexture from './pages/box-texture';
 import Tadiao from './pages/tadiao';
+import Dianti from './pages/dianti';
 import Line2 from './pages/line2';
 import Video from './pages/video';
 import Test from './pages/test';
@@ -24,6 +25,8 @@ ReactDOM.render(
             <Switch>
                 <Route exact path="/" component={Index} />
                 <Route path="/test" component={Test} />
+                <Route path="/tadiao" component={Tadiao} />
+                <Route path="/dianti" component={Dianti} />
                 <Route path="/skin" component={Skin} />
                 <Route path="/basis" component={Basis} />
                 <Route path="/pikaqiu" component={Pikaqiu} />
@@ -32,7 +35,6 @@ ReactDOM.render(
                 <Route path="/auto-move" component={AutoMove} />
                 <Route path="/car-start" component={CarStart} />
                 <Route path="/box-texture" component={BoxTexture} />
-                <Route path="/tadiao" component={Tadiao} />
                 <Route path="/line2" component={Line2} />
                 <Route path="/video" component={Video} />
                 <Route path="/note404" component={Note404} />

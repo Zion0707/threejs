@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 import './index.css';
 
-function Test() {
+function Dianti() {
     const init = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -12,6 +12,23 @@ function Test() {
 
         // 场景
         const scene = new THREE.Scene();
+
+        const scarletMeshMaterila = new THREE.MeshLambertMaterial({ color: '#af3b3e' });
+
+        const dtGroup = new THREE.Group();
+        dtGroup.name = '电梯组';
+
+        const dtBaseGroup = new THREE.Group();
+        dtBaseGroup.name = '电梯底座组';
+        const dtBaseGeometry = new THREE.BoxGeometry(15, 1, 2);
+        const dtBaseMesh1 = new THREE.Mesh(dtBaseGeometry, scarletMeshMaterila);
+        const dtBaseMesh2 = dtBaseMesh1.clone();
+        dtBaseMesh2.rotation.y = 1.57;
+        dtBaseGroup.add(dtBaseMesh1, dtBaseMesh2);
+        dtBaseGroup.position.y = -80;
+
+        dtGroup.add(dtBaseGroup);
+        scene.add(dtGroup);
 
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
@@ -22,7 +39,7 @@ function Test() {
         const renderer = new THREE.WebGLRenderer({ antialias: true });
 
         // 设置渲染器的颜色和大小
-        renderer.setClearColor('#fff');
+        renderer.setClearColor('#ddd');
         renderer.setSize(winWidth, winHeight);
         // 将renderer（渲染器）的dom元素（renderer.domElement）添加到我们的HTML文档中。
         // 这就是渲染器用来显示场景给我们看的<canvas>元素
@@ -71,4 +88,4 @@ function Test() {
         </div>
     );
 }
-export default Test;
+export default Dianti;
