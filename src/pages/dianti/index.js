@@ -14,6 +14,12 @@ function Dianti() {
         // 场景
         const scene = new THREE.Scene();
 
+        // 黑色纹理
+        const blackMeshMaterial = new THREE.MeshLambertMaterial({
+            color: '#000',
+            transparent: true,
+        });
+
         // 白色纹理
         const whiteMeshMaterial = new THREE.MeshLambertMaterial({
             color: '#fff',
@@ -24,6 +30,16 @@ function Dianti() {
             color: '#108fa9',
             transparent: true,
         });
+        // 深蓝色纹理
+        const deepBlueMeshMaterial = new THREE.MeshLambertMaterial({
+            color: '#137a8f',
+            transparent: true,
+        });
+        // 橙色纹理
+        const orangeMeshMaterial = new THREE.MeshLambertMaterial({
+            color: '#ffda00',
+            transparent: true,
+        });
         // 浅蓝色网格纹理
         const lightBlueGridMaterial = new THREE.TextureLoader().load(img01);
 
@@ -31,18 +47,18 @@ function Dianti() {
         dtGroup.name = '电梯组';
 
         // 电梯底座
-        const dtBaseGeometry = new THREE.BoxGeometry(40, 4, 60);
+        const dtBaseGeometry = new THREE.BoxGeometry(50, 4, 80);
         const dtBaseMesh = new THREE.Mesh(dtBaseGeometry, whiteMeshMaterial);
         dtBaseMesh.name = '电梯底座';
-        dtBaseMesh.position.y = -72;
+        dtBaseMesh.position.y = -92;
 
         // 电梯中心柱
         const dtCenterPillarGroup = new THREE.Group();
         dtCenterPillarGroup.name = '电梯中心柱组';
-        dtCenterPillarGroup.position.z = -5;
+        dtCenterPillarGroup.position.z = -15;
 
         // 电梯四条顶梁柱
-        const dtCenterPillarGeometry = new THREE.CylinderGeometry(1, 1, 140, 32);
+        const dtCenterPillarGeometry = new THREE.CylinderGeometry(1, 1, 180, 32);
         const dtCenterPillarMesh1 = new THREE.Mesh(dtCenterPillarGeometry, lightBlueMeshMaterial);
         dtCenterPillarMesh1.position.x = 5;
         const dtCenterPillarMesh2 = dtCenterPillarMesh1.clone();
@@ -52,8 +68,21 @@ function Dianti() {
         const dtCenterPillarMesh4 = dtCenterPillarMesh3.clone();
         dtCenterPillarMesh4.position.x = 5;
 
+        // 电梯升降缆绳
+        const dtCenterCableGeometry = new THREE.CylinderGeometry(0.2, 0.2, 180, 32);
+        const dtCenterCableMesh1 = new THREE.Mesh(dtCenterCableGeometry, whiteMeshMaterial);
+        dtCenterCableMesh1.position.x = -1;
+        dtCenterCableMesh1.position.z = 0.5;
+        const dtCenterCableMesh2 = dtCenterCableMesh1.clone();
+        dtCenterCableMesh2.position.x = 1;
+        const dtCenterCableMesh3 = dtCenterCableMesh1.clone();
+        dtCenterCableMesh3.position.x = 1;
+        dtCenterCableMesh3.position.z = -10.5;
+        const dtCenterCableMesh4 = dtCenterCableMesh1.clone();
+        dtCenterCableMesh4.position.x = -1;
+        dtCenterCableMesh4.position.z = -10.5;
         // 电梯中心柱纹理
-        const dtCenterTextureGeometry = new THREE.BoxGeometry(10, 140, 10);
+        const dtCenterTextureGeometry = new THREE.BoxGeometry(10, 180, 10);
         lightBlueGridMaterial.repeat.set(1, 14);
         lightBlueGridMaterial.wrapT = THREE.RepeatWrapping;
         lightBlueGridMaterial.wrapS = THREE.RepeatWrapping;
@@ -73,9 +102,9 @@ function Dianti() {
         const dtCenterFixedMesh1 = new THREE.Mesh(dtCenterFixedGeometry, lightBlueMeshMaterial);
         dtCenterFixedMesh1.position.z = -5;
         const dtCenterFixedMesh2 = dtCenterFixedMesh1.clone();
-        dtCenterFixedMesh2.position.y = -70;
+        dtCenterFixedMesh2.position.y = -90;
         const dtCenterFixedMesh3 = dtCenterFixedMesh1.clone();
-        dtCenterFixedMesh3.position.y = 67.8;
+        dtCenterFixedMesh3.position.y = 87.8;
         dtCenterPillarGroup.add(
             dtCenterPillarMesh1,
             dtCenterPillarMesh2,
@@ -84,26 +113,76 @@ function Dianti() {
             dtCenterTextureMesh,
             dtCenterFixedMesh1,
             dtCenterFixedMesh2,
-            dtCenterFixedMesh3
+            dtCenterFixedMesh3,
+            dtCenterCableMesh1,
+            dtCenterCableMesh2,
+            dtCenterCableMesh3,
+            dtCenterCableMesh4
         );
+
+        // 电梯平衡砣
+        const dtBalanceGeometry = new THREE.BoxGeometry(10, 20, 6);
+        const dtBalanceMesh = new THREE.Mesh(dtBalanceGeometry, orangeMeshMaterial);
+        dtBalanceMesh.position.z = -28;
+        dtBalanceMesh.position.y = 70;
+        const dtBalanceTextureGeometry = new THREE.BoxGeometry(10.1, 1, 6.1);
+        const dtBalanceTextureMesh1 = new THREE.Mesh(dtBalanceTextureGeometry, blackMeshMaterial);
+        const dtBalanceTextureMesh2 = dtBalanceTextureMesh1.clone();
+        dtBalanceTextureMesh2.position.y = -5;
+        const dtBalanceTextureMesh3 = dtBalanceTextureMesh1.clone();
+        dtBalanceTextureMesh3.position.y = 5;
+        dtBalanceMesh.add(dtBalanceTextureMesh1, dtBalanceTextureMesh2, dtBalanceTextureMesh3);
 
         // 电梯厢房
         const dtRoomGroup = new THREE.Group();
+        dtRoomGroup.position.y = -70;
+        dtRoomGroup.position.z = 0;
         dtRoomGroup.name = '电梯厢房组';
-        const dtRoomTopAndBottomGeometry = new THREE.BoxGeometry(20, 2, 20);
-        const dtRoomTopAndBottomMesh = new THREE.Mesh(
+        // 电梯厢房上顶下顶
+        const dtRoomTopAndBottomGeometry = new THREE.BoxGeometry(32, 2, 32);
+        const dtRoomTopAndBottomMesh1 = new THREE.Mesh(
             dtRoomTopAndBottomGeometry,
             lightBlueMeshMaterial
         );
-        dtRoomGroup.add(dtRoomTopAndBottomMesh);
-        dtGroup.add(dtBaseMesh, dtCenterPillarGroup, dtRoomGroup);
+        dtRoomTopAndBottomMesh1.position.y = -19;
+        const dtRoomTopAndBottomMesh2 = dtRoomTopAndBottomMesh1.clone();
+        dtRoomTopAndBottomMesh1.position.y = 20;
+
+        // 电梯厢房柱子
+        const dtRoomPillarsGeometry = new THREE.BoxGeometry(2, 39, 2);
+        const dtRoomPillarsMesh1 = new THREE.Mesh(dtRoomPillarsGeometry, lightBlueMeshMaterial);
+        dtRoomPillarsMesh1.position.x = -15;
+        dtRoomPillarsMesh1.position.z = 15;
+        const dtRoomPillarsMesh2 = dtRoomPillarsMesh1.clone();
+        dtRoomPillarsMesh2.position.x = 15;
+
+        // 电梯厢房背面
+        const dtRoomBackGeometry = new THREE.BoxGeometry(32, 38, 2);
+        const dtRoomBackMesh = new THREE.Mesh(dtRoomBackGeometry, [
+            lightBlueMeshMaterial,
+            lightBlueMeshMaterial,
+            lightBlueMeshMaterial,
+            lightBlueMeshMaterial,
+            deepBlueMeshMaterial,
+            lightBlueMeshMaterial,
+        ]);
+        dtRoomBackMesh.position.z = -14.8;
+        // 组的添加
+        dtRoomGroup.add(
+            dtRoomTopAndBottomMesh1,
+            dtRoomTopAndBottomMesh2,
+            dtRoomPillarsMesh1,
+            dtRoomPillarsMesh2,
+            dtRoomBackMesh
+        );
+        dtGroup.add(dtBaseMesh, dtCenterPillarGroup, dtRoomGroup, dtBalanceMesh);
         scene.add(dtGroup);
 
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
 
         // 设置相机坐标
-        camera.position.set(0, 0, 300);
+        camera.position.set(0, -80, 300);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true });
