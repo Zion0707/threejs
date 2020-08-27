@@ -8,7 +8,6 @@ import Basis from './pages/basis';
 import Pikaqiu from './pages/pikaqiu';
 import Skin from './pages/skin';
 import ImgLoad from './pages/img-load';
-import PsCoca from './pages/ps-coca';
 import AutoMove from './pages/auto-move';
 import CarStart from './pages/car-start';
 import BoxTexture from './pages/box-texture';
@@ -16,6 +15,7 @@ import Tadiao from './pages/tadiao';
 import Dianti from './pages/dianti';
 import Line2 from './pages/line2';
 import Video from './pages/video';
+import ChangeWide from './pages/change-wide';
 import Test from './pages/test';
 import Note404 from './pages/note404';
 
@@ -31,12 +31,12 @@ ReactDOM.render(
                 <Route path="/basis" component={Basis} />
                 <Route path="/pikaqiu" component={Pikaqiu} />
                 <Route path="/img-load" component={ImgLoad} />
-                <Route path="/ps-coca" component={PsCoca} />
                 <Route path="/auto-move" component={AutoMove} />
                 <Route path="/car-start" component={CarStart} />
                 <Route path="/box-texture" component={BoxTexture} />
                 <Route path="/line2" component={Line2} />
                 <Route path="/video" component={Video} />
+                <Route path="/change-wide" component={ChangeWide} />
                 <Route path="/note404" component={Note404} />
                 <Redirect to="/note404" />
             </Switch>

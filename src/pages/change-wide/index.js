@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import './index.css';
 
-function Test() {
+function ChangeWide() {
     let cameraGlobal = null;
     const changeCameraPosition = () => {
         const tween = new TWEEN.Tween(cameraGlobal.position)
@@ -117,4 +117,4 @@ function Test() {
         </div>
     );
 }
-export default Test;
+export default ChangeWide;
