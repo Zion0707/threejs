@@ -196,13 +196,13 @@ function Dianti() {
         dtRoomLeftMesh.position.x = -15;
 
         // *** 电梯厢房正门（需要动画，左右滑动开）x轴调整宽度
-        const dtRoomPositiveDoorGeometry = new THREE.BoxGeometry(14.5, 37.5, 2);
+        const dtRoomPositiveDoorGeometry = new THREE.BoxGeometry(14.5, 37.5, 1);
         const dtRoomPositiveDoorMesh1 = new THREE.Mesh(dtRoomPositiveDoorGeometry, redMeshMaterial);
         dtRoomPositiveDoorMesh1.position.z = 15;
         dtRoomPositiveDoorMesh1.position.y = 0.5;
         dtRoomPositiveDoorMesh1.position.x = -7;
         const dtRoomPositiveDoorMesh2 = dtRoomPositiveDoorMesh1.clone();
-        dtRoomPositiveDoorMesh2.position.x = 7.5;
+        dtRoomPositiveDoorMesh2.position.x = 7;
         // dtRoomPositiveDoorMesh2.rotation.z = 3.15;
         // // *** 电梯厢房正门黑边（需要动画，跟随电梯厢房正面运动）x轴调整宽度
         // const dtRoomPositiveDoorBlackBorderGeometry = new THREE.BoxGeometry(0.2, 37.5, 2);
@@ -366,11 +366,14 @@ function Dianti() {
 
         // ---------------------------------------------------------------------------------------------------------------
         let dtRoomAnimateSwitch = true; // 电梯上下开关
-        let dtRoomAnimateDelayTime1 = 10; // 电梯上下停留时间
-        const dtRoomAnimateDelayTime2 = 10; // 与（电梯上下停留时间）相同
+        let dtRoomAnimateDelayTime1 = 5; // 电梯下面停留时间
+        const dtRoomAnimateDelayTime2 = 4; // 电梯上面停留时间
 
         let dtRoomRightDoorAnimateSwitch = true; // 电梯厢房右侧开门开关
+        let dtRoomRightDoorAnimateOneSwitch = true; // 电梯厢房右侧开门开关只执行一次，防止多次触发
+
         let dtRoomPositiveDoorAnimateSwitch = true; // 电梯厢房正门开门开关
+        let dtRoomPositiveDoorAnimateOneSwitch = true; // 电梯厢房正门开门开关只执行一次，防止多次触发
         let dtRoomPositiveDoorAnimateNum1 = 14.5; // 电梯厢房正门开门范围
         const dtRoomPositiveDoorAnimateNum2 = 14.5; // 与（电梯厢房正门开门范围）相同
 
@@ -389,6 +392,7 @@ function Dianti() {
                 } else {
                     dtRoomAnimateDelayTime1 -= 0.01;
                     dtRoomRightDoorAnimateFun();
+                    dtRoomPositiveDoorAnimateOneSwitch = true;
                 }
             } else {
                 // 电梯下
@@ -402,58 +406,66 @@ function Dianti() {
                     }
                 } else {
                     dtRoomAnimateDelayTime1 += 0.01;
+                    dtRoomPositiveDoorAnimateFun();
+                    dtRoomRightDoorAnimateOneSwitch = true;
                 }
             }
         };
 
         // 底下右侧开门动画
         const dtRoomRightDoorAnimateFun = () => {
-            if (dtRoomRightDoorAnimateSwitch) {
-                if (dtRoomRightDoorParentLeftMesh.rotation.y <= -2) {
-                    dtRoomRightDoorAnimateSwitch = false;
+            if (dtRoomRightDoorAnimateOneSwitch) {
+                if (dtRoomRightDoorAnimateSwitch) {
+                    if (dtRoomRightDoorParentLeftMesh.rotation.y <= -2) {
+                        dtRoomRightDoorAnimateSwitch = false;
+                    } else {
+                        dtRoomRightDoorParentLeftMesh.rotation.y += -0.01;
+                        dtRoomRightDoorParentRightMesh.rotation.y += 0.01;
+                    }
                 } else {
-                    dtRoomRightDoorParentLeftMesh.rotation.y += -0.01;
-                    dtRoomRightDoorParentRightMesh.rotation.y += 0.01;
-                }
-            } else {
-                if (dtRoomRightDoorParentLeftMesh.rotation.y >= 0) {
-                    dtRoomRightDoorAnimateSwitch = true;
-                } else {
-                    dtRoomRightDoorParentLeftMesh.rotation.y -= -0.01;
-                    dtRoomRightDoorParentRightMesh.rotation.y -= 0.01;
+                    if (dtRoomRightDoorParentLeftMesh.rotation.y >= 0) {
+                        dtRoomRightDoorAnimateSwitch = true;
+                        dtRoomRightDoorAnimateOneSwitch = false;
+                    } else {
+                        dtRoomRightDoorParentLeftMesh.rotation.y -= -0.01;
+                        dtRoomRightDoorParentRightMesh.rotation.y -= 0.01;
+                    }
                 }
             }
         };
 
         // 上面正面开门动画
         const dtRoomPositiveDoorAnimateFun = () => {
-            if (dtRoomPositiveDoorAnimateSwitch) {
-                dtRoomPositiveDoorAnimateNum1 -= 0.1;
-                dtRoomPositiveDoorMesh1.geometry = dtRoomPositiveDoorMesh2.geometry = new THREE.BoxGeometry(
-                    dtRoomPositiveDoorAnimateNum1,
-                    37.5,
-                    2
-                );
-                if (dtRoomPositiveDoorAnimateNum1 <= 0) {
-                    dtRoomPositiveDoorAnimateNum1 = 0;
-                    dtRoomPositiveDoorAnimateSwitch = false;
+            if (dtRoomPositiveDoorAnimateOneSwitch) {
+                if (dtRoomPositiveDoorAnimateSwitch) {
+                    dtRoomPositiveDoorAnimateNum1 -= 0.1;
+                    dtRoomPositiveDoorMesh1.geometry = dtRoomPositiveDoorMesh2.geometry = new THREE.BoxGeometry(
+                        dtRoomPositiveDoorAnimateNum1,
+                        37.5,
+                        2
+                    );
+                    if (dtRoomPositiveDoorAnimateNum1 <= 0) {
+                        dtRoomPositiveDoorAnimateNum1 = 0;
+                        dtRoomPositiveDoorAnimateSwitch = false;
+                    } else {
+                        dtRoomPositiveDoorMesh1.position.x -= 0.05;
+                        dtRoomPositiveDoorMesh2.position.x += 0.05;
+                    }
                 } else {
-                    dtRoomPositiveDoorMesh1.position.x -= 0.05;
-                    dtRoomPositiveDoorMesh2.position.x -= 0.05;
-                }
-            } else {
-                dtRoomPositiveDoorAnimateNum1 += 0.1;
-                dtRoomPositiveDoorMesh1.geometry = dtRoomPositiveDoorMesh2.geometry = new THREE.BoxGeometry(
-                    dtRoomPositiveDoorAnimateNum1,
-                    37.5,
-                    2
-                );
-                if (dtRoomPositiveDoorAnimateNum1 >= dtRoomPositiveDoorAnimateNum2) {
-                    dtRoomPositiveDoorAnimateNum1 = dtRoomPositiveDoorAnimateNum2;
-                    dtRoomPositiveDoorAnimateSwitch = true;
-                } else {
-                    dtRoomPositiveDoorMesh1.position.x += 0.05;
-                    dtRoomPositiveDoorMesh2.position.x += 0.05;
+                    dtRoomPositiveDoorAnimateNum1 += 0.1;
+                    dtRoomPositiveDoorMesh1.geometry = dtRoomPositiveDoorMesh2.geometry = new THREE.BoxGeometry(
+                        dtRoomPositiveDoorAnimateNum1,
+                        37.5,
+                        2
+                    );
+                    if (dtRoomPositiveDoorAnimateNum1 >= dtRoomPositiveDoorAnimateNum2) {
+                        dtRoomPositiveDoorAnimateNum1 = dtRoomPositiveDoorAnimateNum2;
+                        dtRoomPositiveDoorAnimateSwitch = true;
+                        dtRoomPositiveDoorAnimateOneSwitch = false;
+                    } else {
+                        dtRoomPositiveDoorMesh1.position.x += 0.05;
+                        dtRoomPositiveDoorMesh2.position.x -= 0.05;
+                    }
                 }
             }
         };
@@ -467,7 +479,6 @@ function Dianti() {
             // 动画运行
             if (animateSwitch) {
                 dtRoomAnimateFun();
-                dtRoomPositiveDoorAnimateFun();
             }
         }
         render();
