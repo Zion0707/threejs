@@ -56,7 +56,7 @@ function Dianti() {
         // 电梯总组
         const dtGroup = new THREE.Group();
         dtGroup.name = '电梯组';
-        dtGroup.rotation.y = -1.6; // 调整电梯侧面视觉（调试用）
+        // dtGroup.rotation.y = -1.6; // 调整电梯侧面视觉（调试用）
 
         // 电梯底座
         const dtBaseGeometry = new THREE.BoxGeometry(50, 4, 80);
@@ -185,7 +185,7 @@ function Dianti() {
             deepBlueMeshMaterial,
             lightBlueMeshMaterial,
         ]);
-        dtRoomBackMesh.position.z = -14.8;
+        dtRoomBackMesh.position.z = -15;
 
         // 电梯厢房左侧玻璃
         const dtRoomLeftGeometry = new THREE.BoxGeometry(2, 38, 27.8);
@@ -210,7 +210,7 @@ function Dianti() {
         dtRoomPositiveDoorMesh2.position.x = 7.5;
         dtRoomPositiveDoorMesh2.rotation.z = 3.15;
 
-        dtRoomPositiveDoorMesh1.material.opacity = 0.8; // 调整透明度（测试用）
+        dtRoomPositiveDoorMesh1.material.opacity = 0.8; // 调整透明度（调试用）
         // 电梯右侧门
         const dtRoomRightGroup = new THREE.Group();
         dtRoomRightGroup.name = '电梯右侧门';
@@ -246,7 +246,7 @@ function Dianti() {
             null,
         ]);
         dtRoomRightDoorParentLeftMesh.name = '右侧左边门组'; // 包括门框及玻璃
-        dtRoomRightDoorParentLeftMesh.position.set(15, -2.5, 15);
+        dtRoomRightDoorParentLeftMesh.position.set(15, -2.5, 14.5);
         const dtRoomRightDoorParentRightMesh = dtRoomRightDoorParentLeftMesh.clone();
         dtRoomRightDoorParentRightMesh.name = '右侧右边门组'; // 包括门框及玻璃
         dtRoomRightDoorParentRightMesh.position.z = -15;
@@ -304,9 +304,9 @@ function Dianti() {
             dtRoomRightDoorLeftAndRightBorderMesh2Two
         );
 
-        // 双开门动作（测试）
-        dtRoomRightDoorParentLeftMesh.rotation.y = -2; // 开门动画执行
-        dtRoomRightDoorParentRightMesh.rotation.y = 2; // 开门动画执行
+        // 双开门动作（调试用）
+        // dtRoomRightDoorParentLeftMesh.rotation.y = -2; // 开门动画执行
+        // dtRoomRightDoorParentRightMesh.rotation.y = 2; // 开门动画执行
 
         dtRoomRightGroup.add(
             dtRoomRightTopGlassMesh,
@@ -333,7 +333,7 @@ function Dianti() {
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
 
         // 设置相机坐标
-        camera.position.set(0, -80, 300);
+        camera.position.set(200, -80, 300);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true });
