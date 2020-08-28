@@ -420,7 +420,7 @@ function Dianti() {
             } else {
                 // 电梯下
                 if (dtRoomAnimateDelayTime1 >= dtRoomAnimateDelayTime2) {
-                    dtRoomAnimateDelayTime1 = dtRoomAnimateDelayTime2;
+                    dtRoomAnimateDelayTime1 = 4.5;
                     if (dtRoomGroup.position.y <= dtRoomGroupDefaultYNum) {
                         dtRoomAnimateSwitch = true;
                     } else {
