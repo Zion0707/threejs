@@ -401,6 +401,8 @@ function Tadiao() {
         // 设置渲染器的颜色和大小
         renderer.setClearColor('#040b1a');
         renderer.setSize(winWidth, winHeight);
+        renderer.setPixelRatio(window.devicePixelRatio); // 高清设置
+
         // 将renderer（渲染器）的dom元素（renderer.domElement）添加到我们的HTML文档中。
         // 这就是渲染器用来显示场景给我们看的<canvas>元素
         document.body.appendChild(renderer.domElement);

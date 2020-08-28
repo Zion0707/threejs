@@ -5,6 +5,9 @@ import img01 from 'static/images/dianti/01.png';
 import './index.css';
 
 function Dianti() {
+    // 所有动画开启开关
+    let animateSwitch = false;
+
     const init = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -132,11 +135,10 @@ function Dianti() {
             dtCenterCableMesh4
         );
 
-        // 电梯平衡砣
+        // *** 电梯平衡砣（需要动画，上下运动）
         const dtBalanceGeometry = new THREE.BoxGeometry(10, 20, 6);
         const dtBalanceMesh = new THREE.Mesh(dtBalanceGeometry, orangeMeshMaterial);
         dtBalanceMesh.position.z = -28;
-        dtBalanceMesh.position.y = 70;
         const dtBalanceTextureGeometry = new THREE.BoxGeometry(10.1, 1, 6.1);
         const dtBalanceTextureMesh1 = new THREE.Mesh(dtBalanceTextureGeometry, blackMeshMaterial);
         const dtBalanceTextureMesh2 = dtBalanceTextureMesh1.clone();
@@ -144,12 +146,13 @@ function Dianti() {
         const dtBalanceTextureMesh3 = dtBalanceTextureMesh1.clone();
         dtBalanceTextureMesh3.position.y = 5;
         dtBalanceMesh.add(dtBalanceTextureMesh1, dtBalanceTextureMesh2, dtBalanceTextureMesh3);
+        dtBalanceMesh.position.y = 70; // 上下动画执行
 
-        // 电梯厢房
+        // *** 电梯厢房（需要动画，上下运动）
         const dtRoomGroup = new THREE.Group();
-        dtRoomGroup.position.y = -82;
-        dtRoomGroup.position.z = 1;
         dtRoomGroup.name = '电梯厢房组';
+        dtRoomGroup.position.z = 1;
+        dtRoomGroup.position.y = -82; // 上下动画执行
 
         // 电梯厢房顶部黑色磁铁
         const dtRoomMagnetGeometry = new THREE.BoxGeometry(8, 5, 8);
@@ -341,6 +344,8 @@ function Dianti() {
         // 设置渲染器的颜色和大小
         renderer.setClearColor('#040b1a');
         renderer.setSize(winWidth, winHeight);
+        renderer.setPixelRatio(window.devicePixelRatio); // 高清设置
+
         // 将renderer（渲染器）的dom元素（renderer.domElement）添加到我们的HTML文档中。
         // 这就是渲染器用来显示场景给我们看的<canvas>元素
         document.body.appendChild(renderer.domElement);
@@ -357,14 +362,20 @@ function Dianti() {
 
         // 红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
         scene.add(new THREE.AxesHelper(5));
-
         el.append(renderer.domElement);
+
+        // ---------------------------------------------------------------------------------------------------------------
 
         function render() {
             // 动画循环渲染
             requestAnimationFrame(render);
             // 渲染到页面上
             renderer.render(scene, camera);
+            // 动画运行
+            if (animateSwitch) {
+                console.log('动画运行');
+                dtRoomGroup.position.y += 0.5;
+            }
         }
         render();
 
@@ -383,7 +394,15 @@ function Dianti() {
     return (
         <div id="content">
             <ul>
-                <li></li>
+                <li>
+                    <button
+                        onClick={() => {
+                            animateSwitch = !animateSwitch;
+                        }}
+                    >
+                        电梯运行/暂停
+                    </button>
+                </li>
             </ul>
         </div>
     );
