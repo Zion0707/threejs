@@ -13,11 +13,6 @@ function Tadiao() {
     // 所有动画开启开关
     let animateSwitch = false;
 
-    // 物体默认运动值
-    const tdTopGroupAnimateDefaultNum = 0; // 手臂旋转值
-    const tdSliderAnimateDefaultNum = -110; // 滑块来回值
-    const tdHookLineAnimateDefaultNum = -20; // 鱼钩上下值
-
     const init = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -42,6 +37,11 @@ function Tadiao() {
             color: '#ddd',
             transparent: true,
         });
+
+        // 运动物体默认值
+        const tdTopGroupAnimateDefaultNum = 0; // 手臂旋转值
+        const tdSliderAnimateDefaultNum = -110; // 滑块来回值
+        const tdHookLineAnimateDefaultNum = -20; // 鱼钩上下值
 
         // 运动物体
         //  *** 塔吊顶部组，需要动画的（y轴运动，手臂旋转）
