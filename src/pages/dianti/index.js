@@ -48,10 +48,11 @@ function Dianti() {
             color: '#ffda00',
             transparent: true,
         });
-        // 红色纹理
-        const redMeshMaterial = new THREE.MeshLambertMaterial({
-            color: '#ff4c4c',
+        // 橙色纹理
+        const orange2MeshMaterial = new THREE.MeshLambertMaterial({
+            color: '#ffda00',
             transparent: true,
+            opacity: 0.5,
         });
         // 浅蓝色图片纹理
         const lightBlueGridMaterial = new THREE.TextureLoader().load(img01);
@@ -62,10 +63,10 @@ function Dianti() {
         // dtGroup.rotation.y = -1.6; // 调整电梯侧面视觉（调试用）
 
         // 电梯底座
-        const dtBaseGeometry = new THREE.BoxGeometry(50, 4, 80);
+        const dtBaseGeometry = new THREE.BoxGeometry(50, 6, 80);
         const dtBaseMesh = new THREE.Mesh(dtBaseGeometry, whiteMeshMaterial);
         dtBaseMesh.name = '电梯底座';
-        dtBaseMesh.position.y = -104;
+        dtBaseMesh.position.y = -106;
 
         // 电梯中心柱
         const dtCenterPillarGroup = new THREE.Group();
@@ -96,6 +97,16 @@ function Dianti() {
         const dtCenterCableMesh4 = dtCenterCableMesh1.clone();
         dtCenterCableMesh4.position.x = -1;
         dtCenterCableMesh4.position.z = -10.5;
+
+        const dtCenterTopCableGeometry = new THREE.CylinderGeometry(0.2, 0.2, 11.3, 32);
+        const dtCenterTopCableMesh1 = new THREE.Mesh(dtCenterTopCableGeometry, whiteMeshMaterial);
+        dtCenterTopCableMesh1.position.y = 105.2;
+        dtCenterTopCableMesh1.position.x = -1;
+        dtCenterTopCableMesh1.position.z = -5;
+        dtCenterTopCableMesh1.rotation.x = -1.57;
+        const dtCenterTopCableMesh2 = dtCenterTopCableMesh1.clone();
+        dtCenterTopCableMesh2.position.x = 1;
+
         // 电梯中心柱纹理
         const dtCenterTextureGeometry = new THREE.BoxGeometry(10, 180, 10);
         lightBlueGridMaterial.repeat.set(1, 14);
@@ -132,7 +143,9 @@ function Dianti() {
             dtCenterCableMesh1,
             dtCenterCableMesh2,
             dtCenterCableMesh3,
-            dtCenterCableMesh4
+            dtCenterCableMesh4,
+            dtCenterTopCableMesh1,
+            dtCenterTopCableMesh2
         );
 
         // *** 电梯平衡砣（需要动画，上下运动）
@@ -149,10 +162,11 @@ function Dianti() {
         dtBalanceMesh.position.y = 70; // 上下动画执行
 
         // *** 电梯厢房（需要动画，上下运动）
+        const dtRoomGroupDefaultYNum = -82;
         const dtRoomGroup = new THREE.Group();
         dtRoomGroup.name = '电梯厢房组';
         dtRoomGroup.position.z = 1;
-        dtRoomGroup.position.y = -82; // 上下动画执行
+        dtRoomGroup.position.y = dtRoomGroupDefaultYNum; // 上下动画执行
 
         // 电梯厢房顶部黑色磁铁
         const dtRoomMagnetGeometry = new THREE.BoxGeometry(8, 5, 8);
@@ -197,12 +211,16 @@ function Dianti() {
 
         // *** 电梯厢房正门（需要动画，左右滑动开）x轴调整宽度
         const dtRoomPositiveDoorGeometry = new THREE.BoxGeometry(14.5, 37.5, 1);
-        const dtRoomPositiveDoorMesh1 = new THREE.Mesh(dtRoomPositiveDoorGeometry, redMeshMaterial);
+        const dtRoomPositiveDoorMesh1 = new THREE.Mesh(
+            dtRoomPositiveDoorGeometry,
+            orange2MeshMaterial
+        );
         dtRoomPositiveDoorMesh1.position.z = 15;
         dtRoomPositiveDoorMesh1.position.y = 0.5;
         dtRoomPositiveDoorMesh1.position.x = -7;
         const dtRoomPositiveDoorMesh2 = dtRoomPositiveDoorMesh1.clone();
         dtRoomPositiveDoorMesh2.position.x = 7;
+
         // dtRoomPositiveDoorMesh2.rotation.z = 3.15;
         // // *** 电梯厢房正门黑边（需要动画，跟随电梯厢房正面运动）x轴调整宽度
         // const dtRoomPositiveDoorBlackBorderGeometry = new THREE.BoxGeometry(0.2, 37.5, 2);
@@ -213,7 +231,6 @@ function Dianti() {
         // dtRoomPositiveDoorBlackBorderMesh1.position.x = 7.5;
         // dtRoomPositiveDoorMesh1.add(dtRoomPositiveDoorBlackBorderMesh1);
 
-        dtRoomPositiveDoorMesh1.material.opacity = 0.8; // 调整透明度（调试用）
         // 电梯右侧门
         const dtRoomRightGroup = new THREE.Group();
         dtRoomRightGroup.name = '电梯右侧门';
@@ -336,7 +353,7 @@ function Dianti() {
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
 
         // 设置相机坐标
-        camera.position.set(200, -80, 300);
+        camera.position.set(300, 80, 300);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -366,8 +383,8 @@ function Dianti() {
 
         // ---------------------------------------------------------------------------------------------------------------
         let dtRoomAnimateSwitch = true; // 电梯上下开关
-        let dtRoomAnimateDelayTime1 = 5; // 电梯下面停留时间
-        const dtRoomAnimateDelayTime2 = 4; // 电梯上面停留时间
+        let dtRoomAnimateDelayTime1 = 4.5; // 电梯下面停留时间
+        const dtRoomAnimateDelayTime2 = 3.5; // 电梯上面停留时间
 
         let dtRoomRightDoorAnimateSwitch = true; // 电梯厢房右侧开门开关
         let dtRoomRightDoorAnimateOneSwitch = true; // 电梯厢房右侧开门开关只执行一次，防止多次触发
@@ -398,7 +415,7 @@ function Dianti() {
                 // 电梯下
                 if (dtRoomAnimateDelayTime1 >= dtRoomAnimateDelayTime2) {
                     dtRoomAnimateDelayTime1 = dtRoomAnimateDelayTime2;
-                    if (dtRoomGroup.position.y <= -82) {
+                    if (dtRoomGroup.position.y <= dtRoomGroupDefaultYNum) {
                         dtRoomAnimateSwitch = true;
                     } else {
                         dtRoomGroup.position.y -= 0.5;
