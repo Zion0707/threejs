@@ -215,32 +215,104 @@ function Dianti() {
         const dtRoomRightGroup = new THREE.Group();
         dtRoomRightGroup.name = '电梯右侧门';
         // 电梯右侧顶部玻璃
-        const dtRoomRightTopGeometry = new THREE.BoxGeometry(2, 6, 27.8);
-        const dtRoomRightTopMesh = new THREE.Mesh(dtRoomRightTopGeometry, white2MeshMaterial);
-        dtRoomRightTopMesh.position.x = 15;
-        dtRoomRightTopMesh.position.y = 16;
-
+        const dtRoomRightTopGlassGeometry = new THREE.BoxGeometry(2, 5.5, 27.8);
+        const dtRoomRightTopGlassMesh = new THREE.Mesh(
+            dtRoomRightTopGlassGeometry,
+            white2MeshMaterial
+        );
+        dtRoomRightTopGlassMesh.position.x = 15;
+        dtRoomRightTopGlassMesh.position.y = 16.3;
+        const dtRoomRightTopGlassBorderGeometry = new THREE.BoxGeometry(2, 0.5, 27.8);
+        const dtRoomRightTopGlassBorderMesh = new THREE.Mesh(
+            dtRoomRightTopGlassBorderGeometry,
+            lightBlueMeshMaterial
+        );
+        dtRoomRightTopGlassBorderMesh.position.y = -3;
+        dtRoomRightTopGlassMesh.add(dtRoomRightTopGlassBorderMesh);
         // ***电梯厢房右门单个（需要动画，双开）
         /*
          * 这里采用的是一个大的组包围，为什么要这么做，是因为要改变单个门的中心位置，门开的时候才不会错位，
          * 注意：动画需要赋值给这个父级才行！
          *
          * */
-        const dtRoomRightDoorParentGeometry = new THREE.BoxGeometry(2, 10, 20);
-        const dtRoomRightDoorParentMesh = new THREE.Mesh(
-            dtRoomRightDoorParentGeometry,
+        const dtRoomRightDoorParentGeometry = new THREE.BoxGeometry(2, 0, 30);
+        const dtRoomRightDoorParentLeftMesh = new THREE.Mesh(dtRoomRightDoorParentGeometry, [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+        ]);
+        dtRoomRightDoorParentLeftMesh.name = '右侧左边门组'; // 包括门框及玻璃
+        dtRoomRightDoorParentLeftMesh.position.set(15, -2.5, 15);
+        const dtRoomRightDoorParentRightMesh = dtRoomRightDoorParentLeftMesh.clone();
+        dtRoomRightDoorParentRightMesh.name = '右侧右边门组'; // 包括门框及玻璃
+        dtRoomRightDoorParentRightMesh.position.z = -15;
+        // 玻璃
+        const dtRoomRightDoorGlassGeometry = new THREE.BoxGeometry(1, 30, 12);
+        const dtRoomRightDoorGlassMesh = new THREE.Mesh(
+            dtRoomRightDoorGlassGeometry,
             white2MeshMaterial
         );
-        dtRoomRightDoorParentMesh.name = '右侧门组'; // 包括门框及玻璃
-        const dtRoomRightDoorGeometry = new THREE.BoxGeometry(2, 10, 10);
-        const dtRoomRightDoorMesh = new THREE.Mesh(dtRoomRightDoorGeometry, redMeshMaterial);
-        dtRoomRightDoorMesh.position.z = -5;
-        dtRoomRightDoorParentMesh.position.x = 15;
-        dtRoomRightDoorParentMesh.position.z = 15;
-        dtRoomRightDoorParentMesh.rotation.y = -1;
-        dtRoomRightDoorParentMesh.add(dtRoomRightDoorMesh);
+        dtRoomRightDoorGlassMesh.position.z = -8;
 
-        dtRoomRightGroup.add(dtRoomRightTopMesh, dtRoomRightDoorParentMesh);
+        // 边框（上下边框）
+        const dtRoomRightDoorTopAndBottomBorderGeometry = new THREE.BoxGeometry(2, 1, 15);
+        const dtRoomRightDoorTopAndBottomBorderMesh1 = new THREE.Mesh(
+            dtRoomRightDoorTopAndBottomBorderGeometry,
+            lightBlueMeshMaterial
+        );
+        dtRoomRightDoorTopAndBottomBorderMesh1.position.z = -8.5;
+        dtRoomRightDoorTopAndBottomBorderMesh1.position.y = 15;
+        const dtRoomRightDoorTopAndBottomBorderMesh2 = dtRoomRightDoorTopAndBottomBorderMesh1.clone();
+        dtRoomRightDoorTopAndBottomBorderMesh2.position.y = -15;
+
+        // 边框（左右边框）
+        const dtRoomRightDoorLeftAndRightBorderGeometry = new THREE.BoxGeometry(2, 30, 2);
+        const dtRoomRightDoorLeftAndRightBorderMesh1 = new THREE.Mesh(
+            dtRoomRightDoorLeftAndRightBorderGeometry,
+            lightBlueMeshMaterial
+        );
+        dtRoomRightDoorLeftAndRightBorderMesh1.position.z = -1;
+        const dtRoomRightDoorLeftAndRightBorderMesh2 = dtRoomRightDoorLeftAndRightBorderMesh1.clone();
+        dtRoomRightDoorLeftAndRightBorderMesh2.position.z = -15;
+        dtRoomRightDoorParentLeftMesh.add(
+            dtRoomRightDoorGlassMesh,
+            dtRoomRightDoorTopAndBottomBorderMesh1,
+            dtRoomRightDoorTopAndBottomBorderMesh2,
+            dtRoomRightDoorLeftAndRightBorderMesh1,
+            dtRoomRightDoorLeftAndRightBorderMesh2
+        );
+
+        const dtRoomRightDoorGlassMeshTwo = dtRoomRightDoorGlassMesh.clone();
+        dtRoomRightDoorGlassMeshTwo.position.z = 8;
+        const dtRoomRightDoorTopAndBottomBorderMesh1Two = dtRoomRightDoorTopAndBottomBorderMesh1.clone();
+        dtRoomRightDoorTopAndBottomBorderMesh1Two.position.z = 8;
+        const dtRoomRightDoorTopAndBottomBorderMesh2Two = dtRoomRightDoorTopAndBottomBorderMesh2.clone();
+        dtRoomRightDoorTopAndBottomBorderMesh2Two.position.z = 8;
+        const dtRoomRightDoorLeftAndRightBorderMesh1Two = dtRoomRightDoorLeftAndRightBorderMesh1.clone();
+        dtRoomRightDoorLeftAndRightBorderMesh1Two.position.z = 14.5;
+        const dtRoomRightDoorLeftAndRightBorderMesh2Two = dtRoomRightDoorLeftAndRightBorderMesh2.clone();
+        dtRoomRightDoorLeftAndRightBorderMesh2Two.position.z = 1;
+        dtRoomRightDoorParentRightMesh.add(
+            dtRoomRightDoorGlassMeshTwo,
+            dtRoomRightDoorTopAndBottomBorderMesh1Two,
+            dtRoomRightDoorTopAndBottomBorderMesh2Two,
+            dtRoomRightDoorLeftAndRightBorderMesh1Two,
+            dtRoomRightDoorLeftAndRightBorderMesh2Two
+        );
+
+        // 双开门动作（测试）
+        dtRoomRightDoorParentLeftMesh.rotation.y = -2; // 开门动画执行
+        dtRoomRightDoorParentRightMesh.rotation.y = 2; // 开门动画执行
+
+        dtRoomRightGroup.add(
+            dtRoomRightTopGlassMesh,
+            dtRoomRightDoorParentLeftMesh,
+            dtRoomRightDoorParentRightMesh
+        );
         // 房间组的元素
         dtRoomGroup.add(
             dtRoomTopAndBottomMesh1,
