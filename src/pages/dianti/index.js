@@ -114,7 +114,7 @@ function Dianti() {
         dtCenterTopCableMesh2.position.x = 1;
 
         // 电梯中心柱纹理
-        const dtCenterTextureGeometry = new THREE.BoxGeometry(10, 180, 10);
+        const dtCenterTextureGeometry = new THREE.BoxGeometry(10, 200, 10);
         lightBlueGridMaterial.repeat.set(1, 14);
         lightBlueGridMaterial.wrapT = THREE.RepeatWrapping;
         lightBlueGridMaterial.wrapS = THREE.RepeatWrapping;
@@ -158,7 +158,7 @@ function Dianti() {
         const dtBalanceGeometry = new THREE.BoxGeometry(10, 20, 6);
         const dtBalanceMesh = new THREE.Mesh(dtBalanceGeometry, orangeMeshMaterial);
         dtBalanceMesh.position.z = -28;
-        const dtBalanceTextureGeometry = new THREE.BoxGeometry(10.1, 1, 6.1);
+        const dtBalanceTextureGeometry = new THREE.BoxGeometry(10.2, 1, 6.2);
         const dtBalanceTextureMesh1 = new THREE.Mesh(dtBalanceTextureGeometry, blackMeshMaterial);
         const dtBalanceTextureMesh2 = dtBalanceTextureMesh1.clone();
         dtBalanceTextureMesh2.position.y = -5;
@@ -168,7 +168,7 @@ function Dianti() {
         dtBalanceMesh.position.y = 70; // 上下动画执行
 
         // *** 电梯厢房（需要动画，上下运动）
-        const dtRoomGroupDefaultYNum = -82;
+        const dtRoomGroupDefaultYNum = -83;
         const dtRoomGroup = new THREE.Group();
         dtRoomGroup.name = '电梯厢房组';
         dtRoomGroup.position.z = 1;
@@ -359,7 +359,7 @@ function Dianti() {
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
 
         // 设置相机坐标
-        camera.position.set(300, 80, 300);
+        camera.position.set(300, 30, 300);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true });
