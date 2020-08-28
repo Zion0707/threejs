@@ -38,6 +38,12 @@ function Dianti() {
             color: '#108fa9',
             transparent: true,
         });
+        // 浅蓝色纹理
+        const lightBlue2MeshMaterial = new THREE.MeshLambertMaterial({
+            color: '#108fa9',
+            transparent: true,
+            opacity: 0.7,
+        });
         // 深蓝色纹理
         const deepBlueMeshMaterial = new THREE.MeshLambertMaterial({
             color: '#137a8f',
@@ -75,7 +81,7 @@ function Dianti() {
 
         // 电梯四条顶梁柱
         const dtCenterPillarGeometry = new THREE.CylinderGeometry(1, 1, 210, 32);
-        const dtCenterPillarMesh1 = new THREE.Mesh(dtCenterPillarGeometry, lightBlueMeshMaterial);
+        const dtCenterPillarMesh1 = new THREE.Mesh(dtCenterPillarGeometry, lightBlue2MeshMaterial);
         dtCenterPillarMesh1.position.x = 5;
         const dtCenterPillarMesh2 = dtCenterPillarMesh1.clone();
         dtCenterPillarMesh2.position.x = -5;
@@ -125,7 +131,7 @@ function Dianti() {
 
         // 电梯中心柱封顶固定模块
         const dtCenterFixedGeometry = new THREE.BoxGeometry(11, 5, 11);
-        const dtCenterFixedMesh1 = new THREE.Mesh(dtCenterFixedGeometry, lightBlueMeshMaterial);
+        const dtCenterFixedMesh1 = new THREE.Mesh(dtCenterFixedGeometry, lightBlue2MeshMaterial);
         dtCenterFixedMesh1.position.z = -5;
         const dtCenterFixedMesh2 = dtCenterFixedMesh1.clone();
         dtCenterFixedMesh2.position.y = -102;
@@ -436,7 +442,7 @@ function Dianti() {
                     if (dtRoomRightDoorParentLeftMesh.rotation.y <= -2) {
                         dtRoomRightDoorAnimateSwitch = false;
                     } else {
-                        dtRoomRightDoorParentLeftMesh.rotation.y += -0.01;
+                        dtRoomRightDoorParentLeftMesh.rotation.y -= 0.01;
                         dtRoomRightDoorParentRightMesh.rotation.y += 0.01;
                     }
                 } else {
@@ -444,7 +450,7 @@ function Dianti() {
                         dtRoomRightDoorAnimateSwitch = true;
                         dtRoomRightDoorAnimateOneSwitch = false;
                     } else {
-                        dtRoomRightDoorParentLeftMesh.rotation.y -= -0.01;
+                        dtRoomRightDoorParentLeftMesh.rotation.y += 0.01;
                         dtRoomRightDoorParentRightMesh.rotation.y -= 0.01;
                     }
                 }
