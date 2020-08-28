@@ -19,7 +19,6 @@ function Dianti() {
             color: '#000',
             transparent: true,
         });
-
         // 白色纹理
         const whiteMeshMaterial = new THREE.MeshLambertMaterial({
             color: '#fff',
@@ -46,11 +45,18 @@ function Dianti() {
             color: '#ffda00',
             transparent: true,
         });
-        // 浅蓝色网格纹理
+        // 红色纹理
+        const redMeshMaterial = new THREE.MeshLambertMaterial({
+            color: '#ff4c4c',
+            transparent: true,
+        });
+        // 浅蓝色图片纹理
         const lightBlueGridMaterial = new THREE.TextureLoader().load(img01);
 
+        // 电梯总组
         const dtGroup = new THREE.Group();
         dtGroup.name = '电梯组';
+        dtGroup.rotation.y = -1.6; // 调整电梯侧面视觉（调试用）
 
         // 电梯底座
         const dtBaseGeometry = new THREE.BoxGeometry(50, 4, 80);
@@ -142,13 +148,13 @@ function Dianti() {
         // 电梯厢房
         const dtRoomGroup = new THREE.Group();
         dtRoomGroup.position.y = -82;
-        dtRoomGroup.position.z = 0;
+        dtRoomGroup.position.z = 1;
         dtRoomGroup.name = '电梯厢房组';
 
-        // 电梯厢房顶部磁铁
+        // 电梯厢房顶部黑色磁铁
         const dtRoomMagnetGeometry = new THREE.BoxGeometry(8, 5, 8);
         const dtRoomMagnetMesh = new THREE.Mesh(dtRoomMagnetGeometry, blackMeshMaterial);
-        dtRoomMagnetMesh.position.z = -10;
+        dtRoomMagnetMesh.position.z = -12;
         dtRoomMagnetMesh.position.y = 22;
 
         // 电梯厢房上顶下顶
@@ -185,7 +191,57 @@ function Dianti() {
         const dtRoomLeftGeometry = new THREE.BoxGeometry(2, 38, 27.8);
         const dtRoomLeftMesh = new THREE.Mesh(dtRoomLeftGeometry, white2MeshMaterial);
         dtRoomLeftMesh.position.x = -15;
-        // 组的添加
+
+        // *** 电梯厢房正门（需要动画，左右滑动开）x轴调整宽度
+        const dtRoomPositiveDoorGeometry = new THREE.BoxGeometry(14.2, 37.5, 2);
+        const dtRoomPositiveDoorMesh1 = new THREE.Mesh(dtRoomPositiveDoorGeometry, redMeshMaterial);
+        dtRoomPositiveDoorMesh1.position.z = 15;
+        dtRoomPositiveDoorMesh1.position.y = 0.5;
+        dtRoomPositiveDoorMesh1.position.x = -7;
+        // *** 电梯厢房正门黑边（需要动画，跟随电梯厢房正面运动）x轴调整宽度
+        const dtRoomPositiveDoorBlackBorderGeometry = new THREE.BoxGeometry(0.2, 37.5, 2);
+        const dtRoomPositiveDoorBlackBorderMesh1 = new THREE.Mesh(
+            dtRoomPositiveDoorBlackBorderGeometry,
+            blackMeshMaterial
+        );
+        dtRoomPositiveDoorBlackBorderMesh1.position.x = 7.5;
+        dtRoomPositiveDoorMesh1.add(dtRoomPositiveDoorBlackBorderMesh1);
+        const dtRoomPositiveDoorMesh2 = dtRoomPositiveDoorMesh1.clone();
+        dtRoomPositiveDoorMesh2.position.x = 7.5;
+        dtRoomPositiveDoorMesh2.rotation.z = 3.15;
+
+        dtRoomPositiveDoorMesh1.material.opacity = 0.8; // 调整透明度（测试用）
+        // 电梯右侧门
+        const dtRoomRightGroup = new THREE.Group();
+        dtRoomRightGroup.name = '电梯右侧门';
+        // 电梯右侧顶部玻璃
+        const dtRoomRightTopGeometry = new THREE.BoxGeometry(2, 6, 27.8);
+        const dtRoomRightTopMesh = new THREE.Mesh(dtRoomRightTopGeometry, white2MeshMaterial);
+        dtRoomRightTopMesh.position.x = 15;
+        dtRoomRightTopMesh.position.y = 16;
+
+        // ***电梯厢房右门单个（需要动画，双开）
+        /*
+         * 这里采用的是一个大的组包围，为什么要这么做，是因为要改变单个门的中心位置，门开的时候才不会错位，
+         * 注意：动画需要赋值给这个父级才行！
+         *
+         * */
+        const dtRoomRightDoorParentGeometry = new THREE.BoxGeometry(2, 10, 20);
+        const dtRoomRightDoorParentMesh = new THREE.Mesh(
+            dtRoomRightDoorParentGeometry,
+            white2MeshMaterial
+        );
+        dtRoomRightDoorParentMesh.name = '右侧门组'; // 包括门框及玻璃
+        const dtRoomRightDoorGeometry = new THREE.BoxGeometry(2, 10, 10);
+        const dtRoomRightDoorMesh = new THREE.Mesh(dtRoomRightDoorGeometry, redMeshMaterial);
+        dtRoomRightDoorMesh.position.z = -5;
+        dtRoomRightDoorParentMesh.position.x = 15;
+        dtRoomRightDoorParentMesh.position.z = 15;
+        dtRoomRightDoorParentMesh.rotation.y = -1;
+        dtRoomRightDoorParentMesh.add(dtRoomRightDoorMesh);
+
+        dtRoomRightGroup.add(dtRoomRightTopMesh, dtRoomRightDoorParentMesh);
+        // 房间组的元素
         dtRoomGroup.add(
             dtRoomTopAndBottomMesh1,
             dtRoomTopAndBottomMesh2,
@@ -193,7 +249,10 @@ function Dianti() {
             dtRoomPillarsMesh2,
             dtRoomBackMesh,
             dtRoomLeftMesh,
-            dtRoomMagnetMesh
+            dtRoomMagnetMesh,
+            dtRoomPositiveDoorMesh1,
+            dtRoomPositiveDoorMesh2,
+            dtRoomRightGroup
         );
         dtGroup.add(dtBaseMesh, dtCenterPillarGroup, dtRoomGroup, dtBalanceMesh);
         scene.add(dtGroup);
