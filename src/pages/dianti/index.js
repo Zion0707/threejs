@@ -196,22 +196,22 @@ function Dianti() {
         dtRoomLeftMesh.position.x = -15;
 
         // *** 电梯厢房正门（需要动画，左右滑动开）x轴调整宽度
-        const dtRoomPositiveDoorGeometry = new THREE.BoxGeometry(14.2, 37.5, 2);
+        const dtRoomPositiveDoorGeometry = new THREE.BoxGeometry(14.5, 37.5, 2);
         const dtRoomPositiveDoorMesh1 = new THREE.Mesh(dtRoomPositiveDoorGeometry, redMeshMaterial);
         dtRoomPositiveDoorMesh1.position.z = 15;
         dtRoomPositiveDoorMesh1.position.y = 0.5;
         dtRoomPositiveDoorMesh1.position.x = -7;
-        // *** 电梯厢房正门黑边（需要动画，跟随电梯厢房正面运动）x轴调整宽度
-        const dtRoomPositiveDoorBlackBorderGeometry = new THREE.BoxGeometry(0.2, 37.5, 2);
-        const dtRoomPositiveDoorBlackBorderMesh1 = new THREE.Mesh(
-            dtRoomPositiveDoorBlackBorderGeometry,
-            blackMeshMaterial
-        );
-        dtRoomPositiveDoorBlackBorderMesh1.position.x = 7.5;
-        dtRoomPositiveDoorMesh1.add(dtRoomPositiveDoorBlackBorderMesh1);
         const dtRoomPositiveDoorMesh2 = dtRoomPositiveDoorMesh1.clone();
         dtRoomPositiveDoorMesh2.position.x = 7.5;
-        dtRoomPositiveDoorMesh2.rotation.z = 3.15;
+        // dtRoomPositiveDoorMesh2.rotation.z = 3.15;
+        // // *** 电梯厢房正门黑边（需要动画，跟随电梯厢房正面运动）x轴调整宽度
+        // const dtRoomPositiveDoorBlackBorderGeometry = new THREE.BoxGeometry(0.2, 37.5, 2);
+        // const dtRoomPositiveDoorBlackBorderMesh1 = new THREE.Mesh(
+        //     dtRoomPositiveDoorBlackBorderGeometry,
+        //     blackMeshMaterial
+        // );
+        // dtRoomPositiveDoorBlackBorderMesh1.position.x = 7.5;
+        // dtRoomPositiveDoorMesh1.add(dtRoomPositiveDoorBlackBorderMesh1);
 
         dtRoomPositiveDoorMesh1.material.opacity = 0.8; // 调整透明度（调试用）
         // 电梯右侧门
@@ -365,16 +365,109 @@ function Dianti() {
         el.append(renderer.domElement);
 
         // ---------------------------------------------------------------------------------------------------------------
+        let dtRoomAnimateSwitch = true; // 电梯上下开关
+        let dtRoomAnimateDelayTime1 = 10; // 电梯上下停留时间
+        const dtRoomAnimateDelayTime2 = 10; // 与（电梯上下停留时间）相同
+
+        let dtRoomRightDoorAnimateSwitch = true; // 电梯厢房右侧开门开关
+        let dtRoomPositiveDoorAnimateSwitch = true; // 电梯厢房正门开门开关
+        let dtRoomPositiveDoorAnimateNum1 = 14.5; // 电梯厢房正门开门范围
+        const dtRoomPositiveDoorAnimateNum2 = 14.5; // 与（电梯厢房正门开门范围）相同
+
+        // 电梯动画
+        const dtRoomAnimateFun = () => {
+            if (dtRoomAnimateSwitch) {
+                // 电梯上
+                if (dtRoomAnimateDelayTime1 <= 0) {
+                    dtRoomAnimateDelayTime1 = 0;
+                    if (dtRoomGroup.position.y >= 80) {
+                        dtRoomAnimateSwitch = false;
+                    } else {
+                        dtRoomGroup.position.y += 0.5;
+                        dtBalanceMesh.position.y -= 0.5;
+                    }
+                } else {
+                    dtRoomAnimateDelayTime1 -= 0.01;
+                    dtRoomRightDoorAnimateFun();
+                }
+            } else {
+                // 电梯下
+                if (dtRoomAnimateDelayTime1 >= dtRoomAnimateDelayTime2) {
+                    dtRoomAnimateDelayTime1 = dtRoomAnimateDelayTime2;
+                    if (dtRoomGroup.position.y <= -82) {
+                        dtRoomAnimateSwitch = true;
+                    } else {
+                        dtRoomGroup.position.y -= 0.5;
+                        dtBalanceMesh.position.y += 0.5;
+                    }
+                } else {
+                    dtRoomAnimateDelayTime1 += 0.01;
+                }
+            }
+        };
+
+        // 底下右侧开门动画
+        const dtRoomRightDoorAnimateFun = () => {
+            if (dtRoomRightDoorAnimateSwitch) {
+                if (dtRoomRightDoorParentLeftMesh.rotation.y <= -2) {
+                    dtRoomRightDoorAnimateSwitch = false;
+                } else {
+                    dtRoomRightDoorParentLeftMesh.rotation.y += -0.01;
+                    dtRoomRightDoorParentRightMesh.rotation.y += 0.01;
+                }
+            } else {
+                if (dtRoomRightDoorParentLeftMesh.rotation.y >= 0) {
+                    dtRoomRightDoorAnimateSwitch = true;
+                } else {
+                    dtRoomRightDoorParentLeftMesh.rotation.y -= -0.01;
+                    dtRoomRightDoorParentRightMesh.rotation.y -= 0.01;
+                }
+            }
+        };
+
+        // 上面正面开门动画
+        const dtRoomPositiveDoorAnimateFun = () => {
+            if (dtRoomPositiveDoorAnimateSwitch) {
+                dtRoomPositiveDoorAnimateNum1 -= 0.1;
+                dtRoomPositiveDoorMesh1.geometry = dtRoomPositiveDoorMesh2.geometry = new THREE.BoxGeometry(
+                    dtRoomPositiveDoorAnimateNum1,
+                    37.5,
+                    2
+                );
+                if (dtRoomPositiveDoorAnimateNum1 <= 0) {
+                    dtRoomPositiveDoorAnimateNum1 = 0;
+                    dtRoomPositiveDoorAnimateSwitch = false;
+                } else {
+                    dtRoomPositiveDoorMesh1.position.x -= 0.05;
+                    dtRoomPositiveDoorMesh2.position.x -= 0.05;
+                }
+            } else {
+                dtRoomPositiveDoorAnimateNum1 += 0.1;
+                dtRoomPositiveDoorMesh1.geometry = dtRoomPositiveDoorMesh2.geometry = new THREE.BoxGeometry(
+                    dtRoomPositiveDoorAnimateNum1,
+                    37.5,
+                    2
+                );
+                if (dtRoomPositiveDoorAnimateNum1 >= dtRoomPositiveDoorAnimateNum2) {
+                    dtRoomPositiveDoorAnimateNum1 = dtRoomPositiveDoorAnimateNum2;
+                    dtRoomPositiveDoorAnimateSwitch = true;
+                } else {
+                    dtRoomPositiveDoorMesh1.position.x += 0.05;
+                    dtRoomPositiveDoorMesh2.position.x += 0.05;
+                }
+            }
+        };
 
         function render() {
             // 动画循环渲染
             requestAnimationFrame(render);
             // 渲染到页面上
             renderer.render(scene, camera);
+
             // 动画运行
             if (animateSwitch) {
-                console.log('动画运行');
-                dtRoomGroup.position.y += 0.5;
+                dtRoomAnimateFun();
+                dtRoomPositiveDoorAnimateFun();
             }
         }
         render();
