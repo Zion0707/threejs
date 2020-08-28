@@ -384,7 +384,7 @@ function Dianti() {
         scene.add(new THREE.AmbientLight('#fff', 0.5));
 
         // 红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
-        scene.add(new THREE.AxesHelper(5));
+        // scene.add(new THREE.AxesHelper(5));
         el.append(renderer.domElement);
 
         // ---------------------------------------------------------------------------------------------------------------
