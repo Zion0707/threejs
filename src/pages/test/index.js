@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
+
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import fileObj from 'static/media/coca/file.obj';
 import './index.css';
 
 function Test() {
@@ -14,25 +17,24 @@ function Test() {
         // 场景
         const scene = new THREE.Scene();
 
-        // 黄色几何元素
-        const yellowBoxGeometry = new THREE.BoxGeometry(10, 10, 10);
-        const yellowBoxMaterial = new THREE.MeshLambertMaterial({
-            color: 'yellow',
-            transparent: true,
-            opacity: 0.5,
+        // obj 元素加载器
+        const objLoader = new OBJLoader();
+        objLoader.load(fileObj, (obj) => {
+            obj.scale.set(0.1, 0.1, 0.1);
+            obj.traverse((child) => {
+                if (child instanceof THREE.Mesh) {
+                    // 获取需贴纸的材质列表
+                    const objLoaderMaterialArr = child.material;
+                    // 给第一个纹理面设置相关图片
+                    objLoaderMaterialArr[0] = new THREE.MeshLambertMaterial({
+                        color: 'red',
+                        wireframe: true,
+                        wireframeLinecap: 'square',
+                    });
+                }
+            });
+            scene.add(obj);
         });
-        const yellowMesh = new THREE.Mesh(yellowBoxGeometry, yellowBoxMaterial);
-        yellowMesh.name = '黄色立方体';
-
-        // 红色几何元素
-        const redBoxGeometry = new THREE.BoxGeometry(5, 5, 5);
-        const redBoxMaterial = new THREE.MeshLambertMaterial({
-            color: 'red',
-        });
-        const redMesh = new THREE.Mesh(redBoxGeometry, redBoxMaterial);
-        redMesh.name = '红色立方体';
-
-        scene.add(yellowMesh, redMesh);
 
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
@@ -65,23 +67,6 @@ function Test() {
         // scene.add(new THREE.AxesHelper(5));
 
         el.append(renderer.domElement);
-
-        const raycaster = new THREE.Raycaster();
-        const mouse = new THREE.Vector2();
-        // 点击更改颜色
-        renderer.domElement.onclick = (event) => {
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(scene.children);
-            if (intersects.length > 0) {
-                intersects.forEach((item) => {
-                    if (item.object.name === '红色立方体') {
-                        item.object.material = new THREE.MeshLambertMaterial({ color: 'white' });
-                    }
-                });
-            }
-        };
 
         function render() {
             // 动画循环渲染
