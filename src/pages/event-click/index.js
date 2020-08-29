@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import './index.css';
 
-function Test() {
+function EventClick() {
     const init = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -74,6 +74,7 @@ function Test() {
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
             raycaster.setFromCamera(mouse, camera);
             const intersects = raycaster.intersectObjects(scene.children);
+            console.log(intersects);
             if (intersects.length > 0) {
                 intersects.forEach((item) => {
                     if (item.object.name === '红色立方体') {
@@ -111,4 +112,4 @@ function Test() {
         </div>
     );
 }
-export default Test;
+export default EventClick;

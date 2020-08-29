@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import { Route, BrowserRouter as Router, Redirect, Switch } from 'react-router-dom';
+import { Route, HashRouter as Router, Redirect, Switch } from 'react-router-dom';
 import Index from './pages/index';
 import Basis from './pages/basis';
 import Pikaqiu from './pages/pikaqiu';
@@ -16,6 +16,7 @@ import Dianti from './pages/dianti';
 import Line2 from './pages/line2';
 import Video from './pages/video';
 import ChangeWide from './pages/change-wide';
+import EventClick from './pages/event-click';
 import Test from './pages/test';
 import Note404 from './pages/note404';
 
@@ -37,6 +38,7 @@ ReactDOM.render(
                 <Route path="/line2" component={Line2} />
                 <Route path="/video" component={Video} />
                 <Route path="/change-wide" component={ChangeWide} />
+                <Route path="/event-click" component={EventClick} />
                 <Route path="/note404" component={Note404} />
                 <Redirect to="/note404" />
             </Switch>
