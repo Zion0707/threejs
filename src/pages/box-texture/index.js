@@ -24,13 +24,13 @@ function BoxTexture() {
         const material = new THREE.MeshLambertMaterial({
             map: texture,
         });
-        const mesh = new THREE.Mesh(geometry, [material, null, null, null, material, null]);
+        const mesh = new THREE.Mesh(geometry, [material, material, null, null, material, null]);
         scene.add(mesh);
 
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(0, 0, 200);
+        camera.position.set(0, 0, 100);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true });
