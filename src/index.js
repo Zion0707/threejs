@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import { Route, HashRouter as Router, Redirect, Switch } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Redirect, Switch } from 'react-router-dom';
 import Index from './pages/index';
 import Basis from './pages/basis';
 import Pikaqiu from './pages/pikaqiu';
