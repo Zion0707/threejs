@@ -98,6 +98,7 @@ function EventClick() {
         window.onresize = () => {
             const newWindowWidth = window.innerWidth;
             const newWindowHeight = window.innerHeight;
+            el.style.cssText = `width:${newWindowWidth};height:${newWindowHeight}`;
             renderer.setSize(newWindowWidth, newWindowHeight);
             camera.aspect = newWindowWidth / newWindowHeight;
             camera.updateProjectionMatrix();

@@ -2,9 +2,22 @@ import React, { useEffect } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
+
 import './index.css';
 
 function Test() {
+    let globalBoxMesh = null;
+
+    const setOpacity = () => {
+        const tween1 = new TWEEN.Tween(globalBoxMesh.position).to({ x: 10 }, 1000);
+        const tween2 = new TWEEN.Tween(globalBoxMesh.position).to({ y: 10 }, 1000);
+        tween1.easing(TWEEN.Easing.Circular.Out);
+        tween2.easing(TWEEN.Easing.Circular.Out);
+        tween1.chain(tween2);
+        tween2.chain(tween1);
+        tween1.start();
+    };
+
     const init = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -13,6 +26,12 @@ function Test() {
 
         // 场景
         const scene = new THREE.Scene();
+
+        const boxGeometry = new THREE.BoxGeometry(10, 10, 10);
+        const boxMaterial = new THREE.PointsMaterial({ size: 2 });
+        const boxMesh = new THREE.Points(boxGeometry, boxMaterial);
+        globalBoxMesh = boxMesh;
+        scene.add(boxMesh);
 
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
@@ -42,7 +61,7 @@ function Test() {
         scene.add(new THREE.AmbientLight('#fff', 0.5));
 
         // 红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
-        // scene.add(new THREE.AxesHelper(5));
+        scene.add(new THREE.AxesHelper(5));
 
         el.append(renderer.domElement);
 
@@ -60,6 +79,7 @@ function Test() {
         window.onresize = () => {
             const newWindowWidth = window.innerWidth;
             const newWindowHeight = window.innerHeight;
+            el.style.cssText = `width:${newWindowWidth};height:${newWindowHeight}`;
             renderer.setSize(newWindowWidth, newWindowHeight);
             camera.aspect = newWindowWidth / newWindowHeight;
             camera.updateProjectionMatrix();
@@ -70,7 +90,11 @@ function Test() {
     });
     return (
         <div id="content">
-            <ul></ul>
+            <ul>
+                <li>
+                    <button onClick={setOpacity}>更改透明度</button>
+                </li>
+            </ul>
         </div>
     );
 }

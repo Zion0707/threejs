@@ -510,9 +510,12 @@ function Tadiao() {
         render();
 
         // onresize 事件会在窗口被调整大小时发生
-        window.onresize = function () {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            camera.aspect = window.innerWidth / window.innerHeight;
+        window.onresize = () => {
+            const newWindowWidth = window.innerWidth;
+            const newWindowHeight = window.innerHeight;
+            el.style.cssText = `width:${newWindowWidth};height:${newWindowHeight}`;
+            renderer.setSize(newWindowWidth, newWindowHeight);
+            camera.aspect = newWindowWidth / newWindowHeight;
             camera.updateProjectionMatrix();
         };
     };
