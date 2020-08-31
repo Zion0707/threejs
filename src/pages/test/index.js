@@ -28,10 +28,19 @@ function Test() {
         const scene = new THREE.Scene();
 
         const boxGeometry = new THREE.BoxGeometry(10, 10, 10);
-        const boxMaterial = new THREE.PointsMaterial({ size: 2 });
-        const boxMesh = new THREE.Points(boxGeometry, boxMaterial);
+        const boxMaterial = new THREE.MeshLambertMaterial({ color: 'blue', wireframe: true });
+        const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
         globalBoxMesh = boxMesh;
         scene.add(boxMesh);
+
+        const boxGeometry2 = new THREE.BoxGeometry(11, 11, 11);
+        const boxMaterial2 = new THREE.MeshLambertMaterial({
+            color: 'white',
+            transparent: true,
+            opacity: 0.2,
+        });
+        const boxMesh2 = new THREE.Mesh(boxGeometry2, boxMaterial2);
+        scene.add(boxMesh2);
 
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
