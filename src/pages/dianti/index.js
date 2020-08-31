@@ -307,7 +307,7 @@ function Dianti() {
                 } else {
                     dtRoomAnimateDelayTime1 -= 0.01;
                     dtRoomRightDoorAnimateFun();
-                    dtRoomRightDoorAnimateOneSwitch = true;
+                    dtRoomLeftDoorAnimateOneSwitch = true;
                 }
             } else {
                 // 电梯下
@@ -322,7 +322,7 @@ function Dianti() {
                 } else {
                     dtRoomAnimateDelayTime1 += 0.01;
                     dtRoomLeftDoorAnimateFun();
-                    dtRoomLeftDoorAnimateOneSwitch = true;
+                    dtRoomRightDoorAnimateOneSwitch = true;
                 }
             }
         };
@@ -351,8 +351,6 @@ function Dianti() {
                         38,
                         dtRoomRightDoorAnimateNum1
                     );
-
-                    console.log(dtRoomRightDoorAnimateNum1, dtRoomRightDoorAnimateNum2);
                     if (dtRoomRightDoorAnimateNum1 >= dtRoomRightDoorAnimateNum2) {
                         dtRoomRightDoorAnimateNum1 = dtRoomRightDoorAnimateNum2;
                         dtRoomRightDoorAnimateSwitch = true;

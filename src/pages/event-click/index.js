@@ -4,7 +4,7 @@ import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import './index.css';
 
-function Test() {
+function EventClick() {
     const init = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -14,10 +14,30 @@ function Test() {
         // 场景
         const scene = new THREE.Scene();
 
+        // 黄色几何元素
+        const yellowBoxGeometry = new THREE.BoxGeometry(10, 10, 10);
+        const yellowBoxMaterial = new THREE.MeshLambertMaterial({
+            color: 'yellow',
+            transparent: true,
+            opacity: 0.5,
+        });
+        const yellowMesh = new THREE.Mesh(yellowBoxGeometry, yellowBoxMaterial);
+        yellowMesh.name = '黄色立方体';
+
+        // 红色几何元素
+        const redBoxGeometry = new THREE.BoxGeometry(5, 5, 5);
+        const redBoxMaterial = new THREE.MeshLambertMaterial({
+            color: 'red',
+        });
+        const redMesh = new THREE.Mesh(redBoxGeometry, redBoxMaterial);
+        redMesh.name = '红色立方体';
+
+        scene.add(yellowMesh, redMesh);
+
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(0, 0, 200);
+        camera.position.set(10, 30, 100);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -45,6 +65,24 @@ function Test() {
         // scene.add(new THREE.AxesHelper(5));
 
         el.append(renderer.domElement);
+
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        // 点击更改颜色
+        renderer.domElement.onclick = (event) => {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(scene.children);
+            console.log(intersects);
+            if (intersects.length > 0) {
+                intersects.forEach((item) => {
+                    if (item.object.name === '红色立方体') {
+                        item.object.material = new THREE.MeshLambertMaterial({ color: 'white' });
+                    }
+                });
+            }
+        };
 
         function render() {
             // 动画循环渲染
@@ -74,4 +112,4 @@ function Test() {
         </div>
     );
 }
-export default Test;
+export default EventClick;
