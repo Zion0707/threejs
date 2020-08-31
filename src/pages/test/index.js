@@ -21,39 +21,10 @@ function Test() {
         // 场景
         const scene = new THREE.Scene();
 
-        const boxGeometry = new THREE.BoxGeometry(8, 8, 1);
-        const boxMeshMaterial = new THREE.MeshLambertMaterial({
-            color: '#fff',
-            transparent: true,
-            opacity: 0.5,
-        });
-        const boxMesh = new THREE.Mesh(boxGeometry, boxMeshMaterial);
-        scene.add(boxMesh);
-
-        let num = 8;
-        let numSwitch = true;
-        setInterval(() => {
-            if (numSwitch) {
-                num -= 0.01;
-                boxMesh.geometry = new THREE.BoxGeometry(num, 8, 1);
-                boxMesh.position.x -= 0.005;
-                if (num <= 0) {
-                    numSwitch = false;
-                }
-            } else {
-                num += 0.01;
-                boxMesh.geometry = new THREE.BoxGeometry(num, 8, 1);
-                boxMesh.position.x += 0.005;
-                if (num >= 8) {
-                    numSwitch = true;
-                }
-            }
-        }, 1);
-
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(0, 0, 50);
+        camera.position.set(0, 0, 200);
 
         cameraGlobal = camera;
         // 渲染器
