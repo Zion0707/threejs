@@ -7,9 +7,9 @@ function Map3d() {
         return new Promise((reslove, reject) => {
             const script = document.createElement('script');
             script.src =
-                'https://webapi.amap.com/maps?v=1.4.15&key=02b30d3994182a2256b8b4dbbb63c17a&callback=onBMapCallback';
+                'https://webapi.amap.com/maps?v=1.4.15&key=02b30d3994182a2256b8b4dbbb63c17a&plugin=Map3D&callback=onAMapCallback';
             document.body.append(script);
-            window.onBMapCallback = () => {
+            window.onAMapCallback = () => {
                 const { AMap } = window;
                 reslove(AMap);
             };
@@ -19,8 +19,8 @@ function Map3d() {
     useEffect(() => {
         loadamap().then((AMap) => {
             new AMap.Map('container', {
-                center: [117.000923, 36.675807],
-                zoom: 11,
+                pitch: 75,
+                viewMode: '3D',
             });
         });
     }, []);
