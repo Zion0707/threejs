@@ -14,7 +14,6 @@ function Test() {
         // create a scene, that will hold all our elements such as objects, cameras and lights.
         const scene = new THREE.Scene();
 
-        // create a camera, which defines where we're looking at.
         const camera = new THREE.PerspectiveCamera(
             45,
             window.innerWidth / window.innerHeight,
@@ -22,7 +21,6 @@ function Test() {
             1000
         );
 
-        // create a render and set the size
         const renderer = new THREE.WebGLRenderer({ antialias: true });
 
         renderer.setClearColor('#fff');
