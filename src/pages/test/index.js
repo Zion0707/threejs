@@ -22,15 +22,6 @@ function Test() {
         boxMesh.receiveShadow = true; // 允许接收阴影
         scene.add(boxMesh);
 
-        // 平面
-        const planeGeometry = new THREE.PlaneGeometry(30, 30, 1, 1);
-        const planeMaterial = new THREE.MeshBasicMaterial({ color: '#ccc' });
-        const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
-        planeMesh.rotation.x = -0.5 * Math.PI; // 圆周长2PI，PI代表180度，
-        planeMesh.position.y = -7;
-        planeMesh.receiveShadow = true;
-        scene.add(planeMesh);
-
         // 相机
         const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
@@ -40,7 +31,7 @@ function Test() {
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         // 设置渲染器的颜色和大小
-        renderer.setClearColor('#fff');
+        renderer.setClearColor('#000');
         renderer.setSize(winWidth, winHeight);
         renderer.setPixelRatio(window.devicePixelRatio); // 高清设置
         renderer.shadowMapEnabled = true;
@@ -53,6 +44,8 @@ function Test() {
         const orbitControls = new OrbitControls(camera, renderer.domElement);
         orbitControls.autoRotate = false;
         orbitControls.target = new THREE.Vector3(0, 0, 0); // 控制焦点
+        orbitControls.maxDistance = 300;
+        orbitControls.zoomSpeed = 0.8;
 
         // 设置光源
         const light = new THREE.DirectionalLight('#fff', 0.5);
