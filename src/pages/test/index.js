@@ -11,53 +11,67 @@ function Test() {
         const winHeight = window.innerHeight;
         el.style.cssText = `width:${winWidth}px;height:${winHeight}px`;
 
-        // 场景
+        // create a scene, that will hold all our elements such as objects, cameras and lights.
         const scene = new THREE.Scene();
 
-        // 立方体
-        const boxGeometry = new THREE.BoxGeometry(10, 10, 10);
-        const boxMaterial = new THREE.MeshLambertMaterial({ color: 'blue' });
-        const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
-        boxMesh.castShadow = true; // 允许投射阴影
-        boxMesh.receiveShadow = true; // 允许接收阴影
-        scene.add(boxMesh);
+        // create a camera, which defines where we're looking at.
+        const camera = new THREE.PerspectiveCamera(
+            45,
+            window.innerWidth / window.innerHeight,
+            0.1,
+            1000
+        );
 
-        // 相机
-        const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 0.1, 1000);
-        // 设置相机坐标
-        camera.position.set(0, 0, 200);
-        camera.lookAt(new THREE.Vector3(0, 0, 0)); // 让相机指向原点
-
-        // 渲染器
+        // create a render and set the size
         const renderer = new THREE.WebGLRenderer({ antialias: true });
-        // 设置渲染器的颜色和大小
-        renderer.setClearColor('#000');
-        renderer.setSize(winWidth, winHeight);
-        renderer.setPixelRatio(window.devicePixelRatio); // 高清设置
-        renderer.shadowMapEnabled = true;
 
-        // 将renderer（渲染器）的dom元素（renderer.domElement）添加到我们的HTML文档中。
-        // 这就是渲染器用来显示场景给我们看的<canvas>元素
-        document.body.appendChild(renderer.domElement);
+        renderer.setClearColor('#fff');
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFShadowMap;
 
-        // 鼠标控制旋转
+        // create the ground plane
+        const planeGeometry = new THREE.PlaneGeometry(20, 20);
+        const planeMaterial = new THREE.MeshLambertMaterial({ color: '#fff' });
+        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+        plane.receiveShadow = true;
+
+        // rotate and position the plane
+        plane.rotation.x = -0.5 * Math.PI;
+
+        // add the plane to the scene
+        scene.add(plane);
+
+        // create a cube
+        const cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
+        const cubeMaterial = new THREE.MeshLambertMaterial({ color: '#f00' });
+        const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+        cube.castShadow = true;
+
+        // position the cube
+        cube.position.set(-4, 3, 0);
+
+        // add the cube to the scene
+        scene.add(cube);
+
+        // position and point the camera to the center of the scene
+        camera.position.set(-100, 40, 100);
+        camera.lookAt(scene.position);
+
+        // add spotlight for the shadows
+        const spotLight = new THREE.SpotLight(0xffffff);
+        spotLight.position.set(-40, 60, -10);
+        spotLight.castShadow = true;
+        scene.add(spotLight);
+
+        // add the output of the renderer to the html element
+        el.append(renderer.domElement);
+
         const orbitControls = new OrbitControls(camera, renderer.domElement);
         orbitControls.autoRotate = false;
-        orbitControls.target = new THREE.Vector3(0, 0, 0); // 控制焦点
-        orbitControls.maxDistance = 300;
-        orbitControls.zoomSpeed = 0.8;
 
-        // 设置光源
-        const light = new THREE.DirectionalLight('#fff', 0.5);
-        light.position.setScalar(100);
-        light.castShadow = true;
-        scene.add(light);
-        scene.add(new THREE.AmbientLight('#fff', 0.5));
-
-        // 红色代表 X 轴. 绿色代表 Y 轴. 蓝色代表 Z 轴.
-        scene.add(new THREE.AxesHelper(5));
-
-        el.append(renderer.domElement);
+        // call the render function
+        renderer.render(scene, camera);
 
         function render() {
             // 动画循环渲染
