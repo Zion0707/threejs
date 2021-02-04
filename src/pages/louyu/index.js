@@ -1,12 +1,9 @@
 import React, { useEffect } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
-import fileObj from 'static/media/coca/file.obj';
-import cocaRed from 'static/media/coca/coca_red.jpg';
 import * as THREE from 'three';
 import './index.css';
 
-function Building() {
+function Louyu() {
     const init = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -16,47 +13,75 @@ function Building() {
         // 场景
         const scene = new THREE.Scene();
 
-        // 楼宇组开始
-        let objLoaderMaterialArr = [];
-        // obj 元素加载器
-        const objLoader = new OBJLoader();
-        objLoader.load(fileObj, (obj) => {
-            obj.scale.set(0.1, 0.1, 0.1);
-            obj.traverse((child) => {
-                if (child instanceof THREE.Mesh) {
-                    // 获取需贴纸的材质列表
-                    objLoaderMaterialArr = child.material;
-                    // 给第一个纹理面设置相关图片
-                    objLoaderMaterialArr[0] = new THREE.MeshLambertMaterial({
-                        map: new THREE.TextureLoader().load(cocaRed),
-                    });
-                }
-            });
-
-            console.log(obj);
-            obj.opacity = 0.1;
-            scene.add(obj);
+        // 纹理列表
+        const blue05Material = new THREE.MeshLambertMaterial({
+            color: '#15c5e8',
+            transparent: true,
+            opacity: 0.5,
         });
 
-        const buildingGroup = new THREE.Group();
-        const geometry = new THREE.BoxBufferGeometry(1, 1, 1);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const cube = new THREE.Mesh(geometry, material);
-        buildingGroup.add(cube);
-        scene.add(buildingGroup);
+        const blue01Material = new THREE.MeshLambertMaterial({
+            color: '#15c5e8',
+            transparent: true,
+            opacity: 0.1,
+        });
+
+        const light03Material = new THREE.MeshLambertMaterial({
+            color: '#15c5e8',
+            transparent: true,
+            opacity: 0.3,
+        });
+
+        // 楼宇组开始
+        const louyuGroup = new THREE.Group();
+
+        // 楼宇主体
+        const louyuGeometry = new THREE.BoxBufferGeometry(100, 200, 100);
+        const louyuMesh = new THREE.Mesh(louyuGeometry, light03Material);
+        louyuMesh.name = '楼宇主体';
+        louyuGroup.add(louyuMesh);
+
+        // 楼宇顶部
+        const louyuTopGeometry = new THREE.BoxBufferGeometry(100.5, 10, 100.5);
+        const louyuTopMesh = new THREE.Mesh(louyuTopGeometry, blue05Material);
+        louyuTopMesh.position.set(0, 110, 0);
+        louyuTopMesh.name = '楼宇顶部';
+        scene.add(louyuTopMesh);
+
+        // // 楼宇底部
+        // const louyuBottomGeometry = new THREE.BoxBufferGeometry(160, 8, 160);
+        // const louyuBottomMesh = new THREE.Mesh(louyuBottomGeometry, blue05Material);
+        // louyuBottomMesh.position.set(0, -105, 0);
+        // louyuBottomMesh.name = '楼宇底部';
+        // scene.add(louyuBottomMesh);
+
+        // 楼层
+        const floorGeometry = new THREE.BoxBufferGeometry(100, 1, 100);
+        let floorNum = 100;
+        for (let i = 0; i < 20; i++) {
+            const floorMesh = new THREE.Mesh(floorGeometry, blue01Material);
+            floorMesh.position.set(0, (floorNum -= 10), 0);
+            louyuGroup.add(floorMesh);
+        }
+        scene.add(louyuGroup);
+
+        const louyuGroup2 = louyuGroup.clone();
+        scene.add(louyuGroup2);
+
         // 楼宇组结束
 
         // ---------------------------------------------------------------------------------------------
         // 相机
-        const camera = new THREE.PerspectiveCamera(45, winWidth / winHeight, 1, 1000);
+        const camera = new THREE.PerspectiveCamera(60, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(0, 0, 300);
+        camera.position.set(300, 80, 300);
 
         // 渲染器
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 
         // 设置渲染器的颜色和大小
-        renderer.setClearColor('#040b1a');
+        // renderer.setClearColor('#040b1a');
+        renderer.setClearAlpha(0);
         renderer.setSize(winWidth, winHeight);
         renderer.setPixelRatio(window.devicePixelRatio); // 高清设置
 
@@ -99,4 +124,4 @@ function Building() {
     });
     return <div id="content"></div>;
 }
-export default Building;
+export default Louyu;
