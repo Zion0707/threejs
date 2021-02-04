@@ -17,8 +17,9 @@ import Line2 from './pages/line2';
 import Video from './pages/video';
 import ChangeWide from './pages/change-wide';
 import EventClick from './pages/event-click';
-import Map3d from './pages/map-3d';
 import Test from './pages/test';
+import Map3d from './pages/map-3d';
+import Building from './pages/building';
 
 ReactDOM.render(
     <>
@@ -40,6 +41,7 @@ ReactDOM.render(
                 <Route path="/change-wide" component={ChangeWide} />
                 <Route path="/event-click" component={EventClick} />
                 <Route path="/map-3d" component={Map3d} />
+                <Route path="/building" component={Building} />
             </Switch>
         </Router>
     </>,
