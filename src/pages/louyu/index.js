@@ -119,7 +119,7 @@ function Louyu() {
         // 底部圆圈
         const yqGeometry = new THREE.CylinderBufferGeometry(190, 190, 1, 150);
         const yqMesh = new THREE.Mesh(yqGeometry, [null, yqMaterial, yqMaterial, null, null, null]);
-        yqMesh.position.set(0, -130, 0);
+        yqMesh.position.set(0, -134, 0);
 
         const yqGeometry2 = new THREE.CylinderBufferGeometry(170, 170, 1, 150);
         const yqMesh2 = new THREE.Mesh(yqGeometry2, [
@@ -130,7 +130,7 @@ function Louyu() {
             null,
             null,
         ]);
-        yqMesh2.position.set(0, -131, 0);
+        yqMesh2.position.set(0, -130, 0);
 
         louyuGroup.add(
             louyuMesh,
@@ -186,8 +186,8 @@ function Louyu() {
             // 渲染到页面上
             renderer.render(scene, camera);
             // 动画元素执行
-            yqMesh.rotation.y += 0.02;
-            yqMesh2.rotation.y -= 0.02;
+            yqMesh.rotation.y += 0.015;
+            yqMesh2.rotation.y -= 0.015;
         }
         render();
 
