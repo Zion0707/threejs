@@ -14,83 +14,65 @@ function Louyu() {
         const scene = new THREE.Scene();
 
         // 纹理列表
-        const blue1Material = new THREE.MeshLambertMaterial({
+        const blue05Material = new THREE.MeshLambertMaterial({
             color: '#15c5e8',
             transparent: true,
             opacity: 0.5,
         });
 
-        const blue2Material = new THREE.MeshLambertMaterial({
+        const blue01Material = new THREE.MeshLambertMaterial({
+            color: '#15c5e8',
+            transparent: true,
+            opacity: 0.1,
+        });
+
+        const light03Material = new THREE.MeshLambertMaterial({
             color: '#15c5e8',
             transparent: true,
             opacity: 0.3,
-        });
-
-        const white1Material = new THREE.MeshLambertMaterial({
-            color: '#ffffff',
-            transparent: true,
-            opacity: 0.8,
-        });
-
-        const white2Material = new THREE.MeshLambertMaterial({
-            color: '#ffffff',
-            transparent: true,
-            opacity: 0.6,
         });
 
         // 楼宇组开始
         const louyuGroup = new THREE.Group();
 
         // 楼宇主体
-        const louyuGeometry = new THREE.BoxBufferGeometry(180, 260, 100);
-        const louyuMesh = new THREE.Mesh(louyuGeometry, blue1Material);
+        const louyuGeometry = new THREE.BoxBufferGeometry(100, 200, 100);
+        const louyuMesh = new THREE.Mesh(louyuGeometry, light03Material);
         louyuMesh.name = '楼宇主体';
-
-        // 楼宇柱体
-        const cylinderGroup = new THREE.Group();
-        cylinderGroup.name = '楼宇柱体';
-        const cylinderGeometry = new THREE.BoxBufferGeometry(15, 260, 8);
-        const cylinderMesh1 = new THREE.Mesh(cylinderGeometry, blue2Material);
-        cylinderMesh1.position.set(-47, 0, -47);
-        const cylinderMesh2 = cylinderMesh1.clone();
-        cylinderMesh2.position.set(47, 0, 47);
-        const cylinderMesh3 = cylinderMesh1.clone();
-        cylinderMesh3.position.set(-47, 0, 47);
-        const cylinderMesh4 = cylinderMesh1.clone();
-        cylinderMesh4.position.set(47, 0, -47);
-        cylinderGroup.add(cylinderMesh1, cylinderMesh2, cylinderMesh3, cylinderMesh4);
+        louyuGroup.add(louyuMesh);
 
         // 楼宇顶部
-        const louyuTopGeometry = new THREE.BoxBufferGeometry(140, 18, 101);
-        const louyuTopMesh = new THREE.Mesh(louyuTopGeometry, white1Material);
-        louyuTopMesh.position.set(0, 138, 0);
+        const louyuTopGeometry = new THREE.BoxBufferGeometry(100.5, 10, 100.5);
+        const louyuTopMesh = new THREE.Mesh(louyuTopGeometry, blue05Material);
+        louyuTopMesh.position.set(0, 110, 0);
+        louyuTopMesh.name = '楼宇顶部';
+        scene.add(louyuTopMesh);
 
-        // 楼宇底部
-        const louyuBottomGeometry = new THREE.BoxBufferGeometry(240, 2, 220);
-        const louyuBottomMesh = new THREE.Mesh(louyuBottomGeometry, white1Material);
-        louyuBottomMesh.position.set(0, -130, 0);
+        // // 楼宇底部
+        // const louyuBottomGeometry = new THREE.BoxBufferGeometry(160, 8, 160);
+        // const louyuBottomMesh = new THREE.Mesh(louyuBottomGeometry, blue05Material);
+        // louyuBottomMesh.position.set(0, -105, 0);
+        // louyuBottomMesh.name = '楼宇底部';
+        // scene.add(louyuBottomMesh);
 
-        // 楼宇装饰
-        const louyuDecorationGeometry = new THREE.BoxBufferGeometry(190, 5, 110);
-        const louyuDecorationMesh = new THREE.Mesh(louyuDecorationGeometry, white2Material);
-        louyuDecorationMesh.position.set(0, 100, 0);
-        const louyuDecoration2Mesh = louyuDecorationMesh.clone();
-        louyuDecoration2Mesh.position.set(0, 120, 0);
-
-        louyuGroup.add(
-            louyuMesh,
-            cylinderGroup,
-            louyuTopMesh,
-            louyuDecorationMesh,
-            louyuDecoration2Mesh,
-            louyuBottomMesh
-        );
+        // 楼层
+        const floorGeometry = new THREE.BoxBufferGeometry(100, 1, 100);
+        let floorNum = 100;
+        for (let i = 0; i < 20; i++) {
+            const floorMesh = new THREE.Mesh(floorGeometry, blue01Material);
+            floorMesh.position.set(0, (floorNum -= 10), 0);
+            louyuGroup.add(floorMesh);
+        }
         scene.add(louyuGroup);
+
+        const louyuGroup2 = louyuGroup.clone();
+        scene.add(louyuGroup2);
+
         // 楼宇组结束
 
         // ---------------------------------------------------------------------------------------------
         // 相机
-        const camera = new THREE.PerspectiveCamera(100, winWidth / winHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(60, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
         camera.position.set(300, 80, 300);
 
