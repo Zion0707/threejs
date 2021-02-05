@@ -77,8 +77,8 @@ function Louyu() {
         const louyuTopMesh = new THREE.Mesh(louyuTopGeometry, white1Material);
         louyuTopMesh.position.set(0, 138, 0);
 
-        // 楼宇底部
-        const louyuBottomGeometry = new THREE.BoxBufferGeometry(220, 2, 200);
+        // 楼宇白色底盘
+        const louyuBottomGeometry = new THREE.CylinderBufferGeometry(130, 130, 2, 150);
         const louyuBottomMesh = new THREE.Mesh(louyuBottomGeometry, white1Material);
         louyuBottomMesh.position.set(0, -130, 0);
 
@@ -117,11 +117,20 @@ function Louyu() {
         louyuDecoration2Mesh.position.set(0, 120, 0);
 
         // 底部圆圈
-        const yqGeometry = new THREE.CylinderBufferGeometry(200, 200, 1, 150);
-        // const yqMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        const yqGeometry = new THREE.CylinderBufferGeometry(190, 190, 1, 150);
         const yqMesh = new THREE.Mesh(yqGeometry, [null, yqMaterial, yqMaterial, null, null, null]);
         yqMesh.position.set(0, -130, 0);
-        louyuGroup.add(yqMesh);
+
+        const yqGeometry2 = new THREE.CylinderBufferGeometry(170, 170, 1, 150);
+        const yqMesh2 = new THREE.Mesh(yqGeometry2, [
+            null,
+            yqMaterial,
+            yqMaterial,
+            null,
+            null,
+            null,
+        ]);
+        yqMesh2.position.set(0, -131, 0);
 
         louyuGroup.add(
             louyuMesh,
@@ -129,7 +138,9 @@ function Louyu() {
             louyuTopMesh,
             louyuDecorationMesh,
             louyuDecoration2Mesh,
-            louyuBottomMesh
+            louyuBottomMesh,
+            yqMesh,
+            yqMesh2
             // gridGroup
         );
         scene.add(louyuGroup);
@@ -176,6 +187,7 @@ function Louyu() {
             renderer.render(scene, camera);
             // 动画元素执行
             yqMesh.rotation.y += 0.02;
+            yqMesh2.rotation.y -= 0.02;
         }
         render();
 
