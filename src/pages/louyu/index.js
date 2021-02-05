@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 import imgBg from './bg.jpg';
+import imgYq from './yq.png';
 
 import './index.css';
 
@@ -22,12 +23,6 @@ function Louyu() {
             opacity: 0.5,
         });
 
-        const blue2Material = new THREE.MeshLambertMaterial({
-            color: '#15c5e8',
-            transparent: true,
-            opacity: 0.3,
-        });
-
         const white1Material = new THREE.MeshLambertMaterial({
             color: '#ffffff',
             transparent: true,
@@ -40,14 +35,26 @@ function Louyu() {
             opacity: 0.6,
         });
 
-        const img01Texture1 = new THREE.TextureLoader().load(imgBg);
-        img01Texture1.repeat.set(1, 1);
-        img01Texture1.wrapS = THREE.RepeatWrapping;
-        img01Texture1.wrapT = THREE.RepeatWrapping;
-        const tdCenterMaterial = new THREE.MeshLambertMaterial({
-            map: img01Texture1,
+        // 楼宇贴纸
+        const bgTexture1 = new THREE.TextureLoader().load(imgBg);
+        bgTexture1.repeat.set(1, 1);
+        bgTexture1.wrapS = THREE.RepeatWrapping;
+        bgTexture1.wrapT = THREE.RepeatWrapping;
+        const louyuMaterial = new THREE.MeshLambertMaterial({
+            map: bgTexture1,
             transparent: true,
-            opacity: 0.8,
+            opacity: 1,
+        });
+
+        // 底部圆圈
+        const yqTexture1 = new THREE.TextureLoader().load(imgYq);
+        yqTexture1.repeat.set(1, 1);
+        yqTexture1.wrapS = THREE.RepeatWrapping;
+        yqTexture1.wrapT = THREE.RepeatWrapping;
+        const yqMaterial = new THREE.MeshLambertMaterial({
+            map: yqTexture1,
+            transparent: true,
+            opacity: 0.5,
         });
 
         // 楼宇组开始
@@ -60,24 +67,10 @@ function Louyu() {
             blue1Material,
             blue1Material,
             blue1Material,
-            tdCenterMaterial,
-            tdCenterMaterial,
+            louyuMaterial,
+            louyuMaterial,
         ]);
         louyuMesh.name = '楼宇主体';
-
-        // // 楼宇柱体
-        // const cylinderGroup = new THREE.Group();
-        // cylinderGroup.name = '楼宇柱体';
-        // const cylinderGeometry = new THREE.BoxBufferGeometry(15, 260, 8);
-        // const cylinderMesh1 = new THREE.Mesh(cylinderGeometry, blue2Material);
-        // cylinderMesh1.position.set(-47, 0, -47);
-        // const cylinderMesh2 = cylinderMesh1.clone();
-        // cylinderMesh2.position.set(47, 0, 47);
-        // const cylinderMesh3 = cylinderMesh1.clone();
-        // cylinderMesh3.position.set(-47, 0, 47);
-        // const cylinderMesh4 = cylinderMesh1.clone();
-        // cylinderMesh4.position.set(47, 0, -47);
-        // cylinderGroup.add(cylinderMesh1, cylinderMesh2, cylinderMesh3, cylinderMesh4);
 
         // 楼宇顶部
         const louyuTopGeometry = new THREE.BoxBufferGeometry(140, 18, 101);
@@ -89,32 +82,32 @@ function Louyu() {
         const louyuBottomMesh = new THREE.Mesh(louyuBottomGeometry, white1Material);
         louyuBottomMesh.position.set(0, -130, 0);
 
-        // 底部网格
-        const gridGroup = new THREE.Group();
-        const geometry = new THREE.Geometry();
-        gridGroup.position.y = -130;
+        // // 底部网格
+        // const gridGroup = new THREE.Group();
+        // const gridGeometry = new THREE.Geometry();
+        // gridGroup.position.y = -130;
 
-        const gridNum = 200; // 网格数量
-        const gridSize = 20; // 网格大小
-        geometry.vertices.push(new THREE.Vector3(-gridNum, 0, 0));
-        geometry.vertices.push(new THREE.Vector3(gridNum, 0, 0));
+        // const gridNum = 200; // 网格数量
+        // const gridSize = 20; // 网格大小
+        // gridGeometry.vertices.push(new THREE.Vector3(-gridNum, 0, 0));
+        // gridGeometry.vertices.push(new THREE.Vector3(gridNum, 0, 0));
 
-        for (let i = 0; i <= 20; i++) {
-            const line1 = new THREE.Line(
-                geometry,
-                new THREE.LineBasicMaterial({ color: '#555555' })
-            );
-            line1.position.z = i * gridSize - gridNum;
-            gridGroup.add(line1);
+        // for (let i = 0; i <= 20; i++) {
+        //     const line1 = new THREE.Line(
+        //         gridGeometry,
+        //         new THREE.LineBasicMaterial({ color: '#555555' })
+        //     );
+        //     line1.position.z = i * gridSize - gridNum;
+        //     gridGroup.add(line1);
 
-            const line2 = new THREE.Line(
-                geometry,
-                new THREE.LineBasicMaterial({ color: '#555555' })
-            );
-            line2.position.x = i * gridSize - gridNum;
-            line2.rotation.y = (90 * Math.PI) / 180;
-            gridGroup.add(line2);
-        }
+        //     const line2 = new THREE.Line(
+        //         gridGeometry,
+        //         new THREE.LineBasicMaterial({ color: '#555555' })
+        //     );
+        //     line2.position.x = i * gridSize - gridNum;
+        //     line2.rotation.y = (90 * Math.PI) / 180;
+        //     gridGroup.add(line2);
+        // }
 
         // 楼宇装饰
         const louyuDecorationGeometry = new THREE.BoxBufferGeometry(190, 5, 110);
@@ -123,14 +116,21 @@ function Louyu() {
         const louyuDecoration2Mesh = louyuDecorationMesh.clone();
         louyuDecoration2Mesh.position.set(0, 120, 0);
 
+        // 底部圆圈
+        const yqGeometry = new THREE.CylinderBufferGeometry(200, 200, 1, 150);
+        // const yqMaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        const yqMesh = new THREE.Mesh(yqGeometry, [null, yqMaterial, yqMaterial, null, null, null]);
+        yqMesh.position.set(0, -130, 0);
+        louyuGroup.add(yqMesh);
+
         louyuGroup.add(
             louyuMesh,
             // cylinderGroup,
             louyuTopMesh,
             louyuDecorationMesh,
             louyuDecoration2Mesh,
-            louyuBottomMesh,
-            gridGroup
+            louyuBottomMesh
+            // gridGroup
         );
         scene.add(louyuGroup);
         // 楼宇组结束
@@ -139,7 +139,7 @@ function Louyu() {
         // 相机
         const camera = new THREE.PerspectiveCamera(100, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(300, 80, 300);
+        camera.position.set(200, 100, 300);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -157,6 +157,9 @@ function Louyu() {
         // 鼠标控制旋转
         const orbitControls = new OrbitControls(camera, renderer.domElement);
         orbitControls.autoRotate = false;
+        // orbitControls.enableZoom = false;
+        orbitControls.minDistance = 200; // 最大缩放值，值越小模型越大
+        orbitControls.maxDistance = 700; // 最小缩放值，值越大模型越小
 
         // 设置光源
         const light = new THREE.DirectionalLight('#FFFFFF', 0.5);
@@ -171,6 +174,8 @@ function Louyu() {
             requestAnimationFrame(render);
             // 渲染到页面上
             renderer.render(scene, camera);
+            // 动画元素执行
+            yqMesh.rotation.y += 0.02;
         }
         render();
 
