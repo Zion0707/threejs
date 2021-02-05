@@ -2,5 +2,6 @@
     outline: none;
 }
 #content {
-    background-color: #040b1a;
+    /* background-color: #040b1a; */
+    background-image: radial-gradient(#154789, #13194b);
 }

@@ -78,7 +78,7 @@ function Louyu() {
         louyuTopMesh.position.set(0, 138, 0);
 
         // 楼宇底部
-        const louyuBottomGeometry = new THREE.BoxBufferGeometry(240, 2, 220);
+        const louyuBottomGeometry = new THREE.BoxBufferGeometry(220, 2, 200);
         const louyuBottomMesh = new THREE.Mesh(louyuBottomGeometry, white1Material);
         louyuBottomMesh.position.set(0, -130, 0);
 
@@ -192,6 +192,10 @@ function Louyu() {
     useEffect(() => {
         init();
     });
-    return <div id="content"></div>;
+    return (
+        <>
+            <div id="content"></div>
+        </>
+    );
 }
 export default Louyu;
