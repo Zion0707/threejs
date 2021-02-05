@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
+import imgBg from './bg.jpg';
+
 import './index.css';
 
 function Louyu() {
@@ -38,27 +40,44 @@ function Louyu() {
             opacity: 0.6,
         });
 
+        const img01Texture1 = new THREE.TextureLoader().load(imgBg);
+        img01Texture1.repeat.set(1, 1);
+        img01Texture1.wrapS = THREE.RepeatWrapping;
+        img01Texture1.wrapT = THREE.RepeatWrapping;
+        const tdCenterMaterial = new THREE.MeshLambertMaterial({
+            map: img01Texture1,
+            transparent: true,
+            opacity: 0.8,
+        });
+
         // 楼宇组开始
         const louyuGroup = new THREE.Group();
 
         // 楼宇主体
         const louyuGeometry = new THREE.BoxBufferGeometry(180, 260, 100);
-        const louyuMesh = new THREE.Mesh(louyuGeometry, blue1Material);
+        const louyuMesh = new THREE.Mesh(louyuGeometry, [
+            blue1Material,
+            blue1Material,
+            blue1Material,
+            blue1Material,
+            tdCenterMaterial,
+            tdCenterMaterial,
+        ]);
         louyuMesh.name = '楼宇主体';
 
-        // 楼宇柱体
-        const cylinderGroup = new THREE.Group();
-        cylinderGroup.name = '楼宇柱体';
-        const cylinderGeometry = new THREE.BoxBufferGeometry(15, 260, 8);
-        const cylinderMesh1 = new THREE.Mesh(cylinderGeometry, blue2Material);
-        cylinderMesh1.position.set(-47, 0, -47);
-        const cylinderMesh2 = cylinderMesh1.clone();
-        cylinderMesh2.position.set(47, 0, 47);
-        const cylinderMesh3 = cylinderMesh1.clone();
-        cylinderMesh3.position.set(-47, 0, 47);
-        const cylinderMesh4 = cylinderMesh1.clone();
-        cylinderMesh4.position.set(47, 0, -47);
-        cylinderGroup.add(cylinderMesh1, cylinderMesh2, cylinderMesh3, cylinderMesh4);
+        // // 楼宇柱体
+        // const cylinderGroup = new THREE.Group();
+        // cylinderGroup.name = '楼宇柱体';
+        // const cylinderGeometry = new THREE.BoxBufferGeometry(15, 260, 8);
+        // const cylinderMesh1 = new THREE.Mesh(cylinderGeometry, blue2Material);
+        // cylinderMesh1.position.set(-47, 0, -47);
+        // const cylinderMesh2 = cylinderMesh1.clone();
+        // cylinderMesh2.position.set(47, 0, 47);
+        // const cylinderMesh3 = cylinderMesh1.clone();
+        // cylinderMesh3.position.set(-47, 0, 47);
+        // const cylinderMesh4 = cylinderMesh1.clone();
+        // cylinderMesh4.position.set(47, 0, -47);
+        // cylinderGroup.add(cylinderMesh1, cylinderMesh2, cylinderMesh3, cylinderMesh4);
 
         // 楼宇顶部
         const louyuTopGeometry = new THREE.BoxBufferGeometry(140, 18, 101);
@@ -70,6 +89,33 @@ function Louyu() {
         const louyuBottomMesh = new THREE.Mesh(louyuBottomGeometry, white1Material);
         louyuBottomMesh.position.set(0, -130, 0);
 
+        // 底部网格
+        const gridGroup = new THREE.Group();
+        const geometry = new THREE.Geometry();
+        gridGroup.position.y = -130;
+
+        const gridNum = 200; // 网格数量
+        const gridSize = 20; // 网格大小
+        geometry.vertices.push(new THREE.Vector3(-gridNum, 0, 0));
+        geometry.vertices.push(new THREE.Vector3(gridNum, 0, 0));
+
+        for (let i = 0; i <= 20; i++) {
+            const line1 = new THREE.Line(
+                geometry,
+                new THREE.LineBasicMaterial({ color: '#555555' })
+            );
+            line1.position.z = i * gridSize - gridNum;
+            gridGroup.add(line1);
+
+            const line2 = new THREE.Line(
+                geometry,
+                new THREE.LineBasicMaterial({ color: '#555555' })
+            );
+            line2.position.x = i * gridSize - gridNum;
+            line2.rotation.y = (90 * Math.PI) / 180;
+            gridGroup.add(line2);
+        }
+
         // 楼宇装饰
         const louyuDecorationGeometry = new THREE.BoxBufferGeometry(190, 5, 110);
         const louyuDecorationMesh = new THREE.Mesh(louyuDecorationGeometry, white2Material);
@@ -79,11 +125,12 @@ function Louyu() {
 
         louyuGroup.add(
             louyuMesh,
-            cylinderGroup,
+            // cylinderGroup,
             louyuTopMesh,
             louyuDecorationMesh,
             louyuDecoration2Mesh,
-            louyuBottomMesh
+            louyuBottomMesh,
+            gridGroup
         );
         scene.add(louyuGroup);
         // 楼宇组结束
