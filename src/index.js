@@ -20,6 +20,7 @@ import EventClick from './pages/event-click';
 import Test from './pages/test';
 import Map3d from './pages/map-3d';
 import Louyu from './pages/louyu';
+import MeshLine from './pages/mesh-line';
 
 ReactDOM.render(
     <>
@@ -42,6 +43,7 @@ ReactDOM.render(
                 <Route path="/event-click" component={EventClick} />
                 <Route path="/map-3d" component={Map3d} />
                 <Route path="/louyu" component={Louyu} />
+                <Route path="/mesh-line" component={MeshLine} />
             </Switch>
         </Router>
     </>,

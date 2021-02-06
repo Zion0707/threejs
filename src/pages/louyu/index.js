@@ -150,7 +150,7 @@ function Louyu() {
         // 相机
         const camera = new THREE.PerspectiveCamera(100, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(200, 100, 300);
+        camera.position.set(-200, 100, 300);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
