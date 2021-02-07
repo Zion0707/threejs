@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 import imgBg from './bg.jpg';
@@ -7,8 +7,9 @@ import imgYq from './yq.png';
 import './index.css';
 
 function Louyu() {
+    const contentRef = useRef();
     const init = () => {
-        const el = document.getElementById('content');
+        const el = contentRef.current;
         const winWidth = window.innerWidth;
         const winHeight = window.innerHeight;
         el.style.cssText = `width:${winWidth}px;height:${winHeight}px`;
@@ -118,8 +119,15 @@ function Louyu() {
 
         // 底部圆圈
         const yqGeometry = new THREE.CylinderBufferGeometry(190, 190, 1, 150);
-        const yqMesh = new THREE.Mesh(yqGeometry, [null, yqMaterial, yqMaterial, null, null, null]);
-        yqMesh.position.set(0, -134, 0);
+        const yqMesh1 = new THREE.Mesh(yqGeometry, [
+            null,
+            yqMaterial,
+            yqMaterial,
+            null,
+            null,
+            null,
+        ]);
+        yqMesh1.position.set(0, -134, 0);
 
         const yqGeometry2 = new THREE.CylinderBufferGeometry(170, 170, 1, 150);
         const yqMesh2 = new THREE.Mesh(yqGeometry2, [
@@ -139,7 +147,7 @@ function Louyu() {
             louyuDecorationMesh,
             louyuDecoration2Mesh,
             louyuBottomMesh,
-            yqMesh,
+            yqMesh1,
             yqMesh2
             // gridGroup
         );
@@ -150,7 +158,7 @@ function Louyu() {
         // 相机
         const camera = new THREE.PerspectiveCamera(100, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(-200, 100, 300);
+        camera.position.set(0, 100, 300);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -186,7 +194,7 @@ function Louyu() {
             // 渲染到页面上
             renderer.render(scene, camera);
             // 动画元素执行
-            yqMesh.rotation.y += 0.015;
+            yqMesh1.rotation.y += 0.015;
             yqMesh2.rotation.y -= 0.015;
         }
         render();
@@ -206,7 +214,7 @@ function Louyu() {
     });
     return (
         <>
-            <div id="content"></div>
+            <div id="content" ref={contentRef}></div>
         </>
     );
 }

@@ -66,6 +66,7 @@ function EventClick() {
 
         el.append(renderer.domElement);
 
+        // 元素点击事件
         const raycaster = new THREE.Raycaster();
         const mouse = new THREE.Vector2();
         // 点击更改颜色
