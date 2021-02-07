@@ -1,5 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+// 后期处理
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 import * as THREE from 'three';
 import './index.css';
 import TWEEN from '@tweenjs/tween.js';
@@ -22,13 +26,13 @@ function Map3d() {
 
         // 设置渲染器的颜色和大小
         renderer.setClearColor('#040b1a');
-        renderer.setClearAlpha(0);
-        renderer.setSize(winWidth, winHeight);
+        // renderer.setClearAlpha(0);
         renderer.setPixelRatio(window.devicePixelRatio); // 高清设置
+        renderer.setSize(winWidth, winHeight);
 
         // 将renderer（渲染器）的dom元素（renderer.domElement）添加到我们的HTML文档中。
         // 这就是渲染器用来显示场景给我们看的<canvas>元素
-        document.body.appendChild(renderer.domElement);
+        el.appendChild(renderer.domElement);
 
         // ------------------------------------------------------------------------------------
         // 场景
@@ -37,16 +41,38 @@ function Map3d() {
         const boxMaterial = new THREE.MeshBasicMaterial({
             color: '#fff',
             transparent: true,
-            opacity: 0.5,
+            opacity: 1,
         });
         const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
         boxMesh.position.z = 10;
         boxMesh.name = '白色盒子';
         scene.add(boxMesh);
 
+        const outlineObj = (selectedObjects) => {
+            const composer = new EffectComposer(renderer); // 特效组件
+            const renderPass = new RenderPass(scene, camera);
+            composer.addPass(renderPass); // 特效渲染
+            const outlinePass = new OutlinePass(
+                new THREE.Vector2(window.innerWidth, window.innerHeight),
+                scene,
+                camera
+            );
+            composer.addPass(outlinePass); // 加入高光特效
+            outlinePass.pulsePeriod = 1; // 数值越大，律动越慢
+            outlinePass.visibleEdgeColor.set('#ff0000'); // 高光颜色
+            outlinePass.hiddenEdgeColor.set('#ff0000'); // 阴影颜色
+            outlinePass.usePatternTexture = false; // 使用纹理覆盖？
+            outlinePass.edgeStrength = 100; // 高光边缘强度
+            outlinePass.edgeGlow = 100; // 边缘微光强度
+            outlinePass.edgeThickness = 100; // 高光厚度
+            outlinePass.selectedObjects = selectedObjects; // 需要高光的obj
+        };
+
+        outlineObj(boxMesh);
+
         const boxEvent = () => {
             // console.log('被点击');
-            boxMaterial.opacity = 1;
+            boxMaterial.opacity = 0.5;
             const tween = new TWEEN.Tween(boxMesh.position)
                 .to({ x: 100 }, 10000)
                 .easing(TWEEN.Easing.Quadratic.Out);
