@@ -208,7 +208,7 @@ function Guoxin() {
 
         // 设置光源
         const light = new THREE.DirectionalLight('#FFFFFF', 0.5);
-        light.position.setScalar(100);
+        light.position.set(400, 200, 300);
         scene.add(light);
         scene.add(new THREE.AmbientLight('#FFFFFF', 0.5));
 
