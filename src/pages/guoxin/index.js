@@ -2,6 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
+import TWEEN from '@tweenjs/tween.js';
 import './index.css';
 import logoImg from './images/logo.jpg';
 import mapImg from './images/map.png';
@@ -64,8 +65,22 @@ function Guoxin() {
         // ---------------------------------------------------------------------------------------------
         // 楼宇组开始
         const guoxinGroup = new THREE.Group();
-        guoxinGroup.scale.set(0.15, 0.15, 0.15);
+        // guoxinGroup.scale.set(0.15, 0.15, 0.15);
+        guoxinGroup.scale.set(0.05, 0.05, 0.05);
         guoxinGroup.name = '楼宇组';
+        guoxinGroup.rotation.y = -2;
+
+        // 旋转动画start
+        const tween1 = new TWEEN.Tween(guoxinGroup.rotation)
+            .to({ y: 0 }, 4000)
+            .easing(TWEEN.Easing.Quadratic.Out);
+        tween1.start();
+
+        const tween2 = new TWEEN.Tween(guoxinGroup.scale)
+            .to({ x: 0.15, y: 0.15, z: 0.15 }, 4000)
+            .easing(TWEEN.Easing.Quadratic.Out);
+        tween2.start();
+        // 旋转动画end
 
         // 楼宇主体
         const bodyGeometry = new THREE.BoxBufferGeometry(140, 310, 100);
@@ -167,6 +182,7 @@ function Guoxin() {
         const camera = new THREE.PerspectiveCamera(20, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
         camera.position.set(150, 50, 300);
+        // camera.position.set(0, 100, 300);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -183,11 +199,12 @@ function Guoxin() {
 
         // 鼠标控制旋转
         const orbitControls = new OrbitControls(camera, renderer.domElement);
-        orbitControls.autoRotate = false;
+        // orbitControls.autoRotate = false;
         // orbitControls.enableZoom = false;
         orbitControls.minDistance = 200; // 最大缩放值，值越小模型越大
         orbitControls.maxDistance = 500; // 最小缩放值，值越大模型越小
         orbitControls.maxPolarAngle = Math.PI * 0.5; // 限制鼠标拖拽角度
+        orbitControls.enablePan = false; // 禁止鼠标右键拖拽
 
         // 设置光源
         const light = new THREE.DirectionalLight('#FFFFFF', 0.5);
@@ -202,6 +219,8 @@ function Guoxin() {
             requestAnimationFrame(render);
             // 渲染到页面上
             renderer.render(scene, camera);
+
+            TWEEN.update();
         }
         render();
 
