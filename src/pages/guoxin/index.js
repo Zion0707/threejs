@@ -4,9 +4,13 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import './index.css';
+
 import logoImg from './images/logo.png';
 import mapImg from './images/map.png';
-const imgsArr = [logoImg, mapImg];
+import bodyImg from './images/body.png';
+import bottomImg from './images/bottom.png';
+import sliderImg from './images/slider.png';
+const imgsArr = [logoImg, mapImg, bodyImg, bottomImg, sliderImg];
 
 function Guoxin() {
     const [mapLoading, setMapLoading] = useState(true);
@@ -50,6 +54,28 @@ function Guoxin() {
             opacity: 1,
         });
 
+        // 底部 贴纸
+        const bottomTexture = new THREE.TextureLoader().load(bottomImg);
+        bottomTexture.repeat.set(1, 1);
+        bottomTexture.wrapS = THREE.RepeatWrapping;
+        bottomTexture.wrapT = THREE.RepeatWrapping;
+        const bottomMaterial = new THREE.MeshLambertMaterial({
+            map: bottomTexture,
+            transparent: true,
+            opacity: 1,
+        });
+
+        // 侧边 贴纸
+        const sliderTexture = new THREE.TextureLoader().load(sliderImg);
+        sliderTexture.repeat.set(1, 1);
+        sliderTexture.wrapS = THREE.RepeatWrapping;
+        sliderTexture.wrapT = THREE.RepeatWrapping;
+        const sliderMaterial = new THREE.MeshLambertMaterial({
+            map: sliderTexture,
+            transparent: true,
+            opacity: 1,
+        });
+
         const blueMaterial = new THREE.MeshLambertMaterial({
             color: '#a3c1d9',
             transparent: true,
@@ -83,10 +109,23 @@ function Guoxin() {
         // 旋转动画end
 
         // 楼宇主体
-        const bodyGeometry = new THREE.BoxBufferGeometry(140, 310, 100);
+        const bodyGeometry = new THREE.BoxBufferGeometry(140, 260, 100);
         const bodyMesh = new THREE.Mesh(bodyGeometry, blueMaterial);
         bodyMesh.name = '楼宇主体';
-        bodyMesh.position.y = 5;
+        bodyMesh.position.y = 30;
+
+        // 楼宇底部长方体
+        const floorBottomGeometry = new THREE.BoxBufferGeometry(300, 50, 100);
+        const floorBottomMesh = new THREE.Mesh(floorBottomGeometry, [
+            bottomMaterial,
+            bottomMaterial,
+            whiteMaterial,
+            whiteMaterial,
+            bottomMaterial,
+            bottomMaterial,
+        ]);
+        floorBottomMesh.name = '楼宇底部';
+        floorBottomMesh.position.set(0, -125, 0);
 
         // 楼宇正面小长方形
         const positiveGeometry = new THREE.BoxBufferGeometry(20, 70, 110);
@@ -115,12 +154,7 @@ function Guoxin() {
         floorLeftCuboidMesh.name = '楼宇左边长方体';
         floorLeftCuboidMesh.position.set(22.5, 25, -15);
 
-        const floorLeftBottomGeometry = new THREE.BoxBufferGeometry(80, 50, 100);
-        const floorLeftBottomMesh = new THREE.Mesh(floorLeftBottomGeometry, blueMaterial);
-        floorLeftBottomMesh.name = '楼宇左边底部长方体';
-        floorLeftBottomMesh.position.set(0, -125, 0);
-
-        floorLeftGroup.add(floorLeftCylindricalMesh, floorLeftCuboidMesh, floorLeftBottomMesh);
+        floorLeftGroup.add(floorLeftCylindricalMesh, floorLeftCuboidMesh);
 
         // 楼宇右边侧面组
         const floorRightGroup = new THREE.Group();
@@ -140,12 +174,7 @@ function Guoxin() {
         floorRightCuboidMesh.name = '楼宇右边长方体';
         floorRightCuboidMesh.position.set(-22.5, 25, -15);
 
-        const floorRightBottomGeometry = new THREE.BoxBufferGeometry(80, 50, 100);
-        const floorRightBottomMesh = new THREE.Mesh(floorRightBottomGeometry, blueMaterial);
-        floorRightBottomMesh.name = '楼宇右边底部长方体';
-        floorRightBottomMesh.position.set(0, -125, 0);
-
-        floorRightGroup.add(floorRightCylindricalMesh, floorRightCuboidMesh, floorRightBottomMesh);
+        floorRightGroup.add(floorRightCylindricalMesh, floorRightCuboidMesh);
 
         // 背景设置start
         const mapBgTexture = new THREE.TextureLoader().load(mapImg);
@@ -169,7 +198,15 @@ function Guoxin() {
         // 背景设置end
 
         // 组里添加组件
-        guoxinGroup.add(bodyMesh, logoMesh, positiveMesh, mapMesh, floorLeftGroup, floorRightGroup);
+        guoxinGroup.add(
+            bodyMesh,
+            floorBottomMesh,
+            logoMesh,
+            positiveMesh,
+            mapMesh,
+            floorLeftGroup,
+            floorRightGroup
+        );
         scene.add(guoxinGroup);
         // 楼宇组结束
         // ---------------------------------------------------------------------------------------------
