@@ -244,10 +244,15 @@ function Guoxin() {
         orbitControls.enablePan = false; // 禁止鼠标右键拖拽
 
         // 设置光源
-        const light = new THREE.DirectionalLight('#FFFFFF', 0.5);
+        const light = new THREE.DirectionalLight('#ffffff', 0.5);
         light.position.set(400, 200, 300);
         scene.add(light);
-        scene.add(new THREE.AmbientLight('#FFFFFF', 0.5));
+        scene.add(new THREE.AmbientLight('#ffffff', 0.5));
+
+        // 亮白光光源映射
+        const pointLight = new THREE.PointLight('#ffffff', 1, 100);
+        pointLight.position.set(10, 10, 10);
+        scene.add(pointLight);
 
         el.append(renderer.domElement);
 
