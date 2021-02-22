@@ -4,7 +4,8 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 import './index.css';
 import logoImg from './images/logo.jpg';
-const imgsArr = [logoImg];
+import mapImg from './images/map.png';
+const imgsArr = [logoImg, mapImg];
 
 function Guoxin() {
     const [mapLoading, setMapLoading] = useState(true);
@@ -37,7 +38,7 @@ function Guoxin() {
         const scene = new THREE.Scene();
 
         // 贴纸
-
+        // logo 贴纸
         const logoTexture = new THREE.TextureLoader().load(logoImg);
         logoTexture.repeat.set(1, 1);
         logoTexture.wrapS = THREE.RepeatWrapping;
@@ -55,16 +56,16 @@ function Guoxin() {
         });
 
         const whiteMaterial = new THREE.MeshLambertMaterial({
-            color: '#ffffff',
+            color: '#90abc0',
             transparent: true,
-            opacity: 0.5,
+            opacity: 0.8,
         });
 
         // ---------------------------------------------------------------------------------------------
         // 楼宇组开始
         const guoxinGroup = new THREE.Group();
+        guoxinGroup.scale.set(0.15, 0.15, 0.15);
         guoxinGroup.name = '楼宇组';
-        guoxinGroup.scale.set(0.8, 0.8, 0.8);
 
         // 楼宇主体
         const bodyGeometry = new THREE.BoxBufferGeometry(140, 310, 100);
@@ -131,20 +132,41 @@ function Guoxin() {
 
         floorRightGroup.add(floorRightCylindricalMesh, floorRightCuboidMesh, floorRightBottomMesh);
 
+        // 背景设置start
+        const mapBgTexture = new THREE.TextureLoader().load(mapImg);
+        // mapBgTexture.wrapS = mapBgTexture.wrapT = THREE.RepeatWrapping;
+        // mapBgTexture.repeat.set(25, 25);
+        // mapBgTexture.anisotropy = 16;
+
+        const mapBgMaterial = new THREE.MeshLambertMaterial({
+            map: mapBgTexture,
+            transparent: true,
+            opacity: 0.3,
+        });
+
+        const mapMesh = new THREE.Mesh(
+            new THREE.PlaneBufferGeometry(1920 * 2, 1300 * 2),
+            mapBgMaterial
+        );
+        mapMesh.position.y = -150;
+        mapMesh.rotation.x = -Math.PI / 2;
+        mapMesh.receiveShadow = true;
+        // 背景设置end
+
         // 组里添加组件
-        guoxinGroup.add(bodyMesh, logoMesh, positiveMesh, floorLeftGroup, floorRightGroup);
+        guoxinGroup.add(bodyMesh, logoMesh, positiveMesh, mapMesh, floorLeftGroup, floorRightGroup);
         scene.add(guoxinGroup);
         // 楼宇组结束
         // ---------------------------------------------------------------------------------------------
 
-        // 辅助线
-        const axes = new THREE.AxisHelper(20);
-        scene.add(axes);
+        // // 辅助线
+        // const axes = new THREE.AxisHelper(20);
+        // scene.add(axes);
 
         // 相机
-        const camera = new THREE.PerspectiveCamera(100, winWidth / winHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(20, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(150, 0, 300);
+        camera.position.set(150, 50, 300);
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -164,7 +186,8 @@ function Guoxin() {
         orbitControls.autoRotate = false;
         // orbitControls.enableZoom = false;
         orbitControls.minDistance = 200; // 最大缩放值，值越小模型越大
-        orbitControls.maxDistance = 700; // 最小缩放值，值越大模型越小
+        orbitControls.maxDistance = 500; // 最小缩放值，值越大模型越小
+        orbitControls.maxPolarAngle = Math.PI * 0.5; // 限制鼠标拖拽角度
 
         // 设置光源
         const light = new THREE.DirectionalLight('#FFFFFF', 0.5);
