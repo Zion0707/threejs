@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import './index.css';
-import logoImg from './images/logo.jpg';
+import logoImg from './images/logo.png';
 import mapImg from './images/map.png';
 const imgsArr = [logoImg, mapImg];
 
@@ -65,21 +65,21 @@ function Guoxin() {
         // ---------------------------------------------------------------------------------------------
         // 楼宇组开始
         const guoxinGroup = new THREE.Group();
-        // guoxinGroup.scale.set(0.15, 0.15, 0.15);
-        guoxinGroup.scale.set(0.05, 0.05, 0.05);
         guoxinGroup.name = '楼宇组';
-        guoxinGroup.rotation.y = -2;
 
-        // 旋转动画start
-        const tween1 = new TWEEN.Tween(guoxinGroup.rotation)
-            .to({ y: 0 }, 4000)
-            .easing(TWEEN.Easing.Quadratic.Out);
-        tween1.start();
+        // // 旋转动画start
+        guoxinGroup.scale.set(0.15, 0.15, 0.15);
+        // guoxinGroup.scale.set(0.05, 0.05, 0.05);
+        // guoxinGroup.rotation.y = -2;
+        // const tween1 = new TWEEN.Tween(guoxinGroup.rotation)
+        //     .to({ y: 0 }, 4000)
+        //     .easing(TWEEN.Easing.Quadratic.Out);
+        // tween1.start();
 
-        const tween2 = new TWEEN.Tween(guoxinGroup.scale)
-            .to({ x: 0.15, y: 0.15, z: 0.15 }, 4000)
-            .easing(TWEEN.Easing.Quadratic.Out);
-        tween2.start();
+        // const tween2 = new TWEEN.Tween(guoxinGroup.scale)
+        //     .to({ x: 0.15, y: 0.15, z: 0.15 }, 4000)
+        //     .easing(TWEEN.Easing.Quadratic.Out);
+        // tween2.start();
         // 旋转动画end
 
         // 楼宇主体
@@ -89,10 +89,10 @@ function Guoxin() {
         bodyMesh.position.y = 5;
 
         // 楼宇正面小长方形
-        const positiveGeometry = new THREE.BoxBufferGeometry(20, 70, 8);
+        const positiveGeometry = new THREE.BoxBufferGeometry(20, 70, 110);
         const positiveMesh = new THREE.Mesh(positiveGeometry, whiteMaterial);
         positiveMesh.name = '楼宇正面小长方形';
-        positiveMesh.position.set(0, 125, 54);
+        positiveMesh.position.set(0, 130, 0);
 
         // 楼宇logo
         const logoGeometry = new THREE.BoxBufferGeometry(140, 40, 1);
