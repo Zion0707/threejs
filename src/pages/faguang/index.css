@@ -1,0 +1,20 @@
+* {
+    outline: none;
+}
+#content {
+    /* background-color: #040b1a; */
+    background-image: radial-gradient(#154789, #13194b);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+button{
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}

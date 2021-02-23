@@ -42,6 +42,14 @@ function Guoxin() {
         const scene = new THREE.Scene();
 
         // 贴纸
+        // 地图 贴纸
+        const mapBgTexture = new THREE.TextureLoader().load(mapImg);
+        const mapBgMaterial = new THREE.MeshLambertMaterial({
+            map: mapBgTexture,
+            transparent: true,
+            opacity: 0.3,
+        });
+
         // logo 贴纸
         const logoTexture = new THREE.TextureLoader().load(logoImg);
         logoTexture.repeat.set(1, 1);
@@ -126,13 +134,13 @@ function Guoxin() {
         guoxinGroup.scale.set(0.05, 0.05, 0.05);
         guoxinGroup.rotation.y = -2;
         const tween1 = new TWEEN.Tween(guoxinGroup.rotation)
-            .to({ y: 0 }, 4000)
-            .easing(TWEEN.Easing.Quadratic.Out);
+            .to({ y: 0 }, 5000)
+            .easing(TWEEN.Easing.Quadratic.InOut);
         tween1.start();
 
         const tween2 = new TWEEN.Tween(guoxinGroup.scale)
-            .to({ x: 0.15, y: 0.15, z: 0.15 }, 4000)
-            .easing(TWEEN.Easing.Quadratic.Out);
+            .to({ x: 0.15, y: 0.15, z: 0.15 }, 5000)
+            .easing(TWEEN.Easing.Quadratic.InOut);
         tween2.start();
         // 旋转动画end
 
@@ -150,7 +158,7 @@ function Guoxin() {
         bodyMesh.position.y = 30;
 
         // 楼宇底部长方体
-        const floorBottomGeometry = new THREE.BoxBufferGeometry(300, 50, 100);
+        const floorBottomGeometry = new THREE.BoxBufferGeometry(270, 50, 100);
         const floorBottomMesh = new THREE.Mesh(floorBottomGeometry, [
             bottomSideMaterial,
             bottomSideMaterial,
@@ -215,19 +223,12 @@ function Guoxin() {
         floorRightGroup.add(floorRightCylindricalMesh, floorRightCuboidMesh);
 
         // 背景设置start
-        const mapBgTexture = new THREE.TextureLoader().load(mapImg);
         // mapBgTexture.wrapS = mapBgTexture.wrapT = THREE.RepeatWrapping;
         // mapBgTexture.repeat.set(25, 25);
         // mapBgTexture.anisotropy = 16;
 
-        const mapBgMaterial = new THREE.MeshLambertMaterial({
-            map: mapBgTexture,
-            transparent: true,
-            opacity: 0.3,
-        });
-
         const mapMesh = new THREE.Mesh(
-            new THREE.PlaneBufferGeometry(1920 * 2, 1300 * 2),
+            new THREE.PlaneBufferGeometry(2000 * 3, 2000 * 3),
             mapBgMaterial
         );
         mapMesh.position.y = -150;

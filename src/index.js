@@ -22,6 +22,7 @@ import Map3d from './pages/map-3d';
 import Louyu from './pages/louyu';
 import Guoxin from './pages/guoxin';
 import MeshLine from './pages/mesh-line';
+import Faguang from './pages/faguang';
 
 ReactDOM.render(
     <>
@@ -46,6 +47,7 @@ ReactDOM.render(
                 <Route path="/louyu" component={Louyu} />
                 <Route path="/guoxin" component={Guoxin} />
                 <Route path="/mesh-line" component={MeshLine} />
+                <Route path="/faguang" component={Faguang} />
             </Switch>
         </Router>
     </>,
