@@ -35,7 +35,7 @@ function Guoxin() {
     // 漂浮元素生成
     const floatsAnimate = (scene) => {
         const rangeNum = 80;
-        const yNum = -20;
+        const yNum = -30;
         const comeUpArr = [
             { x: rangeNum, z: rangeNum, y: yNum },
             { x: -rangeNum, z: rangeNum, y: yNum },
