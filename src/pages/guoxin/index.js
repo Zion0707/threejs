@@ -10,9 +10,6 @@ import mapImg from './images/map.png';
 import bodyImg from './images/body.png';
 import bottomImg from './images/bottom.png';
 const imgsArr = [logoImg, mapImg, bodyImg, bottomImg];
-const floatsArr = [];
-let startLoadSwitch = true; // 是否是动画开始状态
-let windowActiveSwitch = true; // 浏览器状态
 
 function Guoxin() {
     const [mapLoading, setMapLoading] = useState(true);
@@ -46,7 +43,7 @@ function Guoxin() {
             comeUpArr.push({
                 x: Math.random() * (i % 2 === 0 ? rangeNum : -rangeNum),
                 z: Math.random() * (i % 2 === 0 ? -rangeNum : rangeNum),
-                y: initYNum,
+                y: Math.random() * -500,
             });
         }
 
@@ -107,18 +104,11 @@ function Guoxin() {
                 .to({ opacity: 0 }, 8000)
                 .easing(TWEEN.Easing.Quadratic.Out);
             whiteTween.start();
-
-            floatsArr.push({ e: comeUpGroup, c: comeUpTween, w: whiteTween });
         };
 
         // 延时启动漂浮粒子
         for (let i = 0, len = comeUpArr.length; i < len; i++) {
-            const timer = setTimeout(() => {
-                if (startLoadSwitch === false && windowActiveSwitch === true) {
-                    createComeUpModel(i);
-                }
-                clearTimeout(timer);
-            }, i * 1000);
+            createComeUpModel(i);
         }
     };
 
@@ -347,8 +337,6 @@ function Guoxin() {
                         floatsAnimate(scene);
                         clearTimeout(floatsAnimateTimer);
                     }, 2500);
-
-                    startLoadSwitch = false;
                 }
             });
         mapTween1.start();
@@ -421,26 +409,6 @@ function Guoxin() {
             camera.aspect = newWindowWidth / newWindowHeight;
             camera.updateProjectionMatrix();
         };
-
-        // 浏览器切换的时候，定时器会停止，所以需要做特殊处理
-        window.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                // 挂起
-                // 删除所有漂浮元素
-                for (let i = 0, len = floatsArr.length; i < len; i++) {
-                    floatsArr[i].w.opacity = 0;
-                    scene.remove(floatsArr[i].e);
-                }
-                windowActiveSwitch = false;
-            } else {
-                // 呼出
-                // 生成漂浮元素
-                if (startLoadSwitch === false) {
-                    floatsAnimate(scene);
-                }
-                windowActiveSwitch = true;
-            }
-        });
     };
 
     const init = async () => {
