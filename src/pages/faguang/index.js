@@ -19,14 +19,17 @@ function Guoxin() {
         const scene = new THREE.Scene();
         // ---------------------------------------------------------------------------------------------
 
-        const rangeNum = 60;
-        const comeUpArr = [
-            { x: rangeNum, z: rangeNum, y: -100 },
-            { x: -rangeNum, z: -rangeNum, y: -100 },
-            { x: -rangeNum, z: rangeNum, y: -100 },
-            { x: rangeNum, z: -rangeNum, y: -100 },
-            { x: Math.random() * rangeNum, z: Math.random() * rangeNum, y: -100 },
-        ];
+        const rangeNum = 80;
+        const comeUpArr = [];
+        const initYNum = -30;
+        const initOption = 0.3;
+        for (let i = 0; i < 15; i++) {
+            comeUpArr.push({
+                x: Math.random() * (i % 2 === 0 ? rangeNum : -rangeNum),
+                z: Math.random() * (i % 2 === 0 ? -rangeNum : rangeNum),
+                y: Math.random() * -500,
+            });
+        }
 
         const comeUpModel = (index) => {
             // 纹理
@@ -43,14 +46,16 @@ function Guoxin() {
             comeUpGroup.position.y = comeUpArr[index].y;
             comeUpGroup.position.z = comeUpArr[index].z;
 
+            // 半径尺寸
+            const radiusSize = 0.5;
             // 圆球
-            const circleGeometry = new THREE.SphereGeometry(0.2, 100, 100);
+            const circleGeometry = new THREE.SphereGeometry(radiusSize, 100, 100);
             const circleMesh = new THREE.Mesh(circleGeometry, whiteMaterial);
             circleMesh.name = '圆球';
-            circleMesh.position.y = 8;
+            circleMesh.position.y = 7;
 
             // 圆锥
-            const coneGeometry = new THREE.CylinderBufferGeometry(0.2, 0, 15.1, 100);
+            const coneGeometry = new THREE.CylinderBufferGeometry(radiusSize, 0, 14, 100);
             const coneMesh = new THREE.Mesh(coneGeometry, whiteMaterial);
             coneMesh.name = '圆锥';
             comeUpGroup.add(coneMesh, circleMesh);
@@ -58,8 +63,8 @@ function Guoxin() {
             scene.add(comeUpGroup);
 
             const comeUpAnimateInit = () => {
-                comeUpGroup.position.y = -100;
-                whiteMaterial.opacity = 0.3;
+                comeUpGroup.position.y = initYNum;
+                whiteMaterial.opacity = initOption;
                 const timer = setTimeout(() => {
                     comeUpTween.start();
                     whiteTween.start();
@@ -83,10 +88,7 @@ function Guoxin() {
         };
 
         for (let i = 0, len = comeUpArr.length; i < len; i++) {
-            const timer = setTimeout(() => {
-                comeUpModel(i);
-                clearTimeout(timer);
-            }, i * 1000);
+            comeUpModel(i);
         }
 
         // // 渐隐渐现动画执行
