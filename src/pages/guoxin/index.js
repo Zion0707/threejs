@@ -32,6 +32,7 @@ function Guoxin() {
         return res;
     };
 
+    // 模型及场景加载
     const modelLoad = () => {
         const el = contentRef.current;
         const winWidth = window.innerWidth;
@@ -42,12 +43,12 @@ function Guoxin() {
         const scene = new THREE.Scene();
 
         // 贴纸
-        // 地图 贴纸
+        // 底部地图贴纸
         const mapBgTexture = new THREE.TextureLoader().load(mapImg);
         const mapBgMaterial = new THREE.MeshLambertMaterial({
             map: mapBgTexture,
             transparent: true,
-            opacity: 0.3,
+            opacity: 0.05,
         });
 
         // logo 贴纸
@@ -123,26 +124,10 @@ function Guoxin() {
             opacity: 1,
         });
 
-        // ---------------------------------------------------------------------------------------------
+        // ----------------------------------------------模型绘制区-----------------------------------------------
         // 楼宇组开始
         const guoxinGroup = new THREE.Group();
         guoxinGroup.name = '楼宇组';
-
-        // loading加载完，模型旋转动画start
-        // guoxinGroup.scale.set(0.15, 0.15, 0.15); // 测试用
-
-        guoxinGroup.scale.set(0.05, 0.05, 0.05);
-        guoxinGroup.rotation.y = -2;
-        const tween1 = new TWEEN.Tween(guoxinGroup.rotation)
-            .to({ y: 0 }, 5000)
-            .easing(TWEEN.Easing.Quadratic.InOut);
-        tween1.start();
-
-        const tween2 = new TWEEN.Tween(guoxinGroup.scale)
-            .to({ x: 0.15, y: 0.15, z: 0.15 }, 5000)
-            .easing(TWEEN.Easing.Quadratic.InOut);
-        tween2.start();
-        // 旋转动画end
 
         // 楼宇主体
         const bodyGeometry = new THREE.BoxBufferGeometry(140, 260, 100);
@@ -222,11 +207,7 @@ function Guoxin() {
 
         floorRightGroup.add(floorRightCylindricalMesh, floorRightCuboidMesh);
 
-        // 背景设置start
-        // mapBgTexture.wrapS = mapBgTexture.wrapT = THREE.RepeatWrapping;
-        // mapBgTexture.repeat.set(25, 25);
-        // mapBgTexture.anisotropy = 16;
-
+        // 底部地图 设置start
         const mapMesh = new THREE.Mesh(
             new THREE.PlaneBufferGeometry(2000 * 3, 2000 * 3),
             mapBgMaterial
@@ -234,7 +215,7 @@ function Guoxin() {
         mapMesh.position.y = -150;
         mapMesh.rotation.x = -Math.PI / 2;
         mapMesh.receiveShadow = true;
-        // 背景设置end
+        // 底部地图 设置end
 
         // 组里添加组件
         guoxinGroup.add(
@@ -250,6 +231,28 @@ function Guoxin() {
         // 楼宇组结束
         // ---------------------------------------------------------------------------------------------
 
+        // -----------------------------------------------动画执行区----------------------------------------------
+        // loading加载完，模型旋转动画start
+        // guoxinGroup.scale.set(0.15, 0.15, 0.15); // 测试用
+        guoxinGroup.scale.set(0.05, 0.05, 0.05);
+        guoxinGroup.rotation.y = -2;
+        const modelTween1 = new TWEEN.Tween(guoxinGroup.rotation)
+            .to({ y: 0 }, 5000)
+            .easing(TWEEN.Easing.Quadratic.InOut);
+        modelTween1.start();
+        const modelTween2 = new TWEEN.Tween(guoxinGroup.scale)
+            .to({ x: 0.15, y: 0.15, z: 0.15 }, 5000)
+            .easing(TWEEN.Easing.Quadratic.InOut);
+        modelTween2.start();
+        // 旋转动画end
+
+        // 地图渐现动画执行
+        const mapTween1 = new TWEEN.Tween(mapBgMaterial)
+            .to({ opacity: 0.5 }, 3000)
+            .easing(TWEEN.Easing.Quadratic.In);
+        mapTween1.start();
+        // ---------------------------------------------------------------------------------------------
+
         // // 辅助线
         // const axes = new THREE.AxisHelper(20);
         // scene.add(axes);
@@ -257,8 +260,8 @@ function Guoxin() {
         // 相机
         const camera = new THREE.PerspectiveCamera(20, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(150, 50, 300);
-        // camera.position.set(0, 100, 300);
+        camera.position.set(150, 50, 300); // 侧面
+        // camera.position.set(0, 100, 300); //正面
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
