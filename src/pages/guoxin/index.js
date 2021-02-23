@@ -336,7 +336,7 @@ function Guoxin() {
                     const floatsAnimateTimer = setTimeout(() => {
                         floatsAnimate(scene);
                         clearTimeout(floatsAnimateTimer);
-                    }, 2500);
+                    }, 2200);
                 }
             });
         mapTween1.start();
