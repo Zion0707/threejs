@@ -249,7 +249,7 @@ function Guoxin() {
         positiveMesh.position.set(0, 130, 0);
 
         // 楼宇logo
-        const logoGeometry = new THREE.BoxBufferGeometry(140, 40, 2);
+        const logoGeometry = new THREE.BoxBufferGeometry(140, 40, 3);
         const logoMesh = new THREE.Mesh(logoGeometry, [null, null, null, null, logoMaterial, null]);
         logoMesh.name = '楼宇正面logo';
         logoMesh.position.set(0, 140, 50);
