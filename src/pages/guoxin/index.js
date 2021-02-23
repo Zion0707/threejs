@@ -318,7 +318,13 @@ function Guoxin() {
         guoxinGroup.rotation.y = -2;
         const modelTween1 = new TWEEN.Tween(guoxinGroup.rotation)
             .to({ y: 0 }, 5000)
-            .easing(TWEEN.Easing.Quadratic.InOut);
+            .easing(TWEEN.Easing.Quadratic.InOut)
+            .onUpdate(() => {
+                if (guoxinGroup.rotation.y >= 0) {
+                    // 执行上升漂浮动画
+                    floatsAnimate(scene);
+                }
+            });
         modelTween1.start();
         const modelTween2 = new TWEEN.Tween(guoxinGroup.scale)
             .to({ x: 0.15, y: 0.15, z: 0.15 }, 5000)
@@ -329,16 +335,7 @@ function Guoxin() {
         // mapBgMaterial.opacity = 0.5; // 测试用
         const mapTween1 = new TWEEN.Tween(mapBgMaterial)
             .to({ opacity: 0.5 }, 3000)
-            .easing(TWEEN.Easing.Quadratic.In)
-            .onUpdate(() => {
-                if (mapBgMaterial.opacity >= 0.5) {
-                    // 执行上升漂浮动画
-                    const floatsAnimateTimer = setTimeout(() => {
-                        floatsAnimate(scene);
-                        clearTimeout(floatsAnimateTimer);
-                    }, 2200);
-                }
-            });
+            .easing(TWEEN.Easing.Quadratic.In);
         mapTween1.start();
 
         // 上升漂浮元素动画
@@ -352,8 +349,8 @@ function Guoxin() {
         // 相机
         const camera = new THREE.PerspectiveCamera(20, winWidth / winHeight, 0.1, 1000);
         // 设置相机坐标
-        camera.position.set(150, 50, 300); // 侧面
-        // camera.position.set(0, 100, 300); //正面
+        // camera.position.set(150, 50, 300); // 侧面
+        camera.position.set(0, 50, 300); // 正面
 
         // 渲染器
         const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
