@@ -9,8 +9,7 @@ import logoImg from './images/logo.png';
 import mapImg from './images/map.png';
 import bodyImg from './images/body.png';
 import bottomImg from './images/bottom.png';
-import sliderImg from './images/slider.png';
-const imgsArr = [logoImg, mapImg, bodyImg, bottomImg, sliderImg];
+const imgsArr = [logoImg, mapImg, bodyImg, bottomImg];
 
 function Guoxin() {
     const [mapLoading, setMapLoading] = useState(true);
@@ -54,38 +53,66 @@ function Guoxin() {
             opacity: 1,
         });
 
-        // 底部 贴纸
-        const bottomTexture = new THREE.TextureLoader().load(bottomImg);
-        bottomTexture.repeat.set(1, 1);
-        bottomTexture.wrapS = THREE.RepeatWrapping;
-        bottomTexture.wrapT = THREE.RepeatWrapping;
-        const bottomMaterial = new THREE.MeshLambertMaterial({
-            map: bottomTexture,
+        // 主体正面 贴纸
+        const bodyPositiveTexture = new THREE.TextureLoader().load(bodyImg);
+        bodyPositiveTexture.repeat.set(14, 14);
+        bodyPositiveTexture.wrapS = THREE.RepeatWrapping;
+        bodyPositiveTexture.wrapT = THREE.RepeatWrapping;
+        const bodyPositiveMaterial = new THREE.MeshLambertMaterial({
+            map: bodyPositiveTexture,
+            transparent: true,
+            opacity: 0.8,
+        });
+
+        // 主体侧面 贴纸
+        const bodySideTexture = new THREE.TextureLoader().load(bodyImg);
+        bodySideTexture.repeat.set(10, 14);
+        bodySideTexture.wrapS = THREE.RepeatWrapping;
+        bodySideTexture.wrapT = THREE.RepeatWrapping;
+        const bodySideMaterial = new THREE.MeshLambertMaterial({
+            map: bodySideTexture,
+            transparent: true,
+            opacity: 0.8,
+        });
+
+        // 底部正面 贴纸
+        const bottomPositiveTexture = new THREE.TextureLoader().load(bottomImg);
+        bottomPositiveTexture.repeat.set(25, 3);
+        bottomPositiveTexture.wrapS = THREE.RepeatWrapping;
+        bottomPositiveTexture.wrapT = THREE.RepeatWrapping;
+        const bottomPositiveMaterial = new THREE.MeshLambertMaterial({
+            map: bottomPositiveTexture,
             transparent: true,
             opacity: 1,
         });
 
-        // 侧边 贴纸
-        const sliderTexture = new THREE.TextureLoader().load(sliderImg);
-        sliderTexture.repeat.set(1, 1);
+        // 底部侧面 贴纸
+        const bottomSideTexture = new THREE.TextureLoader().load(bottomImg);
+        bottomSideTexture.repeat.set(8, 3);
+        bottomSideTexture.wrapS = THREE.RepeatWrapping;
+        bottomSideTexture.wrapT = THREE.RepeatWrapping;
+        const bottomSideMaterial = new THREE.MeshLambertMaterial({
+            map: bottomSideTexture,
+            transparent: true,
+            opacity: 1,
+        });
+
+        // 圆形侧边 贴纸
+        const sliderTexture = new THREE.TextureLoader().load(bodyImg);
+        sliderTexture.repeat.set(22, 14);
         sliderTexture.wrapS = THREE.RepeatWrapping;
         sliderTexture.wrapT = THREE.RepeatWrapping;
         const sliderMaterial = new THREE.MeshLambertMaterial({
             map: sliderTexture,
             transparent: true,
-            opacity: 1,
+            opacity: 0.8,
         });
 
-        const blueMaterial = new THREE.MeshLambertMaterial({
-            color: '#a3c1d9',
-            transparent: true,
-            opacity: 1,
-        });
-
+        // 奶白色
         const whiteMaterial = new THREE.MeshLambertMaterial({
             color: '#90abc0',
             transparent: true,
-            opacity: 0.8,
+            opacity: 1,
         });
 
         // ---------------------------------------------------------------------------------------------
@@ -93,7 +120,7 @@ function Guoxin() {
         const guoxinGroup = new THREE.Group();
         guoxinGroup.name = '楼宇组';
 
-        // // 旋转动画start
+        // loading加载完，模型旋转动画start
         guoxinGroup.scale.set(0.15, 0.15, 0.15);
         // guoxinGroup.scale.set(0.05, 0.05, 0.05);
         // guoxinGroup.rotation.y = -2;
@@ -110,19 +137,26 @@ function Guoxin() {
 
         // 楼宇主体
         const bodyGeometry = new THREE.BoxBufferGeometry(140, 260, 100);
-        const bodyMesh = new THREE.Mesh(bodyGeometry, blueMaterial);
+        const bodyMesh = new THREE.Mesh(bodyGeometry, [
+            bodySideMaterial,
+            bodySideMaterial,
+            whiteMaterial,
+            whiteMaterial,
+            bodyPositiveMaterial,
+            bodyPositiveMaterial,
+        ]);
         bodyMesh.name = '楼宇主体';
         bodyMesh.position.y = 30;
 
         // 楼宇底部长方体
         const floorBottomGeometry = new THREE.BoxBufferGeometry(300, 50, 100);
         const floorBottomMesh = new THREE.Mesh(floorBottomGeometry, [
-            bottomMaterial,
-            bottomMaterial,
+            bottomSideMaterial,
+            bottomSideMaterial,
             whiteMaterial,
             whiteMaterial,
-            bottomMaterial,
-            bottomMaterial,
+            bottomPositiveMaterial,
+            bottomPositiveMaterial,
         ]);
         floorBottomMesh.name = '楼宇底部';
         floorBottomMesh.position.set(0, -125, 0);
@@ -134,7 +168,7 @@ function Guoxin() {
         positiveMesh.position.set(0, 130, 0);
 
         // 楼宇logo
-        const logoGeometry = new THREE.BoxBufferGeometry(140, 40, 1);
+        const logoGeometry = new THREE.BoxBufferGeometry(140, 40, 2);
         const logoMesh = new THREE.Mesh(logoGeometry, [null, null, null, null, logoMaterial, null]);
         logoMesh.name = '楼宇正面logo';
         logoMesh.position.set(0, 140, 50);
@@ -144,15 +178,18 @@ function Guoxin() {
         floorLeftGroup.name = '楼宇左边组';
         floorLeftGroup.position.set(-110, 0, 0);
 
-        const floorLeftCylindricalGeometry = new THREE.CylinderBufferGeometry(35, 35, 249.9, 14);
-        const floorLeftCylindricalMesh = new THREE.Mesh(floorLeftCylindricalGeometry, blueMaterial);
+        const floorLeftCylindricalGeometry = new THREE.CylinderBufferGeometry(35, 35, 248, 14);
+        const floorLeftCylindricalMesh = new THREE.Mesh(floorLeftCylindricalGeometry, [
+            sliderMaterial,
+            whiteMaterial,
+        ]);
         floorLeftCylindricalMesh.name = '楼宇左边圆柱体';
         floorLeftCylindricalMesh.position.set(5, 25, -15);
 
-        const floorLeftCuboidGeometry = new THREE.BoxBufferGeometry(35, 250, 70);
-        const floorLeftCuboidMesh = new THREE.Mesh(floorLeftCuboidGeometry, blueMaterial);
+        const floorLeftCuboidGeometry = new THREE.BoxBufferGeometry(30, 250, 72);
+        const floorLeftCuboidMesh = new THREE.Mesh(floorLeftCuboidGeometry, whiteMaterial);
         floorLeftCuboidMesh.name = '楼宇左边长方体';
-        floorLeftCuboidMesh.position.set(22.5, 25, -15);
+        floorLeftCuboidMesh.position.set(28, 25, -15);
 
         floorLeftGroup.add(floorLeftCylindricalMesh, floorLeftCuboidMesh);
 
@@ -161,18 +198,18 @@ function Guoxin() {
         floorRightGroup.name = '楼宇右边组';
         floorRightGroup.position.set(110, 0, 0);
 
-        const floorRightCylindricalGeometry = new THREE.CylinderBufferGeometry(35, 35, 249.9, 14);
-        const floorRightCylindricalMesh = new THREE.Mesh(
-            floorRightCylindricalGeometry,
-            blueMaterial
-        );
+        const floorRightCylindricalGeometry = new THREE.CylinderBufferGeometry(35, 35, 248, 14);
+        const floorRightCylindricalMesh = new THREE.Mesh(floorRightCylindricalGeometry, [
+            sliderMaterial,
+            whiteMaterial,
+        ]);
         floorRightCylindricalMesh.name = '楼宇右边圆柱体';
         floorRightCylindricalMesh.position.set(-5, 25, -15);
 
-        const floorRightCuboidGeometry = new THREE.BoxBufferGeometry(35, 250, 70);
-        const floorRightCuboidMesh = new THREE.Mesh(floorRightCuboidGeometry, blueMaterial);
+        const floorRightCuboidGeometry = new THREE.BoxBufferGeometry(30, 250, 72);
+        const floorRightCuboidMesh = new THREE.Mesh(floorRightCuboidGeometry, whiteMaterial);
         floorRightCuboidMesh.name = '楼宇右边长方体';
-        floorRightCuboidMesh.position.set(-22.5, 25, -15);
+        floorRightCuboidMesh.position.set(-28, 25, -15);
 
         floorRightGroup.add(floorRightCylindricalMesh, floorRightCuboidMesh);
 
