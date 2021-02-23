@@ -10,6 +10,9 @@ import mapImg from './images/map.png';
 import bodyImg from './images/body.png';
 import bottomImg from './images/bottom.png';
 const imgsArr = [logoImg, mapImg, bodyImg, bottomImg];
+const floatsArr = [];
+let startLoadSwitch = true; // 是否是动画开始状态
+let windowActiveSwitch = true; // 浏览器状态
 
 function Guoxin() {
     const [mapLoading, setMapLoading] = useState(true);
@@ -35,19 +38,15 @@ function Guoxin() {
     // 漂浮元素生成
     const floatsAnimate = (scene) => {
         const rangeNum = 80;
-        const yNum = -30;
-        const comeUpArr = [
-            { x: rangeNum, z: rangeNum, y: yNum },
-            { x: -rangeNum, z: rangeNum, y: yNum },
-            { x: rangeNum, z: -rangeNum, y: yNum },
-            { x: -rangeNum, z: -rangeNum, y: yNum },
-        ];
+        const initYNum = -30;
+        const initOption = 0.3;
+        const comeUpArr = [];
 
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 15; i++) {
             comeUpArr.push({
                 x: Math.random() * (i % 2 === 0 ? rangeNum : -rangeNum),
                 z: Math.random() * (i % 2 === 0 ? -rangeNum : rangeNum),
-                y: yNum,
+                y: initYNum,
             });
         }
 
@@ -57,7 +56,7 @@ function Guoxin() {
             const cuMaterial = new THREE.MeshBasicMaterial({
                 color: '#2cc1f7',
                 transparent: true,
-                opacity: 0.3,
+                opacity: initOption,
             });
 
             // 上浮模型
@@ -86,8 +85,8 @@ function Guoxin() {
 
             // 重置位置及透明度
             const comeUpAnimateInit = () => {
-                comeUpGroup.position.y = -20;
-                cuMaterial.opacity = 0.3;
+                comeUpGroup.position.y = initYNum;
+                cuMaterial.opacity = initOption;
                 const timer = setTimeout(() => {
                     comeUpTween.start();
                     whiteTween.start();
@@ -108,12 +107,16 @@ function Guoxin() {
                 .to({ opacity: 0 }, 8000)
                 .easing(TWEEN.Easing.Quadratic.Out);
             whiteTween.start();
+
+            floatsArr.push({ e: comeUpGroup, c: comeUpTween, w: whiteTween });
         };
 
         // 延时启动漂浮粒子
         for (let i = 0, len = comeUpArr.length; i < len; i++) {
             const timer = setTimeout(() => {
-                createComeUpModel(i);
+                if (startLoadSwitch === false && windowActiveSwitch === true) {
+                    createComeUpModel(i);
+                }
                 clearTimeout(timer);
             }, i * 1000);
         }
@@ -344,6 +347,8 @@ function Guoxin() {
                         floatsAnimate(scene);
                         clearTimeout(floatsAnimateTimer);
                     }, 2500);
+
+                    startLoadSwitch = false;
                 }
             });
         mapTween1.start();
@@ -416,6 +421,26 @@ function Guoxin() {
             camera.aspect = newWindowWidth / newWindowHeight;
             camera.updateProjectionMatrix();
         };
+
+        // 浏览器切换的时候，定时器会停止，所以需要做特殊处理
+        window.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // 挂起
+                // 删除所有漂浮元素
+                for (let i = 0, len = floatsArr.length; i < len; i++) {
+                    floatsArr[i].w.opacity = 0;
+                    scene.remove(floatsArr[i].e);
+                }
+                windowActiveSwitch = false;
+            } else {
+                // 呼出
+                // 生成漂浮元素
+                if (startLoadSwitch === false) {
+                    floatsAnimate(scene);
+                }
+                windowActiveSwitch = true;
+            }
+        });
     };
 
     const init = async () => {
