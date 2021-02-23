@@ -33,7 +33,7 @@ function Guoxin() {
     };
 
     // 漂浮元素生成
-    const floats = (scene) => {
+    const floatsAnimate = (scene) => {
         const rangeNum = 80;
         const yNum = -20;
         const comeUpArr = [
@@ -54,8 +54,8 @@ function Guoxin() {
         // 上升拖尾模型
         const createComeUpModel = (index) => {
             // 纹理
-            const whiteMaterial = new THREE.MeshBasicMaterial({
-                color: '#ff000',
+            const cuMaterial = new THREE.MeshBasicMaterial({
+                color: '#2cc1f7',
                 transparent: true,
                 opacity: 0.3,
             });
@@ -72,13 +72,13 @@ function Guoxin() {
 
             // 圆球
             const circleGeometry = new THREE.SphereGeometry(radiusSize, 100, 100);
-            const circleMesh = new THREE.Mesh(circleGeometry, whiteMaterial);
+            const circleMesh = new THREE.Mesh(circleGeometry, cuMaterial);
             circleMesh.name = '圆球';
             circleMesh.position.y = 8;
 
             // 圆锥
             const coneGeometry = new THREE.CylinderBufferGeometry(radiusSize, 0, 15.1, 100);
-            const coneMesh = new THREE.Mesh(coneGeometry, whiteMaterial);
+            const coneMesh = new THREE.Mesh(coneGeometry, cuMaterial);
             coneMesh.name = '圆锥';
             comeUpGroup.add(coneMesh, circleMesh);
 
@@ -87,7 +87,7 @@ function Guoxin() {
             // 重置位置及透明度
             const comeUpAnimateInit = () => {
                 comeUpGroup.position.y = -20;
-                whiteMaterial.opacity = 0.3;
+                cuMaterial.opacity = 0.3;
                 const timer = setTimeout(() => {
                     comeUpTween.start();
                     whiteTween.start();
@@ -104,12 +104,13 @@ function Guoxin() {
                 });
             comeUpTween.start();
 
-            const whiteTween = new TWEEN.Tween(whiteMaterial)
+            const whiteTween = new TWEEN.Tween(cuMaterial)
                 .to({ opacity: 0 }, 8000)
                 .easing(TWEEN.Easing.Quadratic.Out);
             whiteTween.start();
         };
 
+        // 延时启动漂浮粒子
         for (let i = 0, len = comeUpArr.length; i < len; i++) {
             const timer = setTimeout(() => {
                 createComeUpModel(i);
@@ -338,13 +339,17 @@ function Guoxin() {
             .easing(TWEEN.Easing.Quadratic.In)
             .onUpdate(() => {
                 if (mapBgMaterial.opacity >= 0.5) {
-                    const floatsTimer = setTimeout(() => {
-                        floats(scene);
-                        clearTimeout(floatsTimer);
-                    }, 2000);
+                    // 执行上升漂浮动画
+                    const floatsAnimateTimer = setTimeout(() => {
+                        floatsAnimate(scene);
+                        clearTimeout(floatsAnimateTimer);
+                    }, 2500);
                 }
             });
         mapTween1.start();
+
+        // 上升漂浮元素动画
+        // floatsAnimate(scene); // 测试用
         // ---------------------------------------------------------------------------------------------
 
         // // 辅助线
