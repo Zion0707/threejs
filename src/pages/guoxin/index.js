@@ -83,7 +83,7 @@ function Guoxin() {
         const bottomPositiveMaterial = new THREE.MeshLambertMaterial({
             map: bottomPositiveTexture,
             transparent: true,
-            opacity: 1,
+            opacity: 0.7,
         });
 
         // 底部侧面 贴纸
@@ -94,7 +94,7 @@ function Guoxin() {
         const bottomSideMaterial = new THREE.MeshLambertMaterial({
             map: bottomSideTexture,
             transparent: true,
-            opacity: 1,
+            opacity: 0.7,
         });
 
         // 圆形侧边 贴纸
@@ -121,18 +121,19 @@ function Guoxin() {
         guoxinGroup.name = '楼宇组';
 
         // loading加载完，模型旋转动画start
-        guoxinGroup.scale.set(0.15, 0.15, 0.15);
-        // guoxinGroup.scale.set(0.05, 0.05, 0.05);
-        // guoxinGroup.rotation.y = -2;
-        // const tween1 = new TWEEN.Tween(guoxinGroup.rotation)
-        //     .to({ y: 0 }, 4000)
-        //     .easing(TWEEN.Easing.Quadratic.Out);
-        // tween1.start();
+        // guoxinGroup.scale.set(0.15, 0.15, 0.15); // 测试用
 
-        // const tween2 = new TWEEN.Tween(guoxinGroup.scale)
-        //     .to({ x: 0.15, y: 0.15, z: 0.15 }, 4000)
-        //     .easing(TWEEN.Easing.Quadratic.Out);
-        // tween2.start();
+        guoxinGroup.scale.set(0.05, 0.05, 0.05);
+        guoxinGroup.rotation.y = -2;
+        const tween1 = new TWEEN.Tween(guoxinGroup.rotation)
+            .to({ y: 0 }, 4000)
+            .easing(TWEEN.Easing.Quadratic.Out);
+        tween1.start();
+
+        const tween2 = new TWEEN.Tween(guoxinGroup.scale)
+            .to({ x: 0.15, y: 0.15, z: 0.15 }, 4000)
+            .easing(TWEEN.Easing.Quadratic.Out);
+        tween2.start();
         // 旋转动画end
 
         // 楼宇主体
@@ -176,7 +177,7 @@ function Guoxin() {
         // 楼宇左边侧面组
         const floorLeftGroup = new THREE.Group();
         floorLeftGroup.name = '楼宇左边组';
-        floorLeftGroup.position.set(-110, 0, 0);
+        floorLeftGroup.position.set(-90, 0, 0);
 
         const floorLeftCylindricalGeometry = new THREE.CylinderBufferGeometry(35, 35, 248, 14);
         const floorLeftCylindricalMesh = new THREE.Mesh(floorLeftCylindricalGeometry, [
@@ -186,17 +187,17 @@ function Guoxin() {
         floorLeftCylindricalMesh.name = '楼宇左边圆柱体';
         floorLeftCylindricalMesh.position.set(5, 25, -15);
 
-        const floorLeftCuboidGeometry = new THREE.BoxBufferGeometry(30, 250, 72);
+        const floorLeftCuboidGeometry = new THREE.BoxBufferGeometry(10, 250, 72);
         const floorLeftCuboidMesh = new THREE.Mesh(floorLeftCuboidGeometry, whiteMaterial);
         floorLeftCuboidMesh.name = '楼宇左边长方体';
-        floorLeftCuboidMesh.position.set(28, 25, -15);
+        floorLeftCuboidMesh.position.set(15, 25, -13);
 
         floorLeftGroup.add(floorLeftCylindricalMesh, floorLeftCuboidMesh);
 
         // 楼宇右边侧面组
         const floorRightGroup = new THREE.Group();
         floorRightGroup.name = '楼宇右边组';
-        floorRightGroup.position.set(110, 0, 0);
+        floorRightGroup.position.set(90, 0, 0);
 
         const floorRightCylindricalGeometry = new THREE.CylinderBufferGeometry(35, 35, 248, 14);
         const floorRightCylindricalMesh = new THREE.Mesh(floorRightCylindricalGeometry, [
@@ -206,10 +207,10 @@ function Guoxin() {
         floorRightCylindricalMesh.name = '楼宇右边圆柱体';
         floorRightCylindricalMesh.position.set(-5, 25, -15);
 
-        const floorRightCuboidGeometry = new THREE.BoxBufferGeometry(30, 250, 72);
+        const floorRightCuboidGeometry = new THREE.BoxBufferGeometry(10, 250, 72);
         const floorRightCuboidMesh = new THREE.Mesh(floorRightCuboidGeometry, whiteMaterial);
         floorRightCuboidMesh.name = '楼宇右边长方体';
-        floorRightCuboidMesh.position.set(-28, 25, -15);
+        floorRightCuboidMesh.position.set(-15, 25, -13);
 
         floorRightGroup.add(floorRightCylindricalMesh, floorRightCuboidMesh);
 
