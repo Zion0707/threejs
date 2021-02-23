@@ -19,38 +19,94 @@ function Guoxin() {
         const scene = new THREE.Scene();
         // ---------------------------------------------------------------------------------------------
 
-        const boxGeometry = new THREE.CylinderBufferGeometry(5, 5, 5, 100);
-        const boxMaterial = new THREE.MeshBasicMaterial({
-            color: '#ff000',
-            transparent: true,
-            opacity: 0.1,
-        });
-        const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
-        scene.add(boxMesh);
+        const rangeNum = 60;
+        const comeUpArr = [
+            { x: rangeNum, z: rangeNum, y: -100 },
+            { x: -rangeNum, z: -rangeNum, y: -100 },
+            { x: -rangeNum, z: rangeNum, y: -100 },
+            { x: rangeNum, z: -rangeNum, y: -100 },
+            { x: Math.random() * rangeNum, z: Math.random() * rangeNum, y: -100 },
+        ];
 
-        // 动画执行
-        const tween1 = new TWEEN.Tween(boxMaterial)
-            .to({ opacity: 1 }, 2000)
-            .easing(TWEEN.Easing.Quadratic.In)
-            .onUpdate(() => {
-                if (boxMaterial.opacity >= 1) {
-                    tween2.start();
-                }
+        const comeUpModel = (index) => {
+            // 纹理
+            const whiteMaterial = new THREE.MeshBasicMaterial({
+                color: '#ff000',
+                transparent: true,
+                opacity: 0.3,
             });
 
-        const tween2 = new TWEEN.Tween(boxMaterial)
-            .to({ opacity: 0.1 }, 2000)
-            .easing(TWEEN.Easing.Quadratic.Out)
-            .onUpdate(() => {
-                if (boxMaterial.opacity <= 0.1) {
-                    tween1.start();
-                }
-            });
+            // 上浮模型
+            const comeUpGroup = new THREE.Group();
+            comeUpGroup.name = '物体上浮模型';
+            comeUpGroup.position.x = comeUpArr[index].x;
+            comeUpGroup.position.y = comeUpArr[index].y;
+            comeUpGroup.position.z = comeUpArr[index].z;
 
-        const btn = btnRef.current;
-        btn.addEventListener('click', () => {
-            tween1.start();
-        });
+            // 圆球
+            const circleGeometry = new THREE.SphereGeometry(0.2, 100, 100);
+            const circleMesh = new THREE.Mesh(circleGeometry, whiteMaterial);
+            circleMesh.name = '圆球';
+            circleMesh.position.y = 8;
+
+            // 圆锥
+            const coneGeometry = new THREE.CylinderBufferGeometry(0.2, 0, 15.1, 100);
+            const coneMesh = new THREE.Mesh(coneGeometry, whiteMaterial);
+            coneMesh.name = '圆锥';
+            comeUpGroup.add(coneMesh, circleMesh);
+
+            scene.add(comeUpGroup);
+
+            const comeUpAnimateInit = () => {
+                comeUpGroup.position.y = -100;
+                whiteMaterial.opacity = 0.3;
+                const timer = setTimeout(() => {
+                    comeUpTween.start();
+                    whiteTween.start();
+                    clearTimeout(timer);
+                });
+            };
+            const comeUpTween = new TWEEN.Tween(comeUpGroup.position)
+                .to({ y: 100 }, 8000)
+                .easing(TWEEN.Easing.Linear.None)
+                .onUpdate(() => {
+                    if (comeUpGroup.position.y >= 100) {
+                        comeUpAnimateInit();
+                    }
+                });
+            comeUpTween.start();
+
+            const whiteTween = new TWEEN.Tween(whiteMaterial)
+                .to({ opacity: 0 }, 8000)
+                .easing(TWEEN.Easing.Quadratic.Out);
+            whiteTween.start();
+        };
+
+        for (let i = 0, len = comeUpArr.length; i < len; i++) {
+            const timer = setTimeout(() => {
+                comeUpModel(i);
+                clearTimeout(timer);
+            }, i * 1000);
+        }
+
+        // // 渐隐渐现动画执行
+        // const tween1 = new TWEEN.Tween(boxMaterial)
+        //     .to({ opacity: 1 }, 2000)
+        //     .easing(TWEEN.Easing.Quadratic.In)
+        //     .onUpdate(() => {
+        //         if (boxMaterial.opacity >= 1) {
+        //             tween2.start();
+        //         }
+        //     });
+
+        // const tween2 = new TWEEN.Tween(boxMaterial)
+        //     .to({ opacity: 0.1 }, 2000)
+        //     .easing(TWEEN.Easing.Quadratic.Out)
+        //     .onUpdate(() => {
+        //         if (boxMaterial.opacity <= 0.1) {
+        //             tween1.start();
+        //         }
+        //     });
 
         // ---------------------------------------------------------------------------------------------
         // // 辅助线
@@ -82,7 +138,7 @@ function Guoxin() {
         // orbitControls.enableZoom = false;
         orbitControls.minDistance = 200; // 最大缩放值，值越小模型越大
         orbitControls.maxDistance = 500; // 最小缩放值，值越大模型越小
-        orbitControls.maxPolarAngle = Math.PI * 0.5; // 限制鼠标拖拽角度
+        // orbitControls.maxPolarAngle = Math.PI * 0.5; // 限制鼠标拖拽角度
         orbitControls.enablePan = false; // 禁止鼠标右键拖拽
 
         // 设置光源

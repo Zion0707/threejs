@@ -32,6 +32,92 @@ function Guoxin() {
         return res;
     };
 
+    // 漂浮元素生成
+    const floats = (scene) => {
+        const rangeNum = 80;
+        const yNum = -20;
+        const comeUpArr = [
+            { x: rangeNum, z: rangeNum, y: yNum },
+            { x: -rangeNum, z: rangeNum, y: yNum },
+            { x: rangeNum, z: -rangeNum, y: yNum },
+            { x: -rangeNum, z: -rangeNum, y: yNum },
+        ];
+
+        for (let i = 0; i < 10; i++) {
+            comeUpArr.push({
+                x: Math.random() * (i % 2 === 0 ? rangeNum : -rangeNum),
+                z: Math.random() * (i % 2 === 0 ? -rangeNum : rangeNum),
+                y: yNum,
+            });
+        }
+
+        // 上升拖尾模型
+        const createComeUpModel = (index) => {
+            // 纹理
+            const whiteMaterial = new THREE.MeshBasicMaterial({
+                color: '#ff000',
+                transparent: true,
+                opacity: 0.3,
+            });
+
+            // 上浮模型
+            const comeUpGroup = new THREE.Group();
+            comeUpGroup.name = '物体上浮模型';
+            comeUpGroup.position.x = comeUpArr[index].x;
+            comeUpGroup.position.y = comeUpArr[index].y;
+            comeUpGroup.position.z = comeUpArr[index].z;
+
+            // 半径尺寸
+            const radiusSize = 0.3;
+
+            // 圆球
+            const circleGeometry = new THREE.SphereGeometry(radiusSize, 100, 100);
+            const circleMesh = new THREE.Mesh(circleGeometry, whiteMaterial);
+            circleMesh.name = '圆球';
+            circleMesh.position.y = 8;
+
+            // 圆锥
+            const coneGeometry = new THREE.CylinderBufferGeometry(radiusSize, 0, 15.1, 100);
+            const coneMesh = new THREE.Mesh(coneGeometry, whiteMaterial);
+            coneMesh.name = '圆锥';
+            comeUpGroup.add(coneMesh, circleMesh);
+
+            scene.add(comeUpGroup);
+
+            // 重置位置及透明度
+            const comeUpAnimateInit = () => {
+                comeUpGroup.position.y = -20;
+                whiteMaterial.opacity = 0.3;
+                const timer = setTimeout(() => {
+                    comeUpTween.start();
+                    whiteTween.start();
+                    clearTimeout(timer);
+                });
+            };
+            const comeUpTween = new TWEEN.Tween(comeUpGroup.position)
+                .to({ y: 200 }, 8000)
+                .easing(TWEEN.Easing.Linear.None)
+                .onUpdate(() => {
+                    if (comeUpGroup.position.y >= 200) {
+                        comeUpAnimateInit();
+                    }
+                });
+            comeUpTween.start();
+
+            const whiteTween = new TWEEN.Tween(whiteMaterial)
+                .to({ opacity: 0 }, 8000)
+                .easing(TWEEN.Easing.Quadratic.Out);
+            whiteTween.start();
+        };
+
+        for (let i = 0, len = comeUpArr.length; i < len; i++) {
+            const timer = setTimeout(() => {
+                createComeUpModel(i);
+                clearTimeout(timer);
+            }, i * 1000);
+        }
+    };
+
     // 模型及场景加载
     const modelLoad = () => {
         const el = contentRef.current;
@@ -244,12 +330,20 @@ function Guoxin() {
             .to({ x: 0.15, y: 0.15, z: 0.15 }, 5000)
             .easing(TWEEN.Easing.Quadratic.InOut);
         modelTween2.start();
-        // 旋转动画end
 
         // 地图渐现动画执行
+        // mapBgMaterial.opacity = 0.5; // 测试用
         const mapTween1 = new TWEEN.Tween(mapBgMaterial)
             .to({ opacity: 0.5 }, 3000)
-            .easing(TWEEN.Easing.Quadratic.In);
+            .easing(TWEEN.Easing.Quadratic.In)
+            .onUpdate(() => {
+                if (mapBgMaterial.opacity >= 0.5) {
+                    const floatsTimer = setTimeout(() => {
+                        floats(scene);
+                        clearTimeout(floatsTimer);
+                    }, 2000);
+                }
+            });
         mapTween1.start();
         // ---------------------------------------------------------------------------------------------
 
