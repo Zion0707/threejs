@@ -1,6 +1,15 @@
-export const randomNum = (Min, Max) => {
-    const Range = Max - Min;
-    const Rand = Math.random();
-    const num = Min + Math.round(Rand * Range); // 四舍五入
-    return num;
-};
+/**
+ * 获取随机范围数
+ * @param {type:number, desc:最小值} min
+ * @param {type:number, desc:最大值} max
+ */
+export function randomRange(min, max) {
+    let minVal = min;
+    let maxVal = max;
+    const tmp = minVal;
+    if (maxVal < minVal) {
+        minVal = maxVal;
+        maxVal = tmp;
+    }
+    return Math.floor(Math.random() * (maxVal - minVal + 1) + minVal);
+}

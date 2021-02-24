@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 import './index.css';
+import { randomRange } from './utils';
 
 import logoImg from './images/logo.png';
 import mapImg from './images/map.png';
@@ -48,7 +49,7 @@ function Guoxin() {
                 index: i,
                 x: Math.random() * (i % 2 === 0 ? rangeNum : -rangeNum),
                 z: Math.random() * (i % 2 === 0 ? -rangeNum : rangeNum),
-                y: Math.random() * -500,
+                y: -randomRange(20, 500),
             });
         }
 
@@ -93,7 +94,7 @@ function Guoxin() {
             };
 
             const comeUpAnimate = new TWEEN.Tween(comeUpGroup.position)
-                .to({ y: 200 }, 8000)
+                .to({ y: 200 }, 7000)
                 .easing(TWEEN.Easing.Linear.None)
                 .onUpdate(() => {
                     if (comeUpGroup.position.y >= 200) {
@@ -102,7 +103,7 @@ function Guoxin() {
                 });
 
             const fadeOutAnimate = new TWEEN.Tween(cuMaterial)
-                .to({ opacity: 0 }, 8000)
+                .to({ opacity: 0 }, 7000)
                 .easing(TWEEN.Easing.Quadratic.Out);
 
             comeUpGroup.position.x = comeUpArr[index].x;
