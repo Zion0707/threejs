@@ -22,7 +22,8 @@ import Map3d from './pages/map-3d';
 import Louyu from './pages/louyu';
 import Guoxin from './pages/guoxin';
 import MeshLine from './pages/mesh-line';
-import Faguang from './pages/faguang';
+import Floating from './pages/floating';
+import FadeInOut from './pages/fade-in-out';
 
 ReactDOM.render(
     <>
@@ -47,7 +48,8 @@ ReactDOM.render(
                 <Route path="/louyu" component={Louyu} />
                 <Route path="/guoxin" component={Guoxin} />
                 <Route path="/mesh-line" component={MeshLine} />
-                <Route path="/faguang" component={Faguang} />
+                <Route path="/floating" component={Floating} />
+                <Route path="/fade-in-out" component={FadeInOut} />
             </Switch>
         </Router>
     </>,
