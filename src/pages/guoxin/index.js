@@ -73,10 +73,10 @@ function Guoxin() {
             const circleGeometry = new THREE.SphereGeometry(radiusSize, 100, 100);
             const circleMesh = new THREE.Mesh(circleGeometry, cuMaterial);
             circleMesh.name = '圆球';
-            circleMesh.position.y = 8;
+            circleMesh.position.y = 7;
 
             // 圆锥
-            const coneGeometry = new THREE.CylinderBufferGeometry(radiusSize, 0, 15.1, 100);
+            const coneGeometry = new THREE.CylinderBufferGeometry(radiusSize, 0, 15, 100);
             const coneMesh = new THREE.Mesh(coneGeometry, cuMaterial);
             coneMesh.name = '圆锥';
             comeUpGroup.add(coneMesh, circleMesh);
