@@ -2,8 +2,8 @@
     outline: none;
 }
 #content {
-    background-color: #040d21;
-    /* background-image: radial-gradient(#154789, #13194b); */
+    /* background-color: #040d21; */
+    background-image: radial-gradient(#154789, #13194b);
     width: 100%;
     height: 100%;
     position: absolute;
