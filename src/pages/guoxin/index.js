@@ -32,15 +32,20 @@ function Guoxin() {
         return res;
     };
 
-    // 漂浮元素生成
-    const floatsAnimate = (scene) => {
-        const rangeNum = 80;
-        const initYNum = -30;
-        const initOption = 0.3;
-        const comeUpArr = [];
+    // 上升漂浮元素生成
+    const floatsAnimate = (scene, delayTime) => {
+        const dtime = delayTime || 0;
 
-        for (let i = 0; i < 15; i++) {
+        const rangeNum = 80; // 随机范围值
+        const yDownNum = -30; // 漂浮元素统一的最底值
+        const fadeInOption = 0.3; // 显示透明度
+        const comeUpArr = []; // 上升漂浮元素装载
+        const comeUpCount = 20; // 漂浮元素总数
+
+        for (let i = 0; i < comeUpCount; i++) {
             comeUpArr.push({
+                el: null,
+                index: i,
                 x: Math.random() * (i % 2 === 0 ? rangeNum : -rangeNum),
                 z: Math.random() * (i % 2 === 0 ? -rangeNum : rangeNum),
                 y: Math.random() * -500,
@@ -49,19 +54,16 @@ function Guoxin() {
 
         // 上升拖尾模型
         const createComeUpModel = (index) => {
-            // 纹理
+            // 纹理，开始透明是为了生成
             const cuMaterial = new THREE.MeshBasicMaterial({
                 color: '#2cc1f7',
                 transparent: true,
-                opacity: initOption,
+                opacity: 0,
             });
 
             // 上浮模型
             const comeUpGroup = new THREE.Group();
             comeUpGroup.name = '物体上浮模型';
-            comeUpGroup.position.x = comeUpArr[index].x;
-            comeUpGroup.position.y = comeUpArr[index].y;
-            comeUpGroup.position.z = comeUpArr[index].z;
 
             // 半径尺寸
             const radiusSize = 0.3;
@@ -77,20 +79,20 @@ function Guoxin() {
             const coneMesh = new THREE.Mesh(coneGeometry, cuMaterial);
             coneMesh.name = '圆锥';
             comeUpGroup.add(coneMesh, circleMesh);
-
             scene.add(comeUpGroup);
 
             // 重置位置及透明度
             const comeUpAnimateInit = () => {
-                comeUpGroup.position.y = initYNum;
-                cuMaterial.opacity = initOption;
+                comeUpGroup.position.y = yDownNum;
+                cuMaterial.opacity = fadeInOption;
                 const timer = setTimeout(() => {
-                    comeUpTween.start();
-                    whiteTween.start();
+                    comeUpAnimate.start();
+                    fadeOutAnimate.start();
                     clearTimeout(timer);
                 });
             };
-            const comeUpTween = new TWEEN.Tween(comeUpGroup.position)
+
+            const comeUpAnimate = new TWEEN.Tween(comeUpGroup.position)
                 .to({ y: 200 }, 8000)
                 .easing(TWEEN.Easing.Linear.None)
                 .onUpdate(() => {
@@ -98,18 +100,36 @@ function Guoxin() {
                         comeUpAnimateInit();
                     }
                 });
-            comeUpTween.start();
 
-            const whiteTween = new TWEEN.Tween(cuMaterial)
+            const fadeOutAnimate = new TWEEN.Tween(cuMaterial)
                 .to({ opacity: 0 }, 8000)
                 .easing(TWEEN.Easing.Quadratic.Out);
-            whiteTween.start();
+
+            comeUpGroup.position.x = comeUpArr[index].x;
+            comeUpGroup.position.y = comeUpArr[index].y;
+            comeUpGroup.position.z = comeUpArr[index].z;
+            // 元素和动画记录，方便执行
+            comeUpArr[index].el = comeUpGroup;
+            comeUpArr[index].cuMaterial = cuMaterial;
+            comeUpArr[index].comeUpAnimate = comeUpAnimate;
+            comeUpArr[index].fadeOutAnimate = fadeOutAnimate;
         };
 
         // 延时启动漂浮粒子
         for (let i = 0, len = comeUpArr.length; i < len; i++) {
             createComeUpModel(i);
         }
+
+        // 动画执行
+        console.log(comeUpArr);
+        const timer = setTimeout(() => {
+            for (let i = 0, len = comeUpArr.length; i < len; i++) {
+                comeUpArr[i].cuMaterial.opacity = fadeInOption;
+                comeUpArr[i].comeUpAnimate.start();
+                comeUpArr[i].fadeOutAnimate.start();
+            }
+            clearTimeout(timer);
+        }, dtime);
     };
 
     // 模型及场景加载
@@ -318,13 +338,7 @@ function Guoxin() {
         guoxinGroup.rotation.y = -2;
         const modelTween1 = new TWEEN.Tween(guoxinGroup.rotation)
             .to({ y: 0 }, 5000)
-            .easing(TWEEN.Easing.Quadratic.InOut)
-            .onUpdate(() => {
-                if (guoxinGroup.rotation.y >= 0) {
-                    // 执行上升漂浮动画
-                    floatsAnimate(scene);
-                }
-            });
+            .easing(TWEEN.Easing.Quadratic.InOut);
         modelTween1.start();
         const modelTween2 = new TWEEN.Tween(guoxinGroup.scale)
             .to({ x: 0.15, y: 0.15, z: 0.15 }, 5000)
@@ -338,8 +352,8 @@ function Guoxin() {
             .easing(TWEEN.Easing.Quadratic.In);
         mapTween1.start();
 
-        // 上升漂浮元素动画
-        // floatsAnimate(scene); // 测试用
+        // 漂浮元素上升动画
+        floatsAnimate(scene, 4000);
         // ---------------------------------------------------------------------------------------------
 
         // // 辅助线
