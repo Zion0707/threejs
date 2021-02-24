@@ -24,6 +24,7 @@ import Guoxin from './pages/guoxin';
 import MeshLine from './pages/mesh-line';
 import Floating from './pages/floating';
 import FadeInOut from './pages/fade-in-out';
+import Guidao from './pages/guidao';
 
 ReactDOM.render(
     <>
@@ -50,6 +51,7 @@ ReactDOM.render(
                 <Route path="/mesh-line" component={MeshLine} />
                 <Route path="/floating" component={Floating} />
                 <Route path="/fade-in-out" component={FadeInOut} />
+                <Route path="/guidao" component={Guidao} />
             </Switch>
         </Router>
     </>,

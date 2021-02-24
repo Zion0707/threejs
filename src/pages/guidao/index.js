@@ -1,9 +1,13 @@
 // 漂浮元素上升
 import React, { useEffect, useRef } from 'react';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import TWEEN from '@tweenjs/tween.js';
 import './index.css';
+
+import model from 'static/media/pikaqiu/file.obj';
+import skin from 'static/media/pikaqiu/file.jpg';
 
 function FadeInOut() {
     const contentRef = useRef();
@@ -13,44 +17,6 @@ function FadeInOut() {
         const winWidth = window.innerWidth;
         const winHeight = window.innerHeight;
         el.style.cssText = `width:${winWidth}px;height:${winHeight}px`;
-
-        // 场景
-        const scene = new THREE.Scene();
-        // ---------------------------------------------------------------------------------------------
-
-        const boxGeometry = new THREE.BoxGeometry(10, 10, 10);
-        const boxMaterial = new THREE.MeshBasicMaterial({
-            color: '#FFFFFF',
-            transparent: true,
-            opacity: 0.1,
-        });
-        const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
-        scene.add(boxMesh);
-
-        // 渐隐渐现动画执行
-        const tween1 = new TWEEN.Tween(boxMaterial)
-            .to({ opacity: 1 }, 2000)
-            .easing(TWEEN.Easing.Quadratic.In)
-            .onUpdate(() => {
-                if (boxMaterial.opacity >= 1) {
-                    tween2.start();
-                }
-            });
-
-        const tween2 = new TWEEN.Tween(boxMaterial)
-            .to({ opacity: 0.1 }, 2000)
-            .easing(TWEEN.Easing.Quadratic.Out)
-            .onUpdate(() => {
-                if (boxMaterial.opacity <= 0.1) {
-                    tween1.start();
-                }
-            });
-        tween1.start();
-
-        // ---------------------------------------------------------------------------------------------
-        // // 辅助线
-        // const axes = new THREE.AxisHelper(20);
-        // scene.add(axes);
 
         // 相机
         const camera = new THREE.PerspectiveCamera(20, winWidth / winHeight, 0.1, 1000);
@@ -70,6 +36,69 @@ function FadeInOut() {
         // 将renderer（渲染器）的dom元素（renderer.domElement）添加到我们的HTML文档中。
         // 这就是渲染器用来显示场景给我们看的<canvas>元素
         document.body.appendChild(renderer.domElement);
+
+        // 场景
+        // ---------------------------------------------------------------------------------------------
+        const scene = new THREE.Scene();
+        const boxGeometry = new THREE.BoxGeometry(5, 5, 5);
+
+        // logo 贴纸
+        const logoTexture = new THREE.TextureLoader().load(require('./images/logo.png'));
+        logoTexture.repeat.set(1, 1);
+        logoTexture.wrapS = THREE.RepeatWrapping;
+        logoTexture.wrapT = THREE.RepeatWrapping;
+        const logoMaterial = new THREE.MeshLambertMaterial({
+            map: logoTexture,
+            transparent: true,
+            opacity: 1,
+        });
+
+        const boxMesh = new THREE.Mesh(boxGeometry, logoMaterial);
+        boxMesh.position.set(-5, 10, 5);
+        boxMesh.name = '盒子模型';
+        scene.add(boxMesh);
+
+        // 导入obj模型
+        const objLoader = new OBJLoader();
+        objLoader.load(model, (object) => {
+            // 设置模型缩放比例
+            object.scale.set(3, 3, 3);
+            // 设置模型的坐标
+            object.position.set(0, 0, 0);
+
+            object.traverse((child) => {
+                if (child instanceof THREE.Mesh) {
+                    console.log(child.material);
+                    // 设置模型皮肤
+                    child.material.map = THREE.ImageUtils.loadTexture(skin);
+                }
+            });
+            // 将模型添加到场景中
+            scene.add(object);
+        });
+
+        // ---------------------------------------------------------------------------------------------
+
+        // 元素点击事件
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        // 点击更改颜色
+        renderer.domElement.onclick = (event) => {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(scene.children);
+            console.log(intersects);
+            if (intersects.length > 0) {
+                intersects.forEach((item) => {
+                    console.log(item.object.name);
+                });
+            }
+        };
+
+        // // 辅助线
+        // const axes = new THREE.AxisHelper(20);
+        // scene.add(axes);
 
         // 鼠标控制旋转
         const orbitControls = new OrbitControls(camera, renderer.domElement);
