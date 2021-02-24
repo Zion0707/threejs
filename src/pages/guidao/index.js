@@ -70,7 +70,7 @@ function FadeInOut() {
                 if (child instanceof THREE.Mesh) {
                     console.log(child.material);
                     // 设置模型皮肤
-                    child.material.map = THREE.ImageUtils.loadTexture(skin);
+                    child.material.map = new THREE.TextureLoader().load(skin);
                 }
             });
             // 将模型添加到场景中
