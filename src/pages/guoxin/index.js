@@ -39,7 +39,7 @@ function Guoxin() {
 
         const rangeNum = 80; // 随机范围值
         const yDownNum = -30; // 漂浮元素统一的最底值
-        const fadeInOption = 0.3; // 显示透明度
+        const fadeInOption = 0.8; // 显示透明度
         const comeUpArr = []; // 上升漂浮元素装载
         const comeUpCount = 20; // 漂浮元素总数
 
@@ -49,7 +49,7 @@ function Guoxin() {
                 index: i,
                 x: Math.random() * (i % 2 === 0 ? rangeNum : -rangeNum),
                 z: Math.random() * (i % 2 === 0 ? -rangeNum : rangeNum),
-                y: -randomRange(20, 500),
+                y: -randomRange(20, 800),
             });
         }
 
@@ -57,7 +57,7 @@ function Guoxin() {
         const createComeUpModel = (index) => {
             // 纹理，开始透明是为了生成
             const cuMaterial = new THREE.MeshBasicMaterial({
-                color: '#2cc1f7',
+                color: '#00d8ff',
                 transparent: true,
                 opacity: 0,
             });
@@ -309,8 +309,9 @@ function Guoxin() {
         floorRightGroup.add(floorRightCylindricalMesh, floorRightCuboidMesh);
 
         // 底部地图 设置start
+        const mapSize = 2000 * 3;
         const mapMesh = new THREE.Mesh(
-            new THREE.PlaneBufferGeometry(2000 * 3, 2000 * 3),
+            new THREE.PlaneBufferGeometry(mapSize, mapSize),
             mapBgMaterial
         );
         mapMesh.position.y = -150;
@@ -347,7 +348,7 @@ function Guoxin() {
         modelTween2.start();
 
         // 地图渐现动画执行
-        // mapBgMaterial.opacity = 0.5; // 测试用
+        // mapBgMaterial.opacity = 1; // 测试用
         const mapTween1 = new TWEEN.Tween(mapBgMaterial)
             .to({ opacity: 0.5 }, 3000)
             .easing(TWEEN.Easing.Quadratic.In);
