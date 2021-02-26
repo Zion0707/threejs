@@ -40,7 +40,23 @@ function FadeInOut() {
         // 场景
         // ---------------------------------------------------------------------------------------------
         const scene = new THREE.Scene();
-        const boxGeometry = new THREE.BoxGeometry(5, 5, 5);
+
+        // 导入obj模型
+        const objLoader = new OBJLoader();
+        objLoader.load(model, (object) => {
+            object.scale.set(3, 3, 3);
+            object.position.set(0, 0, 0);
+            object.traverse((child) => {
+                if (child.isMesh) {
+                    // // 设置模型皮肤
+                    child.material.map = new THREE.TextureLoader().load(skin);
+                    child.material.transparent = true; // 设置皮肤透明度
+                    child.material.opacity = 0.1; // 设置皮肤透明度
+                }
+            });
+            // 将模型添加到场景中
+            scene.add(object);
+        });
 
         // logo 贴纸
         const logoTexture = new THREE.TextureLoader().load(require('./images/logo.png'));
@@ -53,36 +69,18 @@ function FadeInOut() {
             opacity: 1,
         });
 
+        const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
         const boxMesh = new THREE.Mesh(boxGeometry, logoMaterial);
         boxMesh.position.set(-5, 10, 5);
         boxMesh.name = '盒子模型';
         scene.add(boxMesh);
-
-        // 导入obj模型
-        const objLoader = new OBJLoader();
-        objLoader.load(model, (object) => {
-            // 设置模型缩放比例
-            object.scale.set(3, 3, 3);
-            // 设置模型的坐标
-            object.position.set(0, 0, 0);
-
-            object.traverse((child) => {
-                if (child instanceof THREE.Mesh) {
-                    console.log(child.material);
-                    // 设置模型皮肤
-                    child.material.map = new THREE.TextureLoader().load(skin);
-                }
-            });
-            // 将模型添加到场景中
-            scene.add(object);
-        });
 
         // ---------------------------------------------------------------------------------------------
 
         // 元素点击事件
         const raycaster = new THREE.Raycaster();
         const mouse = new THREE.Vector2();
-        // 点击更改颜色
+
         renderer.domElement.onclick = (event) => {
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -104,7 +102,7 @@ function FadeInOut() {
         const orbitControls = new OrbitControls(camera, renderer.domElement);
         // orbitControls.autoRotate = false;
         // orbitControls.enableZoom = false;
-        orbitControls.minDistance = 200; // 最大缩放值，值越小模型越大
+        orbitControls.minDistance = 100; // 最大缩放值，值越小模型越大
         orbitControls.maxDistance = 500; // 最小缩放值，值越大模型越小
         // orbitControls.maxPolarAngle = Math.PI * 0.5; // 限制鼠标拖拽角度
         orbitControls.enablePan = false; // 禁止鼠标右键拖拽
@@ -116,9 +114,9 @@ function FadeInOut() {
         scene.add(new THREE.AmbientLight('#ffffff', 0.5));
 
         // 亮白光光源映射
-        const pointLight = new THREE.PointLight('#ffffff', 1, 100);
-        pointLight.position.set(10, 10, 10);
-        scene.add(pointLight);
+        // const pointLight = new THREE.PointLight('#ffffff', 1, 100);
+        // pointLight.position.set(10, 10, 10);
+        // scene.add(pointLight);
 
         el.append(renderer.domElement);
 
