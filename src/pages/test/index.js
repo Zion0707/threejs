@@ -28,32 +28,37 @@ function Test() {
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFShadowMap;
 
-        // create the ground plane
-        const planeGeometry = new THREE.PlaneGeometry(20, 20);
-        const planeMaterial = new THREE.MeshLambertMaterial({ color: '#fff' });
-        const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-        plane.receiveShadow = true;
+        const geometry = new THREE.Geometry();
+        const material = new THREE.LineBasicMaterial({ color: '#f00' });
+        geometry.vertices.push(new THREE.Vector3(-10, 10, 0), new THREE.Vector3(10, 10, 0));
+        const line = new THREE.Line(geometry, material, THREE.LineSegments);
+        scene.add(line);
 
-        // rotate and position the plane
-        plane.rotation.x = -0.5 * Math.PI;
+        const sphere = new THREE.SphereGeometry(2, 4, 2);
+        const object = new THREE.Mesh(sphere, new THREE.MeshBasicMaterial('#f00'));
+        const box = new THREE.BoxHelper(object, '#f00');
+        scene.add(box);
 
-        // add the plane to the scene
-        scene.add(plane);
+        const cvs = document.createElement('canvas');
+        const ctx = cvs.getContext('2d');
+        ctx.fillStyle = '#FF0000';
+        ctx.fillRect(0, 0, 10, 10);
+        document.body.appendChild(cvs);
 
-        // create a cube
-        const cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
-        const cubeMaterial = new THREE.MeshLambertMaterial({ color: '#f00' });
-        const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
-        cube.castShadow = true;
+        const cvsTexture = new THREE.CanvasTexture(cvs);
+        const cvsGeometry = new THREE.BoxGeometry(5, 5, 0.1);
+        const cvsMaterial = new THREE.MeshPhongMaterial({
+            map: cvsTexture, // 设置纹理贴图
+        });
+        const cvsMesh = new THREE.Mesh(cvsGeometry, cvsMaterial);
+        scene.add(cvsMesh);
 
-        // position the cube
-        cube.position.set(-4, 3, 0);
-
-        // add the cube to the scene
-        scene.add(cube);
+        // 添加三维辅助线
+        const axesHelper = new THREE.AxesHelper(5);
+        scene.add(axesHelper);
 
         // position and point the camera to the center of the scene
-        camera.position.set(-100, 40, 100);
+        camera.position.set(0, 0, 100);
         camera.lookAt(scene.position);
 
         // add spotlight for the shadows
