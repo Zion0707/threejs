@@ -1,0 +1,14 @@
+* {
+    outline: none;
+}
+.home {
+    height: 2000px;
+    position: relative;
+}
+
+.btn {
+    position: absolute;
+    top: 1000px;
+    left: 30px;
+    height: 20px;
+}

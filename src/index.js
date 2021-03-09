@@ -20,12 +20,12 @@ import EventClick from './pages/event-click';
 import Test from './pages/test';
 import Map3d from './pages/map-3d';
 import Louyu from './pages/louyu';
-import Guoxin from './pages/guoxin';
 import MeshLine from './pages/mesh-line';
 import Floating from './pages/floating';
 import FadeInOut from './pages/fade-in-out';
 import ObjOpacity from './pages/obj-opacity';
-import Guidao from './pages/guidao';
+import KeepAlive from './pages/keep-alive';
+import KeepAlive2 from './pages/keep-alive2';
 
 ReactDOM.render(
     <>
@@ -48,12 +48,12 @@ ReactDOM.render(
                 <Route path="/event-click" component={EventClick} />
                 <Route path="/map-3d" component={Map3d} />
                 <Route path="/louyu" component={Louyu} />
-                <Route path="/guoxin" component={Guoxin} />
                 <Route path="/mesh-line" component={MeshLine} />
                 <Route path="/floating" component={Floating} />
                 <Route path="/fade-in-out" component={FadeInOut} />
                 <Route path="/obj-opacity" component={ObjOpacity} />
-                <Route path="/guidao" component={Guidao} />
+                <Route path="/keep-alive" component={KeepAlive} />
+                <Route path="/keep-alive2" component={KeepAlive2} />
             </Switch>
         </Router>
     </>,
