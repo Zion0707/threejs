@@ -28,26 +28,26 @@ function CanvasTexture() {
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFShadowMap;
 
-        // 线条
-        const geometry = new THREE.Geometry();
-        const material = new THREE.LineBasicMaterial({ color: '#555' });
-        geometry.vertices.push(new THREE.Vector3(-10, 0, 0), new THREE.Vector3(10, 0, 0));
-        const line = new THREE.Line(geometry, material, THREE.LineSegments);
-        scene.add(line);
-
-        const sphere = new THREE.BoxGeometry(4, 4, 4);
-        const object = new THREE.Mesh(sphere, new THREE.MeshBasicMaterial('#abc'));
-        const box = new THREE.BoxHelper(object, '#abc');
-        scene.add(box);
-
         // canvas 绘制
-        const cvs = document.createElement('canvas');
-        const ctx = cvs.getContext('2d');
-        ctx.fillStyle = '#FF0000';
-        ctx.fillRect(50, 50, 50, 50);
+        function getTextCanvas(text) {
+            const width = 400;
+            const height = 400;
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ddd';
+            ctx.fillRect(0, 0, width, height);
+            ctx.font = '50px Microsoft YaHei';
+            ctx.fillStyle = '#2891FF';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, width / 2, height / 2);
+            return canvas;
+        }
 
         // canvas 纹理
-        const cvsTexture = new THREE.CanvasTexture(cvs);
+        const cvsTexture = new THREE.CanvasTexture(getTextCanvas('张三'));
         const cvsGeometry = new THREE.BoxGeometry(5, 5, 0.1);
         const cvsMaterial = new THREE.MeshBasicMaterial({
             map: cvsTexture, // 设置纹理贴图
@@ -63,9 +63,13 @@ function CanvasTexture() {
         ]);
         scene.add(cvsMesh);
 
-        // // 添加三维辅助线
-        // const axesHelper = new THREE.AxesHelper(5);
-        // scene.add(axesHelper);
+        setTimeout(() => {
+            cvsMaterial.map = new THREE.CanvasTexture(getTextCanvas('李四'));
+        }, 1000);
+
+        // 添加三维辅助线
+        const axesHelper = new THREE.AxesHelper(5);
+        scene.add(axesHelper);
 
         // position and point the camera to the center of the scene
         camera.position.set(0, 0, 50);

@@ -4,7 +4,8 @@ import './index.css';
 
 const KeepAlive = () => {
     const history = useHistory();
-    const { state } = useLocation();
+    const location = useLocation();
+    const { state } = location;
     const [scrollTop] = useState((state && state.scrollTop) || 0);
 
     const skip = () => {
@@ -14,12 +15,24 @@ const KeepAlive = () => {
         });
     };
 
+    const unComponent = () => {
+        location.state = undefined;
+    };
+
     useEffect(() => {
         window.scrollTo(0, scrollTop);
+        return unComponent;
     }, []);
 
     return (
         <div className="home">
+            <button
+                onClick={() => {
+                    history.push({ pathname: '/test' });
+                }}
+            >
+                按钮
+            </button>
             {scrollTop}
             <button type="button" className="btn" onClick={skip}>
                 跳转

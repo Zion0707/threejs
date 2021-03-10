@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
+import { useHistory } from 'react-router-dom';
 
 import './index.css';
 
 function Test() {
+    const history = useHistory();
+
     const init = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -30,20 +33,18 @@ function Test() {
 
         // canvas 绘制
         function getTextCanvas(text) {
-            const width = 512;
-            const height = 256;
+            const width = 400;
+            const height = 400;
             const canvas = document.createElement('canvas');
             canvas.width = width;
             canvas.height = height;
             const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#C3C3C3';
+            ctx.fillStyle = '#ddd';
             ctx.fillRect(0, 0, width, height);
-            ctx.font = 50 + 'px " bold';
+            ctx.font = '50px Microsoft YaHei';
             ctx.fillStyle = '#2891FF';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.scale(2, 1);
-            ctx.translate(-125, 0);
             ctx.fillText(text, width / 2, height / 2);
             return canvas;
         }
@@ -113,7 +114,13 @@ function Test() {
 
     return (
         <div id="content">
-            <ul></ul>
+            <button
+                onClick={() => {
+                    history.push('/keep-alive');
+                }}
+            >
+                去页面
+            </button>
         </div>
     );
 }
