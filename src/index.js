@@ -26,6 +26,7 @@ import FadeInOut from './pages/fade-in-out';
 import ObjOpacity from './pages/obj-opacity';
 import KeepAlive from './pages/keep-alive';
 import KeepAlive2 from './pages/keep-alive2';
+import CanvasTexture from './pages/canvas-texture';
 
 ReactDOM.render(
     <>
@@ -54,6 +55,7 @@ ReactDOM.render(
                 <Route path="/obj-opacity" component={ObjOpacity} />
                 <Route path="/keep-alive" component={KeepAlive} />
                 <Route path="/keep-alive2" component={KeepAlive2} />
+                <Route path="/canvas-texture" component={CanvasTexture} />
             </Switch>
         </Router>
     </>,

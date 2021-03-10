@@ -4,7 +4,7 @@ import * as THREE from 'three';
 
 import './index.css';
 
-function Test() {
+function CanvasTexture() {
     const init = () => {
         const el = document.getElementById('content');
         const winWidth = window.innerWidth;
@@ -28,28 +28,26 @@ function Test() {
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFShadowMap;
 
+        // 线条
+        const geometry = new THREE.Geometry();
+        const material = new THREE.LineBasicMaterial({ color: '#555' });
+        geometry.vertices.push(new THREE.Vector3(-10, 0, 0), new THREE.Vector3(10, 0, 0));
+        const line = new THREE.Line(geometry, material, THREE.LineSegments);
+        scene.add(line);
+
+        const sphere = new THREE.BoxGeometry(4, 4, 4);
+        const object = new THREE.Mesh(sphere, new THREE.MeshBasicMaterial('#abc'));
+        const box = new THREE.BoxHelper(object, '#abc');
+        scene.add(box);
+
         // canvas 绘制
-        function getTextCanvas(text) {
-            const width = 512;
-            const height = 256;
-            const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#C3C3C3';
-            ctx.fillRect(0, 0, width, height);
-            ctx.font = 50 + 'px " bold';
-            ctx.fillStyle = '#2891FF';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.scale(2, 1);
-            ctx.translate(-125, 0);
-            ctx.fillText(text, width / 2, height / 2);
-            return canvas;
-        }
+        const cvs = document.createElement('canvas');
+        const ctx = cvs.getContext('2d');
+        ctx.fillStyle = '#FF0000';
+        ctx.fillRect(50, 50, 50, 50);
 
         // canvas 纹理
-        const cvsTexture = new THREE.CanvasTexture(getTextCanvas('张三'));
+        const cvsTexture = new THREE.CanvasTexture(cvs);
         const cvsGeometry = new THREE.BoxGeometry(5, 5, 0.1);
         const cvsMaterial = new THREE.MeshBasicMaterial({
             map: cvsTexture, // 设置纹理贴图
@@ -65,9 +63,9 @@ function Test() {
         ]);
         scene.add(cvsMesh);
 
-        // 添加三维辅助线
-        const axesHelper = new THREE.AxesHelper(5);
-        scene.add(axesHelper);
+        // // 添加三维辅助线
+        // const axesHelper = new THREE.AxesHelper(5);
+        // scene.add(axesHelper);
 
         // position and point the camera to the center of the scene
         camera.position.set(0, 0, 50);
@@ -117,4 +115,4 @@ function Test() {
         </div>
     );
 }
-export default Test;
+export default CanvasTexture;
