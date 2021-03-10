@@ -1,127 +1,60 @@
 import React, { useEffect } from 'react';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from 'three';
-import { useHistory } from 'react-router-dom';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import './index.css';
 
 function Test() {
-    const history = useHistory();
-
     const init = () => {
-        const el = document.getElementById('content');
-        const winWidth = window.innerWidth;
-        const winHeight = window.innerHeight;
-        el.style.cssText = `width:${winWidth}px;height:${winHeight}px`;
-
-        // create a scene, that will hold all our elements such as objects, cameras and lights.
         const scene = new THREE.Scene();
+        scene.background = new THREE.Color('#48dbfb');
+        scene.fog = new THREE.Fog('#48dbfb', 500, 1000);
 
         const camera = new THREE.PerspectiveCamera(
-            45,
+            75,
             window.innerWidth / window.innerHeight,
             0.1,
             1000
         );
+        camera.position.z = 5;
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-
-        renderer.setClearColor('#fff');
+        const renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.shadowMap.enabled = true;
-        renderer.shadowMap.type = THREE.PCFShadowMap;
+        document.body.appendChild(renderer.domElement);
 
-        // canvas 绘制
-        function getTextCanvas(text) {
-            const width = 400;
-            const height = 400;
-            const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#ddd';
-            ctx.fillRect(0, 0, width, height);
-            ctx.font = '50px Microsoft YaHei';
-            ctx.fillStyle = '#2891FF';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(text, width / 2, height / 2);
-            return canvas;
-        }
+        // 鼠标控制旋转
+        new OrbitControls(camera, renderer.domElement);
 
-        // canvas 纹理
-        const cvsTexture = new THREE.CanvasTexture(getTextCanvas('张三'));
-        const cvsGeometry = new THREE.BoxGeometry(5, 5, 0.1);
-        const cvsMaterial = new THREE.MeshBasicMaterial({
-            map: cvsTexture, // 设置纹理贴图
-            transparent: true,
-        });
-        const cvsMesh = new THREE.Mesh(cvsGeometry, [
-            null,
-            null,
-            null,
-            null,
-            cvsMaterial,
-            cvsMaterial,
-        ]);
-        scene.add(cvsMesh);
+        const group = new THREE.Group();
 
-        // 添加三维辅助线
-        const axesHelper = new THREE.AxesHelper(5);
-        scene.add(axesHelper);
+        // 立方体盒子
+        const boxGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+        const boxMaterial = new THREE.MeshBasicMaterial({ color: '#fff' });
+        const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
 
-        // position and point the camera to the center of the scene
-        camera.position.set(0, 0, 50);
-        camera.lookAt(scene.position);
+        // 平面
+        const geometry = new THREE.PlaneGeometry(2, 2);
+        const material = new THREE.MeshBasicMaterial({ color: '#f1f1f1', side: THREE.DoubleSide });
+        const plane = new THREE.Mesh(geometry, material);
+        plane.rotateX(1.6);
+        plane.position.y = -0.5;
 
-        // add spotlight for the shadows
-        const spotLight = new THREE.SpotLight(0xffffff);
-        spotLight.position.set(-40, 60, -10);
-        spotLight.castShadow = true;
-        scene.add(spotLight);
+        group.add(boxMesh);
+        group.add(plane);
+        scene.add(group);
 
-        // add the output of the renderer to the html element
-        el.append(renderer.domElement);
-
-        const orbitControls = new OrbitControls(camera, renderer.domElement);
-        orbitControls.autoRotate = false;
-
-        // call the render function
-        renderer.render(scene, camera);
-
-        function render() {
-            // 动画循环渲染
-            requestAnimationFrame(render);
-            // 渲染到页面上
+        const animate = function () {
+            requestAnimationFrame(animate);
             renderer.render(scene, camera);
-        }
-        render();
-
-        // onresize 事件会在窗口被调整大小时发生
-        window.onresize = () => {
-            const newWindowWidth = window.innerWidth;
-            const newWindowHeight = window.innerHeight;
-            el.style.cssText = `width:${newWindowWidth};height:${newWindowHeight}`;
-            renderer.setSize(newWindowWidth, newWindowHeight);
-            camera.aspect = newWindowWidth / newWindowHeight;
-            camera.updateProjectionMatrix();
         };
+
+        animate();
     };
 
     useEffect(() => {
         init();
     });
 
-    return (
-        <div id="content">
-            <button
-                onClick={() => {
-                    history.push('/keep-alive');
-                }}
-            >
-                去页面
-            </button>
-        </div>
-    );
+    return <div></div>;
 }
 export default Test;
