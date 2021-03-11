@@ -10,7 +10,7 @@ const KeepAlive = () => {
 
     const skip = () => {
         history.push({
-            pathname: '/keep-alive2',
+            pathname: '/keep-alive/33/110',
             state: { from: '/keep-alive', scrollTop: window.scrollY },
         });
     };

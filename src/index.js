@@ -34,30 +34,30 @@ ReactDOM.render(
         <Router>
             <Switch>
                 <Route exact path="/" component={Index} />
-                <Route path="/test" component={Test} />
-                <Route path="/tadiao" component={Tadiao} />
-                <Route path="/dianti" component={Dianti} />
-                <Route path="/skin" component={Skin} />
-                <Route path="/basis" component={Basis} />
-                <Route path="/pikaqiu" component={Pikaqiu} />
-                <Route path="/img-load" component={ImgLoad} />
-                <Route path="/auto-move" component={AutoMove} />
-                <Route path="/car-start" component={CarStart} />
-                <Route path="/box-texture" component={BoxTexture} />
-                <Route path="/line2" component={Line2} />
-                <Route path="/video" component={Video} />
-                <Route path="/change-wide" component={ChangeWide} />
-                <Route path="/event-click" component={EventClick} />
-                <Route path="/map-3d" component={Map3d} />
-                <Route path="/louyu" component={Louyu} />
-                <Route path="/mesh-line" component={MeshLine} />
-                <Route path="/floating" component={Floating} />
-                <Route path="/fade-in-out" component={FadeInOut} />
-                <Route path="/obj-opacity" component={ObjOpacity} />
-                <Route path="/keep-alive" component={KeepAlive} />
-                <Route path="/keep-alive2" component={KeepAlive2} />
-                <Route path="/canvas-texture" component={CanvasTexture} />
-                <Route path="/drag" component={Drag} />
+                <Route exact path="/test" component={Test} />
+                <Route exact path="/tadiao" component={Tadiao} />
+                <Route exact path="/dianti" component={Dianti} />
+                <Route exact path="/skin" component={Skin} />
+                <Route exact path="/basis" component={Basis} />
+                <Route exact path="/pikaqiu" component={Pikaqiu} />
+                <Route exact path="/img-load" component={ImgLoad} />
+                <Route exact path="/auto-move" component={AutoMove} />
+                <Route exact path="/car-start" component={CarStart} />
+                <Route exact path="/box-texture" component={BoxTexture} />
+                <Route exact path="/line2" component={Line2} />
+                <Route exact path="/video" component={Video} />
+                <Route exact path="/change-wide" component={ChangeWide} />
+                <Route exact path="/event-click" component={EventClick} />
+                <Route exact path="/map-3d" component={Map3d} />
+                <Route exact path="/louyu" component={Louyu} />
+                <Route exact path="/mesh-line" component={MeshLine} />
+                <Route exact path="/floating" component={Floating} />
+                <Route exact path="/fade-in-out" component={FadeInOut} />
+                <Route exact path="/obj-opacity" component={ObjOpacity} />
+                <Route exact path="/keep-alive" component={KeepAlive} />
+                <Route exact path="/keep-alive/:id/:name" component={KeepAlive2} />
+                <Route exact path="/canvas-texture" component={CanvasTexture} />
+                <Route exact path="/drag" component={Drag} />
             </Switch>
         </Router>
     </>,

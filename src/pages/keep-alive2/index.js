@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 
-const KeepAlive2 = () => {
+const KeepAlive2 = (props) => {
     const history = useHistory();
     const { state } = useLocation();
+
+    console.log(props.match.params);
 
     const backEvent = () => {
         history.push({ state });
