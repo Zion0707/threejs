@@ -23,10 +23,10 @@ function Test() {
         document.body.appendChild(renderer.domElement);
 
         // 鼠标控制旋转
-        new OrbitControls(camera, renderer.domElement);
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
 
         const group = new THREE.Group();
-
         // 立方体盒子
         const boxGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
         const boxMaterial = new THREE.MeshBasicMaterial({ color: '#fff' });
