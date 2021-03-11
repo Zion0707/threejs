@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { TransformControls } from 'three/examples/jsm/controls/TransformControls';
+import { DragControls } from 'three/examples/jsm/controls/DragControls';
 
 import './index.css';
 
@@ -22,14 +24,10 @@ function Test() {
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // 鼠标控制旋转
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
-
         const group = new THREE.Group();
         // 立方体盒子
         const boxGeometry = new THREE.BoxGeometry(0.5, 0.5, 0.5);
-        const boxMaterial = new THREE.MeshBasicMaterial({ color: '#fff' });
+        const boxMaterial = new THREE.MeshBasicMaterial({ color: '#f00' });
         const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
 
         // 平面
@@ -43,6 +41,17 @@ function Test() {
         group.add(plane);
         scene.add(group);
 
+        // 放大缩小控制器
+        new OrbitControls(camera, renderer.domElement);
+        // 变化控制器
+        const transformControl = new TransformControls(camera, renderer.domElement);
+        scene.add(transformControl);
+        // 拖拽控制器
+        const dragControls = new DragControls([boxMesh], camera, renderer.domElement);
+        dragControls.addEventListener('hoveron', (event) => {
+            transformControl.attach(event.object);
+        });
+
         const animate = function () {
             requestAnimationFrame(animate);
             renderer.render(scene, camera);
@@ -53,7 +62,7 @@ function Test() {
 
     useEffect(() => {
         init();
-    });
+    }, []);
 
     return <div></div>;
 }

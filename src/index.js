@@ -27,6 +27,7 @@ import ObjOpacity from './pages/obj-opacity';
 import KeepAlive from './pages/keep-alive';
 import KeepAlive2 from './pages/keep-alive2';
 import CanvasTexture from './pages/canvas-texture';
+import Drag from './pages/drag';
 
 ReactDOM.render(
     <>
@@ -56,6 +57,7 @@ ReactDOM.render(
                 <Route path="/keep-alive" component={KeepAlive} />
                 <Route path="/keep-alive2" component={KeepAlive2} />
                 <Route path="/canvas-texture" component={CanvasTexture} />
+                <Route path="/drag" component={Drag} />
             </Switch>
         </Router>
     </>,

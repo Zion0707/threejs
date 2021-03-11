@@ -1,9 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 
 const KeepAlive2 = () => {
     const history = useHistory();
     const { state } = useLocation();
+
+    const backEvent = () => {
+        history.push({ state });
+    };
+
+    const unComponent = () => {
+        console.log('组件卸载');
+        window.removeEventListener('popstate', backEvent);
+    };
+
+    useEffect(() => {
+        window.addEventListener('popstate', () => {
+            backEvent();
+        });
+
+        return unComponent;
+    }, []);
     return (
         <div
             onClick={() => {
