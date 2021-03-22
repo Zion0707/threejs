@@ -1,44 +1,45 @@
 import React, { useEffect, useState } from 'react';
 const imgsArr = [
-    'http://dummyimage.com/200x100/FF6600',
-    'http://dummyimage.com/200x100/4A7BF7&text=Hello',
+    'http://dummyimage.com/100x100/FF6600&text=Hello',
+    'http://dummyimage.com/100x100/4A7BF7&text=Hello',
+    'http://dummyimage.com/100x100/4A7BFF&text=Hello',
+    'http://dummyimage.com/100x100/4A7BBB&text=Hello',
+    'http://dummyimage.com/100x100/EEEEEE&text=Hello',
 ];
 
 function ImgLoad() {
-    const [msg, setMsg] = useState('加载中...');
-    const [imgList, setImgList] = useState([]);
+    const [loadNum, setLoadNum] = useState(0);
 
     // 图片加载
-    const imgLoad = async () => {
-        const pArr = [];
-        imgsArr.forEach((item) => {
-            const p = new Promise((reslove) => {
+    const imgLoad = (callback) => {
+        let num = 1;
+        imgsArr.forEach(async (item) => {
+            await new Promise((res) => {
                 const img = new Image();
                 img.src = item;
                 img.onload = () => {
-                    reslove(img);
+                    const percent = (num / imgsArr.length) * 100;
+                    callback && callback(percent, img);
+                    num++;
+                    res(img);
                 };
             });
-            pArr.push(p);
         });
-        const res = await Promise.all(pArr);
-        return res;
     };
 
     useEffect(() => {
-        const init = async () => {
-            const res = await imgLoad();
-            setImgList(res);
-            setMsg('加载完成...');
-        };
-        init();
+        imgLoad((num, img) => {
+            console.log(num, img);
+            setLoadNum(num);
+        });
     }, []);
 
     return (
         <>
-            {msg}
-            {imgList.map((item) => {
-                return <img key={item.src} src={item.src} alt="图片" />;
+            {loadNum}%
+            <br />
+            {imgsArr.map((item) => {
+                return <img key={item} src={item} alt="图片" />;
             })}
         </>
     );
