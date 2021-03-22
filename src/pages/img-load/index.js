@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from 'react';
-const imgsArr = [
-    'http://dummyimage.com/100x100/FF6600&text=Hello',
-    'http://dummyimage.com/100x100/4A7BF7&text=Hello',
-    'http://dummyimage.com/100x100/4A7BFF&text=Hello',
-    'http://dummyimage.com/100x100/4A7BBB&text=Hello',
-    'http://dummyimage.com/100x100/EEEEEE&text=Hello',
+
+const imgsList = [
+    'http://dummyimage.com/1000x1000/FF6611',
+    'http://dummyimage.com/1000x1000/FF6622',
+    'http://dummyimage.com/1000x1000/FF6633',
+    'http://dummyimage.com/1000x1000/FF6644',
+    'http://dummyimage.com/1000x1000/FF6655',
+    'http://dummyimage.com/2000x2000/FF6666',
+    'http://dummyimage.com/1000x1000/FF6677',
+    'http://dummyimage.com/1000x1000/FF6688',
+    'http://dummyimage.com/1000x1000/FF6699',
+    'http://dummyimage.com/1000x1000/FF66AA',
+    'http://dummyimage.com/1000x1000/FF66BB',
+    'http://dummyimage.com/1000x1000/FF66CC',
 ];
 
 function ImgLoad() {
     const [loadNum, setLoadNum] = useState(0);
 
     // 图片加载
-    const imgLoad = (callback) => {
+    const imgLoad = (imgsArr, callback) => {
         let num = 1;
         imgsArr.forEach(async (item) => {
             await new Promise((res) => {
@@ -28,7 +36,7 @@ function ImgLoad() {
     };
 
     useEffect(() => {
-        imgLoad((num, img) => {
+        imgLoad(imgsList, (num, img) => {
             console.log(num, img);
             setLoadNum(num);
         });
@@ -36,9 +44,9 @@ function ImgLoad() {
 
     return (
         <>
-            {loadNum}%
+            加载进度：{loadNum}%
             <br />
-            {imgsArr.map((item) => {
+            {imgsList.map((item) => {
                 return <img key={item} src={item} alt="图片" />;
             })}
         </>
